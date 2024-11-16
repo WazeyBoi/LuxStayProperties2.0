@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+        .logout {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .logout a {
+            color: #800000;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        h2 {
+            color: #800000;
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .button-container a {
+            text-decoration: none;
+            color: white;
+            background-color: #800000;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .button-container a:hover {
+            background-color: #660000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Logout Link -->
+        <div class="logout">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+
+        <!-- Header -->
+        <h2>Tenant Dashboard</h2>
+
+        <!-- Navigation Buttons -->
+        <div class="button-container">
+            <a href="{% url 'property_listing' %}" class="dashboard-btn">Property Listings</a>
+            <a href="{% url 'my_bookings' %}">My Bookings</a>
+            <a href="">My Payments</a>
+            <a href="">My Maintenance Request</a>
+            <a href="">My Feedbacks</a>
+            <a href="{% url 'edit_account' %}">My Account</a>
+        </div>
+    </div>
+
+</body>
+</html>

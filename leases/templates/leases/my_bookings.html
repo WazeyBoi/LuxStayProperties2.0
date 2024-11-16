@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 900px;
+        }
+        h2 {
+            text-align: center;
+            color: #800000;
+            margin-bottom: 20px;
+            font-size: 26px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        thead {
+            background-color: #800000;
+            color: white;
+        }
+        th, td {
+            padding: 10px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+        td {
+            font-size: 14px;
+            color: #333;
+        }
+        .status-active {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-old {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .no-bookings {
+            text-align: center;
+            color: #666;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .back-link {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .back-link a {
+            color: #800000;
+            font-weight: bold;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="back-link">
+            <a href="{% url 'tenant_dashboard' %}">&larr; Back to Dashboard</a>
+        </div>
+
+        <h2>My Bookings</h2>
+
+       <!-- Active Bookings -->
+        {% if active_bookings %}
+            {% for booking in active_bookings %}
+                <tr>
+                    <td>{{ booking.property.property_name }}</td>
+                    <td>{{ booking.property.address }}</td>
+                    <td>{{ booking.start_date }}</td>
+                    <td>{{ booking.end_date }}</td>
+                    <td class="status-active">Active</td>
+                </tr>
+            {% endfor %}
+         {% else %}
+            <p class="no-bookings">No active bookings.</p>
+        {% endif %}
+
+        <!-- Old Bookings -->
+        <h3 style="color: #333; margin-top: 40px;">Old Bookings</h3>
+        {% if old_bookings %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Property Name</th>
+                    <th>Address</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in old_bookings %}
+                <tr>
+                    <td>{{ booking.property.property_name }}</td>
+                    <td>{{ booking.property.address }}</td>
+                    <td>{{ booking.start_date }}</td>
+                    <td>{{ booking.end_date }}</td>
+                    <td class="status-old">Ended</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-bookings">No old bookings.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

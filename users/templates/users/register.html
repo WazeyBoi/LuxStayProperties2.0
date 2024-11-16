@@ -1,0 +1,52 @@
+{% extends "users/base.html" %}
+
+{% block title %}Register | LuxStay Properties{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Register</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        <label for="username">Username:</label>
+        {{ form.username }}
+        
+        <label for="password1">Password:</label>
+        {{ form.password1 }}
+        
+        <label for="password2">Password confirmation:</label>
+        {{ form.password2 }}
+        
+        <label for="first_name">First name:</label>
+        {{ form.first_name }}
+        
+        <label for="last_name">Last name:</label>
+        {{ form.last_name }}
+        
+        <label for="email">Email address:</label>
+        {{ form.email }}
+
+        <label for="contact">Contact:</label>
+        {{ form.contact }}
+        
+        <label for="birthdate">Birthdate:</label>
+        {{ form.birthdate }}
+        
+        <label for="streetAddress">Street Address:</label>
+        {{ form.streetAddress }}
+        
+        <label for="city">City:</label>
+        {{ form.city }}
+        
+        <label for="zipcode">Zipcode:</label>
+        {{ form.zipcode }}
+        
+        <button type="submit">Register</button>
+    </form>
+
+    <p>
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </p>
+</div>
+{% endblock %}

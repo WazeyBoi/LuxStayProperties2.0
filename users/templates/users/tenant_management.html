@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 95%;
+            margin: auto;
+        }
+        h2 {
+            color: #800000;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #800000;
+            color: white;
+        }
+        a {
+            color: #800000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div style="text-align: left; margin-bottom: 20px;">
+            <a href="{% url 'property_owner_dashboard' %}">&larr; Back to Dashboard</a>
+        </div>
+
+        <h2>Tenant Management</h2>
+
+        <!-- Search Form -->
+        <form method="get" action="{% url 'tenant_management' %}">
+            <input type="text" name="search" placeholder="Search by first or last name">
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Tenants Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Leases</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tenant in tenants %}
+                <tr>
+                    <td>{{ tenant.first_name }}</td>
+                    <td>{{ tenant.last_name }}</td>
+                    <td>{{ tenant.streetAddress|default:"N/A" }}, {{ tenant.city|default:"N/A" }} {{ tenant.zipcode|default:"N/A" }}</td>
+                    <td>{{ tenant.email }}</td>
+                    <td>{{ tenant.contact|default:"N/A" }}</td>
+                    <td>
+                        <a href="{% url 'view_tenant_lease' tenant.id %}">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
