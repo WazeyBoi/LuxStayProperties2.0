@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'leases',
     'rent_payment',
     'lease_management',
+    'maintenance_request',
+    'feedback',
 ]
 
 AUTH_USER_MODEL = 'users.User'

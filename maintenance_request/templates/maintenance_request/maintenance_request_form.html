@@ -1,0 +1,15 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Create Maintenance Request{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Create Maintenance Request</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Request</button>
+    </form>
+</div>
+{% endblock %}
+
