@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- [Your existing head content including styles] -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Property Bookings</title>
@@ -52,8 +53,13 @@
 </head>
 <body>
     <div class="container">
+
+        <div style="text-align: left; margin-bottom: 20px;">
+            <a href="{% url 'property_owner_dashboard' %}" style="color: #800000; font-weight: bold; text-decoration: underline; font-size: 14px;">&larr; Home</a>
+        </div>
+
         <h2>Property Bookings</h2>
-        {% if active_leases %}
+        {% if page_obj %}
         <table>
             <thead>
                 <tr>
@@ -66,7 +72,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for lease in active_leases %}
+                {% for lease in page_obj %}
                 <tr>
                     <td>{{ lease.property.property_name }}</td>
                     <td>{{ lease.property.address }}</td>
@@ -80,9 +86,31 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Pagination Controls -->
+        <div style="margin-top: 20px; text-align: center;">
+            <span style="display: inline-block; margin-right: 10px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            <div style="display: inline-flex; gap: 5px;">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" style="text-decoration: none; color: #800000; font-weight: bold;">Previous</a>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <span style="padding: 5px 10px; background-color: #800000; color: white; border-radius: 5px;">{{ num }}</span>
+                    {% else %}
+                        <a href="?page={{ num }}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #800000; color: #800000; border-radius: 5px;">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" style="text-decoration: none; color: #800000; font-weight: bold;">Next</a>
+                {% endif %}
+            </div>
+        </div>
+
         {% else %}
         <p>No active leases found.</p>
         {% endif %}
+
     </div>
 </body>
 </html>

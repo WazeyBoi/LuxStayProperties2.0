@@ -59,11 +59,26 @@ def delete_property(request, property_id):
 
 @login_required
 def property_bookings(request):
-    # Fetch all properties with active leases
-    active_leases = Lease.objects.filter(status='active', end_date__gte=date.today())
-    
+    # Fetch all properties with active leases for the logged-in property owner and status 'leased'
+    active_leases_list = Lease.objects.filter(
+        property__owner=request.user,
+        property__status='leased',
+        status='active',
+        end_date__gte=date.today()
+    )
+
+    # Set up pagination: Show 10 leases per page
+    paginator = Paginator(active_leases_list, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
     context = {
-        'active_leases': active_leases,
+        'page_obj': page_obj,
     }
     return render(request, 'leases/property_bookings.html', context)
 
