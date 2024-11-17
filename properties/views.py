@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from leases.models import Lease
 from datetime import date
 from django.contrib import messages
+from rent_payment.models import Payment
 
 @login_required
 def property_owner_dashboard(request):
@@ -105,5 +106,22 @@ def terminate_lease(request, lease_id):
 def terminate_confirmation(request, lease_id):
     lease = get_object_or_404(Lease, id=lease_id)
     return render(request, 'leases/terminate_confirmation.html', {'lease': lease})
+
+@login_required
+def property_payment(request):
+    if request.user.role != 'property_owner':
+        return redirect('login')  # Restrict access to PropertyOwners only
+
+    # Fetch the payment information related to active leases for properties owned by the logged-in user
+    payments = Payment.objects.filter(
+        leaseId__property__owner=request.user,
+        leaseId__status='active'  # Filter by active leases
+    ).select_related('tenantId', 'leaseId__property')  # Optimized query to access related models
+
+    context = {
+        'payments': payments,
+    }
+
+    return render(request, 'properties/property_payment.html', context)
 
 #test

@@ -10,4 +10,5 @@ urlpatterns = [
     path('property-bookings/', views.property_bookings, name='property_bookings'),
     path('terminate-confirmation/<int:lease_id>/', views.terminate_confirmation, name='terminate_confirmation'),
     path('terminate-lease/<int:lease_id>/', views.terminate_lease, name='terminate_lease'),
+    path('property-payment/', views.property_payment, name='property_payment'),
 ]

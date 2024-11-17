@@ -103,3 +103,40 @@ def pending_list(request):
         'unpaid_page_obj': unpaid_page_obj,
         'paid_page_obj': paid_page_obj
     })
+
+@login_required
+def payment_list_propertyowner(request):
+    # Check if the logged-in user is a property owner
+    if request.user.role != 'property_owner':
+        return redirect('home')  # Redirect non-property owners to a home page or another page
+
+    # Get all leases for properties owned by the property owner
+    leases = Lease.objects.filter(property_owner=request.user)
+
+    # Prepare a list to hold property details with payments
+    properties_with_payments = []
+
+    for lease in leases:
+        # Get the associated payments for the lease
+        payments = Payment.objects.filter(leaseId=lease)
+
+        # Create a list of dictionaries for each property with payment details
+        for payment in payments:
+            properties_with_payments.append({
+                'property_name': lease.property.property_name,  # Corrected to 'property_name'
+                'property_id': lease.property.id,  # Add the property ID
+                'amount_paid': payment.totalAmount,  # Corrected to 'totalAmount'
+                'payment_date': payment.paymentDate  # Corrected to 'paymentDate'
+            })
+
+    # Pagination: Show 5 properties per page
+    paginator = Paginator(properties_with_payments, 5)  # 5 items per page
+    page_number = request.GET.get('page')  # Get the current page number from the request
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    return render(request, 'rent_payment/payment_list_propertyowner.html', {'page_obj': page_obj})
