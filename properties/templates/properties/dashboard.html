@@ -1,13 +1,9 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body style="font-family: Arial, sans-serif; background-color: #f4f6f9; color: #333; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
+{% extends 'users/base.html' %}
 
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; padding: 20px;">
     <div style="text-align: center; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); width: 400px;">
         <!-- Logout link at the top -->
         <div style="text-align: right; margin-bottom: 10px;">
@@ -23,6 +19,5 @@
             <a href="{% url 'property_bookings' %}" style="text-decoration: none; color: #ffffff; background-color: #800000; padding: 10px 20px; border-radius: 5px; font-weight: bold; transition: background-color 0.3s ease;">Property Bookings</a>
         </div>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}
