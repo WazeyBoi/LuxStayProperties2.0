@@ -1,6 +1,8 @@
 # rent_payment/models.py
 from django.db import models
 
+from users.models import User
+
 class Payment(models.Model):
     # Define choices for paymentMethod
     CASH = 'cash'
@@ -23,8 +25,8 @@ class Payment(models.Model):
     ]
 
     paymentId = models.AutoField(primary_key=True)
-    lease = models.ForeignKey('lease.Lease', on_delete=models.CASCADE, related_name='payments')
-    tenantId = models.CharField(max_length=100)  # Store tenant's name or identifier
+    leaseId = models.ForeignKey('leases.Lease', on_delete=models.CASCADE)
+    tenantId = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'tenant'})  # Foreign key to User model
     paymentDate = models.DateField()
     paymentMethod = models.CharField(
         max_length=20,
@@ -32,11 +34,6 @@ class Payment(models.Model):
         default=CASH  # Default to 'Cash' if nothing is selected
     )
     totalAmount = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(
-        max_length=10,  # Adjusted max_length based on your choices
-        choices=STATUS_CHOICES,
-        default=UNPAID  # Default to 'Unpaid' if nothing is selected
-    )
 
     def __str__(self):
         return f'Payment {self.paymentId} for Tenant {self.tenantId}'

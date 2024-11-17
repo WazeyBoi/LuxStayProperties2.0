@@ -9,8 +9,8 @@ from datetime import datetime
 
 @login_required
 def tenant_dashboard(request):
-    # Filter leases based on status
-    active_leases = Lease.objects.filter(tenant=request.user, status='active', end_date__gte=date.today())
+    # Filter active leases with unpaid status
+    active_leases = Lease.objects.filter(tenant=request.user, status='active', payment_status='unpaid', end_date__gte=date.today())
     inactive_leases = Lease.objects.filter(tenant=request.user, status='inactive')
 
     context = {
@@ -18,6 +18,7 @@ def tenant_dashboard(request):
         'inactive_leases': inactive_leases,
     }
     return render(request, 'leases/tenant_dashboard.html', context)
+
 
 @login_required
 def book_property(request, property_id):
@@ -30,14 +31,15 @@ def book_property(request, property_id):
         # Use the property's monthly price as the total amount
         total_amount = property_obj.price
 
-        # Save the lease
+        # Save the lease with payment_status as 'unpaid'
         lease = Lease(
             tenant=request.user,
             property=property_obj,
             start_date=start_date,
             end_date=end_date,
             total_amount=total_amount,
-            status='active'
+            status='active',
+            payment_status='unpaid'  # New field added here
         )
         lease.save()
         

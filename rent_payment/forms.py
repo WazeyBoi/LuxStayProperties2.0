@@ -1,24 +1,19 @@
-# rent_payment/forms.py
 from django import forms
 from .models import Payment
+from django.utils.timezone import now
 
 class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
-        fields = ['tenantId', 'paymentDate', 'paymentMethod', 'totalAmount', 'status']
+        fields = ['paymentDate', 'paymentMethod', 'totalAmount']
     
-    # Optionally, you can customize the widget if desired
     paymentMethod = forms.ChoiceField(
         choices=Payment.PAYMENT_METHOD_CHOICES,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-        # Add a custom widget for the paymentDate field
     paymentDate = forms.DateField(
-        widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'})
+        widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+        initial=now().date  # Set the default to today's date
     )
 
-    status = forms.ChoiceField(
-        choices=Payment.STATUS_CHOICES,
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )

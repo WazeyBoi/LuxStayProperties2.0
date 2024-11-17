@@ -7,14 +7,15 @@
 <div class="container" style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); width: 600px; margin: auto;">
 
     <h2 style="text-align: center; color: #800000; margin-bottom: 20px;">Payments</h2>
-    
-    <a href="{% url 'payment_create' %}" class="add-payment" style="display: inline-block; margin-bottom: 20px; padding: 10px 20px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; font-weight: bold; text-align: center;">Add Payment</a>
 
     <!-- Payments List -->
     <h3 style="color: #333; margin-bottom: 10px;">Payment Details</h3>
     <ul style="list-style: none; padding: 0;">
         {% for payment in payments %}
             <li style="padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">  <!-- Increased margin-bottom -->
+                <!-- Display Property Name -->
+                <p style="margin-bottom: 10px;"><strong>Property Name:</strong> {{ payment.lease.property.property_name }}</p>  <!-- Accessing the property name from the lease -->
+                
                 <p style="margin-bottom: 10px;"><strong>Total Amount:</strong> ${{ payment.totalAmount }}</p>  <!-- Added margin-bottom -->
                 <p style="margin-bottom: 10px;"><strong>Payment Method:</strong> {{ payment.get_paymentMethod_display }}</p>  <!-- Added margin-bottom -->
                 <p style="margin-bottom: 10px;"><strong>Status:</strong> {{ payment.get_status_display }}</p>  <!-- Added margin-bottom -->
