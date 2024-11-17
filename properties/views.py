@@ -93,7 +93,7 @@ def terminate_lease(request, lease_id):
 
         # Mark the lease as inactive
         lease.end_date = date.today()  # Set the end date to today
-        lease.status = 'inactive'  # Ensure lease status is inactive
+        lease.status = 'terminated'  # Ensure lease status is inactive
         lease.save()
 
         messages.success(request, "Lease terminated successfully.")

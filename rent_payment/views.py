@@ -7,12 +7,24 @@ from users.models import User
 from .models import Payment
 from .forms import PaymentForm
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required
 def payment_list(request):
     # Filter payments for the current user (tenant)
     payments = Payment.objects.filter(tenantId=request.user)  # Filtering payments by the logged-in user
-    return render(request, 'rent_payment/payment_list.html', {'payments': payments})
+
+    # Pagination: Show 5 payments per page
+    paginator = Paginator(payments, 5)  # 5 items per page
+    page_number = request.GET.get('page')  # Get the current page number from the request
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    return render(request, 'rent_payment/payment_list.html', {'page_obj': page_obj})
 
 def payment_create(request, leaseid, tenantid):
     lease = get_object_or_404(Lease, id=leaseid, tenant_id=tenantid)
@@ -27,6 +39,7 @@ def payment_create(request, leaseid, tenantid):
             payment.save()
 
             # Update lease status to 'paid' after successful payment
+            lease.status  = 'active'
             lease.payment_status  = 'paid'
             lease.save()
 
@@ -62,6 +75,31 @@ def payment_delete(request, paymentId):
 
 def pending_list(request):
     # Filter leases based on payment_status and tenant's user status
-    unpaid = Lease.objects.filter(tenant=request.user, payment_status='unpaid')  # Check payment_status instead of status
-    paid = Lease.objects.filter(tenant=request.user, payment_status='paid')  # Check payment_status here as well
-    return render(request, 'rent_payment/pending_list.html', {'unpaid': unpaid, 'paid': paid})
+    unpaid = Lease.objects.filter(tenant=request.user, payment_status='unpaid')
+    paid = Lease.objects.filter(tenant=request.user, payment_status='paid')
+
+    # Pagination: 5 items per page for unpaid and paid lists
+    unpaid_paginator = Paginator(unpaid, 5)
+    paid_paginator = Paginator(paid, 5)
+
+    unpaid_page_number = request.GET.get('unpaid_page')  # Use a unique key for unpaid pagination
+    paid_page_number = request.GET.get('paid_page')  # Use a unique key for paid pagination
+
+    try:
+        unpaid_page_obj = unpaid_paginator.get_page(unpaid_page_number)
+    except PageNotAnInteger:
+        unpaid_page_obj = unpaid_paginator.page(1)
+    except EmptyPage:
+        unpaid_page_obj = unpaid_paginator.page(unpaid_paginator.num_pages)
+
+    try:
+        paid_page_obj = paid_paginator.get_page(paid_page_number)
+    except PageNotAnInteger:
+        paid_page_obj = paid_paginator.page(1)
+    except EmptyPage:
+        paid_page_obj = paid_paginator.page(paid_paginator.num_pages)
+
+    return render(request, 'rent_payment/pending_list.html', {
+        'unpaid_page_obj': unpaid_page_obj,
+        'paid_page_obj': paid_page_obj
+    })

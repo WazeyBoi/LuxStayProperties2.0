@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Lease
 from properties.models import Property
 from datetime import datetime
+from django.core.paginator import Paginator
 
 @login_required
 def tenant_dashboard(request):
@@ -31,14 +32,14 @@ def book_property(request, property_id):
         # Use the property's monthly price as the total amount
         total_amount = property_obj.price
 
-        # Save the lease with payment_status as 'unpaid'
+        # Save the lease with status as 'pending'
         lease = Lease(
             tenant=request.user,
             property=property_obj,
             start_date=start_date,
             end_date=end_date,
             total_amount=total_amount,
-            status='active',
+            status='pending',  # Changed status to 'pending'
             payment_status='unpaid'  # New field added here
         )
         lease.save()
@@ -53,9 +54,32 @@ def book_property(request, property_id):
 
 @login_required
 def my_bookings(request):
+    # Filter bookings
     active_bookings = Lease.objects.filter(tenant=request.user, status='active')
+    pending_bookings = Lease.objects.filter(tenant=request.user, status='pending')
     old_bookings = Lease.objects.filter(tenant=request.user, status__in=['inactive', 'terminated'])
-    return render(request, 'leases/my_bookings.html', {'active_bookings': active_bookings, 'old_bookings': old_bookings})
+
+    # Paginate bookings
+    paginator_active = Paginator(active_bookings, 5)  # 5 rows per page for active bookings
+    paginator_pending = Paginator(pending_bookings, 5)  # 5 rows per page for pending bookings
+    paginator_old = Paginator(old_bookings, 5)  # 5 rows per page for old bookings
+
+    # Get current page numbers
+    page_active = request.GET.get('page_active', 1)
+    page_pending = request.GET.get('page_pending', 1)
+    page_old = request.GET.get('page_old', 1)
+
+    # Get the corresponding page objects
+    active_page = paginator_active.get_page(page_active)
+    pending_page = paginator_pending.get_page(page_pending)
+    old_page = paginator_old.get_page(page_old)
+
+    return render(request, 'leases/my_bookings.html', {
+        'active_page': active_page,
+        'pending_page': pending_page,
+        'old_page': old_page,
+    })
+
 
 @login_required
 def property_listing(request):

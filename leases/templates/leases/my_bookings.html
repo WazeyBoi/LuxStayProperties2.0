@@ -56,6 +56,10 @@
             color: #28a745;
             font-weight: bold;
         }
+        .status-pending {
+            color: #ffc107;
+            font-weight: bold;
+        }
         .status-old {
             color: #d9534f;
             font-weight: bold;
@@ -76,6 +80,23 @@
             text-decoration: underline;
             font-size: 14px;
         }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            color: #800000;
+            padding: 8px 16px;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .pagination .active {
+            background-color: #800000;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -87,9 +108,9 @@
 
         <h2>My Bookings</h2>
 
-       <!-- Active Bookings -->
-        <h3 style="color: #333; margin-top: 20px;">Active Bookings</h3>
-        {% if active_bookings %}
+        <!-- Active and Pending Bookings -->
+        <h3 style="color: #333; margin-top: 20px;">Active & Pending Bookings</h3>
+        {% if active_page.object_list %}
         <table>
             <thead>
                 <tr>
@@ -101,7 +122,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for booking in active_bookings %}
+                {% for booking in active_page %}
                 <tr>
                     <td>{{ booking.property.property_name }}</td>
                     <td>{{ booking.property.address }}</td>
@@ -110,16 +131,34 @@
                     <td class="status-active">Active</td>
                 </tr>
                 {% endfor %}
+                {% for booking in pending_page %}
+                <tr>
+                    <td>{{ booking.property.property_name }}</td>
+                    <td>{{ booking.property.address }}</td>
+                    <td>{{ booking.start_date }}</td>
+                    <td>{{ booking.end_date }}</td>
+                    <td class="status-pending">Pending</td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
-        {% else %}
-        <p class="no-bookings">No active bookings.</p>
-        {% endif %}
 
+        <div class="pagination">
+            {% if active_page.has_previous %}
+                <a href="?page_active={{ active_page.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ active_page.number }} of {{ active_page.paginator.num_pages }}</span>
+            {% if active_page.has_next %}
+                <a href="?page_active={{ active_page.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="no-bookings">No active or pending bookings.</p>
+        {% endif %}
 
         <!-- Old Bookings -->
         <h3 style="color: #333; margin-top: 40px;">Old Bookings</h3>
-        {% if old_bookings %}
+        {% if old_page.object_list %}
         <table>
             <thead>
                 <tr>
@@ -131,17 +170,33 @@
                 </tr>
             </thead>
             <tbody>
-                {% for booking in old_bookings %}
+                {% for booking in old_page %}
                 <tr>
                     <td>{{ booking.property.property_name }}</td>
                     <td>{{ booking.property.address }}</td>
                     <td>{{ booking.start_date }}</td>
                     <td>{{ booking.end_date }}</td>
-                    <td class="status-old">Ended</td>
+                    <td class="status-old">
+                        {% if booking.status == 'terminated' %}
+                            Terminated
+                        {% else %}
+                            Ended
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        <div class="pagination">
+            {% if old_page.has_previous %}
+                <a href="?page_old={{ old_page.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ old_page.number }} of {{ old_page.paginator.num_pages }}</span>
+            {% if old_page.has_next %}
+                <a href="?page_old={{ old_page.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
         {% else %}
         <p class="no-bookings">No old bookings.</p>
         {% endif %}

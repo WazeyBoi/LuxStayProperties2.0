@@ -4,22 +4,24 @@
 {% block title %}Payments{% endblock %}
 
 {% block content %}
-<div class="container" style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); width: 600px; margin: auto;">
+<div class="container" style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); width: 800px; margin: auto;">
 
     <h2 style="text-align: center; color: #800000; margin-bottom: 20px;">Payments</h2>
 
     <!-- Payments List -->
-    <h3 style="color: #333; margin-bottom: 10px;">Payment Details</h3>
+    <h3 style="color: #333; margin-bottom: 20px;">Payment Details</h3>
     <ul style="list-style: none; padding: 0;">
-        {% for payment in payments %}
-            <li style="padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">  <!-- Increased margin-bottom -->
+        {% for payment in page_obj %}
+            <li style="padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
                 <!-- Display Property Name -->
                 <p style="margin-bottom: 10px;"><strong>Property Name:</strong> {{ payment.lease.property.property_name }}</p>  <!-- Accessing the property name from the lease -->
                 
-                <p style="margin-bottom: 10px;"><strong>Total Amount:</strong> ${{ payment.totalAmount }}</p>  <!-- Added margin-bottom -->
-                <p style="margin-bottom: 10px;"><strong>Payment Method:</strong> {{ payment.get_paymentMethod_display }}</p>  <!-- Added margin-bottom -->
-                <p style="margin-bottom: 10px;"><strong>Status:</strong> {{ payment.get_status_display }}</p>  <!-- Added margin-bottom -->
-                <div class="payment-actions" style="margin-top: 15px;">  <!-- Increased margin-top for better spacing -->
+                <p style="margin-bottom: 10px;"><strong>Total Amount:</strong> ${{ payment.totalAmount }}</p>
+                <p style="margin-bottom: 10px;"><strong>Payment Method:</strong> {{ payment.get_paymentMethod_display }}</p>
+                <p style="margin-bottom: 10px;"><strong>Status:</strong> {{ payment.get_status_display }}</p>
+
+                <!-- Payment Actions -->
+                <div class="payment-actions" style="margin-top: 15px;">
                     <a href="{% url 'payment_update' payment.paymentId %}" style="display: inline-block; padding: 8px 15px; background-color: #01a63d; color: white; border-radius: 5px; text-decoration: none; font-weight: bold; margin-right: 10px;">Edit</a>
                     <a href="{% url 'payment_delete' payment.paymentId %}" style="display: inline-block; padding: 8px 15px; background-color: #d9534f; color: white; border-radius: 5px; text-decoration: none; font-weight: bold;">Delete</a>
                 </div>
@@ -28,6 +30,17 @@
             <p>No payments found.</p>
         {% endfor %}
     </ul>
+
+    <!-- Pagination Controls -->
+    <div style="text-align: center; margin-top: 20px;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">Previous</a>
+        {% endif %}
+        <span style="font-weight: bold; font-size: 16px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">Next</a>
+        {% endif %}
+    </div>
 
 </div>
 {% endblock %}

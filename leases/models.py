@@ -8,6 +8,7 @@ class Lease(models.Model):
         ('active', 'Active'),
         ('inactive', 'Inactive'),
         ('terminated', 'Terminated'),
+        ('pending', 'Pending'),  # Added Pending status
     ]
 
     PAYMENT_STATUS_CHOICES = [
