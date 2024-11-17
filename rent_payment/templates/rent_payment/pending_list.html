@@ -1,178 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pending List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            margin: 0;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 900px;
-        }
-        h2 {
-            text-align: center;
-            color: #800000;
-            margin-bottom: 20px;
-            font-size: 26px;
-            font-weight: bold;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        thead {
-            background-color: #800000;
-            color: white;
-        }
-        th, td {
-            padding: 10px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            font-size: 16px;
-            text-transform: uppercase;
-        }
-        td {
-            font-size: 14px;
-            color: #333;
-        }
-        .pay-button {
-            background-color: #800000;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .pay-button:hover {
-            background-color: #800000;
-        }
-        .no-bookings {
-            text-align: center;
-            color: #666;
-            margin-top: 20px;
-            font-size: 16px;
-        }
-        .back-link {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-        .back-link a {
-            color: #800000;
-            font-weight: bold;
-            text-decoration: underline;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
+{% extends 'users/base.html' %}
 
-    <div class="container">
-        <div class="back-link">
-            <a href="{% url 'tenant_dashboard' %}">&larr; Back to Dashboard</a>
-        </div>
+{% block title %}Pending List{% endblock %}
 
-        <h2>Pending List</h2>
-
-<!-- Pending Payment -->
-<h3 style="color: #333; margin-top: 20px;">Pending Payment</h3>
-{% if unpaid_page_obj %}
-<table>
-    <thead>
-        <tr>
-            <th>Property Name</th>
-            <th>Address</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for booking in unpaid_page_obj %}
-        <tr>
-            <td>{{ booking.property.property_name }}</td>
-            <td>{{ booking.property.address }}</td>
-            <td>{{ booking.start_date }}</td>
-            <td>{{ booking.end_date }}</td>
-            <td style="color: #d9534f; font-weight: bold;">UNPAID</td>
-            <td><a href="{% url 'payment_create' leaseid=booking.id tenantid=booking.tenant.id %}" class="pay-button">PAY</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-        <!-- Pagination for Unpaid -->
-        <div style="text-align: center; margin-top: 20px;">
-            {% if unpaid_page_obj.has_previous %}
-            <a href="?unpaid_page={{ unpaid_page_obj.previous_page_number }}" class="pay-button">Previous</a>
-            {% endif %}
-            <span style="font-size: 16px; font-weight: bold;">Page {{ unpaid_page_obj.number }} of {{ unpaid_page_obj.paginator.num_pages }}</span>
-            {% if unpaid_page_obj.has_next %}
-            <a href="?unpaid_page={{ unpaid_page_obj.next_page_number }}" class="pay-button">Next</a>
-            {% endif %}
-        </div>
-        {% else %}
-        <p class="no-bookings">No pending payments.</p>
-        {% endif %}
-
-        <!-- Paid -->
-        <h3 style="color: #333; margin-top: 40px;">Paid</h3>
-        {% if paid_page_obj %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Property Name</th>
-                    <th>Address</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for booking in paid_page_obj %}
-                <tr>
-                    <td>{{ booking.property.property_name }}</td>
-                    <td>{{ booking.property.address }}</td>
-                    <td>{{ booking.start_date }}</td>
-                    <td>{{ booking.end_date }}</td>
-                    <td style="color: #5cb85c; font-weight: bold;">PAID</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Pagination for Paid -->
-        <div style="text-align: center; margin-top: 20px;">
-            {% if paid_page_obj.has_previous %}
-            <a href="?paid_page={{ paid_page_obj.previous_page_number }}" class="pay-button">Previous</a>
-            {% endif %}
-            <span style="font-size: 16px; font-weight: bold;">Page {{ paid_page_obj.number }} of {{ paid_page_obj.paginator.num_pages }}</span>
-            {% if paid_page_obj.has_next %}
-            <a href="?paid_page={{ paid_page_obj.next_page_number }}" class="pay-button">Next</a>
-            {% endif %}
-        </div>
-        {% else %}
-        <p class="no-bookings">No paid bookings.</p>
-        {% endif %}
+{% block content %}
+<div class="container" style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); width: 90%; max-width: 900px; margin: auto;">
+    <div class="back-link" style="text-align: left; margin-bottom: 20px;">
+        <a href="{% url 'tenant_dashboard' %}" style="color: #800000; font-weight: bold; text-decoration: underline; font-size: 14px;">&larr; Back to Dashboard</a>
     </div>
 
-</body>
-</html>
+    <h2 style="text-align: center; color: #800000; margin-bottom: 20px; font-size: 26px; font-weight: bold;">Pending List</h2>
+
+    <!-- Pending Payment -->
+    <h3 style="color: #333; margin-top: 20px;">Pending Payment</h3>
+    {% if unpaid_page_obj %}
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead style="background-color: #800000; color: white;">
+            <tr>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Property Name</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Address</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Start Date</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">End Date</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Status</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in unpaid_page_obj %}
+            <tr>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.property_name }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.address }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #d9534f; font-weight: bold;">UNPAID</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px;"><a href="{% url 'payment_create' leaseid=booking.id tenantid=booking.tenant.id %}" class="pay-button" style="background-color: #800000; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">PAY</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination for Unpaid -->
+    <div style="text-align: center; margin-top: 20px;">
+        {% if unpaid_page_obj.has_previous %}
+        <a href="?unpaid_page={{ unpaid_page_obj.previous_page_number }}" class="pay-button" style="background-color: #800000; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">Previous</a>
+        {% endif %}
+        <span style="font-size: 16px; font-weight: bold;">Page {{ unpaid_page_obj.number }} of {{ unpaid_page_obj.paginator.num_pages }}</span>
+        {% if unpaid_page_obj.has_next %}
+        <a href="?unpaid_page={{ unpaid_page_obj.next_page_number }}" class="pay-button" style="background-color: #800000; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">Next</a>
+        {% endif %}
+    </div>
+    {% else %}
+    <p class="no-bookings" style="text-align: center; color: #666; margin-top: 20px; font-size: 16px;">No pending payments.</p>
+    {% endif %}
+
+    <!-- Paid -->
+    <h3 style="color: #333; margin-top: 40px;">Paid</h3>
+    {% if paid_page_obj %}
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead style="background-color: #800000; color: white;">
+            <tr>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Property Name</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Address</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Start Date</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">End Date</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in paid_page_obj %}
+            <tr>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.property_name }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.address }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #5cb85c; font-weight: bold;">PAID</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination for Paid -->
+    <div style="text-align: center; margin-top: 20px;">
+        {% if paid_page_obj.has_previous %}
+        <a href="?paid_page={{ paid_page_obj.previous_page_number }}" class="pay-button" style="background-color: #800000; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">Previous</a>
+        {% endif %}
+        <span style="font-size: 16px; font-weight: bold;">Page {{ paid_page_obj.number }} of {{ paid_page_obj.paginator.num_pages }}</span>
+        {% if paid_page_obj.has_next %}
+        <a href="?paid_page={{ paid_page_obj.next_page_number }}" class="pay-button" style="background-color: #800000; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">Next</a>
+        {% endif %}
+    </div>
+    {% else %}
+    <p class="no-bookings" style="text-align: center; color: #666; margin-top: 20px; font-size: 16px;">No paid bookings.</p>
+    {% endif %}
+</div>
+{% endblock %}
