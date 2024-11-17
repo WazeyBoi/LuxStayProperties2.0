@@ -1,144 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ property.property_name }}</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f6f9;
-            padding: 20px;
-            margin: 0;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            max-width: 850px;
-            margin: 30px auto;
-        }
-        .back-link {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-        .back-link a {
-            color: #800000;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-        h2 {
-            color: #800000;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .details {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px 15px;
-            margin-bottom: 20px;
-        }
-        .details p {
-            margin: 0;
-            font-size: 15px;
-            color: #555;
-        }
-        .details p strong {
-            color: #800000;
-            font-size: 16px;
-        }
-        .description {
-            margin-top: 30px;
-        }
-        .description h3 {
-            color: #800000;
-            font-size: 20px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #800000;
-            padding-bottom: 5px;
-        }
-        .description p {
-            color: #333;
-            font-size: 15px;
-            line-height: 1.8;
-            text-align: justify;
-        }
-        .cta {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .cta a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #800000;
-            color: #ffffff;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .cta a:hover {
-            background-color: #a00000;
-        }
-    </style>
-</head>
-<body>
+{% extends 'users/base.html' %}
 
-    <div class="container">
-        <div class="back-link">
-            <a href="{% url 'property_listing' %}">&larr; Back to Listings</a>
-        </div>
+{% block title %}{{ property.property_name }}{% endblock %}
 
-        <h2>{{ property.property_name }}</h2>
-        
-        <div class="details">
-            <p><strong>Address:</strong></p>
-            <p>{{ property.address }}</p>
-
-            <p><strong>Type:</strong></p>
-            <p>{{ property.property_type|capfirst }}</p>
-
-            <p><strong>Rooms:</strong></p>
-            <p>{{ property.number_of_rooms }}</p>
-
-            <p><strong>Baths:</strong></p>
-            <p>{{ property.num_of_bathrooms }}</p>
-
-            <p><strong>Square Feet:</strong></p>
-            <p>{{ property.sqft }}</p>
-
-            <p><strong>Price per Month (PHP):</strong></p>
-            <p>{{ property.price }}</p>
-
-            <p><strong>Furnished:</strong></p>
-            <p>{{ property.is_furnished|yesno:"Yes,No" }}</p>
-
-            <p><strong>Parking Spaces:</strong></p>
-            <p>{{ property.parking_spaces }}</p>
-
-            <p><strong>Pet Policy:</strong></p>
-            <p>{{ property.pet_policy|yesno:"Allowed,Not Allowed" }}</p>
-
-            <p><strong>Status:</strong></p>
-            <p>{{ property.get_status_display }}</p>
-        </div>
-
-        <div class="description">
-            <h3>Description</h3>
-            <p>{{ property.description|default:"No description provided." }}</p>
-        </div>
-
-        <div class="cta">
-            <a href="{% url 'book_property' property.id %}">Book This Property</a>
-        </div>
+{% block content %}
+<div class="container" style="background-color: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); max-width: 850px; margin: 30px auto;">
+    <div class="back-link" style="text-align: left; margin-bottom: 20px;">
+        <a href="{% url 'property_listing' %}" style="color: #800000; font-weight: bold; text-decoration: none; font-size: 14px;">&larr; Back to Listings</a>
     </div>
 
-</body>
-</html>
+    <h2 style="color: #800000; text-align: center; margin-bottom: 30px; font-size: 28px; font-weight: bold;">{{ property.property_name }}</h2>
+    
+    <div class="details" style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px 15px; margin-bottom: 20px;">
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Address:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.address }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Type:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.property_type|capfirst }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Rooms:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.number_of_rooms }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Baths:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.num_of_bathrooms }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Square Feet:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.sqft }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Price per Month (PHP):</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.price }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Furnished:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.is_furnished|yesno:"Yes,No" }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Parking Spaces:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.parking_spaces }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Pet Policy:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.pet_policy|yesno:"Allowed,Not Allowed" }}</p>
+
+        <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Status:</strong></p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.get_status_display }}</p>
+    </div>
+
+    <div class="description" style="margin-top: 30px;">
+        <h3 style="color: #800000; font-size: 20px; margin-bottom: 15px; border-bottom: 2px solid #800000; padding-bottom: 5px;">Description</h3>
+        <p style="color: #333; font-size: 15px; line-height: 1.8; text-align: justify;">{{ property.description|default:"No description provided." }}</p>
+    </div>
+
+    <div class="cta" style="text-align: center; margin-top: 30px;">
+        <a href="{% url 'book_property' property.id %}" style="display: inline-block; padding: 10px 20px; background-color: #800000; color: #ffffff; font-weight: bold; text-decoration: none; border-radius: 5px; font-size: 16px;">Book This Property</a>
+    </div>
+</div>
+{% endblock %}
