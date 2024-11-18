@@ -24,7 +24,7 @@ def feedback_list(request):
 
 @login_required
 def feedback_create(request, leaseid, tenantid):
-    lease = get_object_or_404(Lease, id=leaseid, tenant_id=tenantid)
+    lease = get_object_or_404(Lease, id=leaseid)
     tenant = get_object_or_404(User, id=tenantid)
 
     if request.method == 'POST':
@@ -36,15 +36,15 @@ def feedback_create(request, leaseid, tenantid):
             feedback.save()
             return redirect('feedback:feedback_list')  # Use the correct URL name
     else:
-        form = FeedbackForm()
+        form = FeedbackForm()  # Ensure the form is initialized for GET requests
 
     return render(request, 'feedback/feedback_form.html', {
         'form': form,
         'lease': lease,
         'tenant': tenant,
-         'stars': range(1, 11), 
-        
+        'stars': range(1, 11), 
     })
+
 
 
 @login_required

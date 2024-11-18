@@ -7,20 +7,20 @@
 <div class="container" style="max-width: 800px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
     <div class="container">
         <div class="back-link">
-            <a href="{% url 'my_bookings' %}">&larr; Back to My Bookings List</a>
+            <a href="{% url 'my_bookings' % }"style="color: #800000; font-weight: bold; text-decoration: underline; font-size: 14px;">&larr; Back to My Bookings List</a>
         </div>
         <h1 style="color: #800000; text-align: center;">Submit Feedback</h1>
         
-        <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+        <form method="post">
             {% csrf_token %}
-            
-            <!-- Star Rating -->
-            <div style="grid-column: span 2; text-align: center;">
-                <label style="font-size: 16px; font-weight: bold;">Star Rating:</label><br>
-                <div style="display: inline-flex; justify-content: center; gap: 5px;">
+            {{ form.non_field_errors }}
+            <div>
+                {{ form.starRating.errors }}
+                <label>Star Rating</label>
+                <div>
                     {% for i in stars %}
                     <label>
-                        <input type="radio" name="star_rating" value="{{ i }}" style="display: none;">
+                        <input type="radio" name="starRating" value="{{ i }}" style="display: none;">
                         <span style="font-size: 24px; color: #800000; cursor: pointer;" onclick="this.style.color='#FFD700';">
                             &#9733;
                         </span>
@@ -28,12 +28,11 @@
                     {% endfor %}
                 </div>
             </div>
-
-            <!-- Comments -->
-            <div style="grid-column: span 2;">
-                <label for="comments" style="font-size: 16px; font-weight: bold;">Comments:</label>
-                <textarea id="comments" name="comments" style="background-color: beige; width: 100%; height: 150px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;"></textarea>
-            </div>
+            <div>
+                {{ form.comments.errors }}
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments">{{ form.comments.value }}</textarea>
+           
             
             <!-- Hidden fields -->
             <input type="hidden" name="leaseid" value="{{ lease.id }}">
