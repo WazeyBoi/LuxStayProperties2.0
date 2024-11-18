@@ -1,4 +1,3 @@
-# maintenance_request/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -10,8 +9,8 @@ from .forms import MaintenanceRequestForm
 
 @login_required
 def maintenance_request_list(request):
-    requests = MaintenanceRequest.objects.filter(tenantId=request.user)
-    paginator = Paginator(requests, 5)  # 5 items per page
+    maintenance_requests = MaintenanceRequest.objects.filter(tenantId=request.user)
+    paginator = Paginator(maintenance_requests, 5)
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
@@ -24,17 +23,18 @@ def maintenance_request_list(request):
 
 @login_required
 def maintenance_request_create(request, leaseid, tenantid):
-    lease = get_object_or_404(Lease, id=leaseid, tenant_id=tenantid)
+    lease = get_object_or_404(Lease, id=leaseid)
     tenant = get_object_or_404(User, id=tenantid)
 
     if request.method == 'POST':
         form = MaintenanceRequestForm(request.POST)
         if form.is_valid():
-            request_obj = form.save(commit=False)
-            request_obj.leaseId = lease
-            request_obj.tenantId = tenant
-            request_obj.save()
-            return redirect('maintenance_request_list')
+            maintenance_request = form.save(commit=False)
+            maintenance_request.leaseId = lease
+            maintenance_request.tenantId = tenant
+            maintenance_request.status = 'pending'  # Set default status
+            maintenance_request.save()
+            return redirect('maintenance_request:maintenance_request_list')
     else:
         form = MaintenanceRequestForm()
 
@@ -43,3 +43,4 @@ def maintenance_request_create(request, leaseid, tenantid):
         'lease': lease,
         'tenant': tenant
     })
+

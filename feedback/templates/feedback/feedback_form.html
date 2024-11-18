@@ -1,14 +1,66 @@
-{% extends 'users/base.html' %}
+{% extends "users/base.html" %}
+{% load static %}
 
 {% block title %}Submit Feedback{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Submit Feedback</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit Feedback</button>
-    </form>
+<div class="container" style="max-width: 800px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="container">
+        <div class="back-link">
+            <a href="{% url 'my_bookings' %}">&larr; Back to My Bookings List</a>
+        </div>
+        <h1 style="color: #800000; text-align: center;">Submit Feedback</h1>
+        
+        <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+            {% csrf_token %}
+            
+            <!-- Star Rating -->
+            <div style="grid-column: span 2; text-align: center;">
+                <label style="font-size: 16px; font-weight: bold;">Star Rating:</label><br>
+                <div style="display: inline-flex; justify-content: center; gap: 5px;">
+                    {% for i in stars %}
+                    <label>
+                        <input type="radio" name="star_rating" value="{{ i }}" style="display: none;">
+                        <span style="font-size: 24px; color: #800000; cursor: pointer;" onclick="this.style.color='#FFD700';">
+                            &#9733;
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div style="grid-column: span 2;">
+                <label for="comments" style="font-size: 16px; font-weight: bold;">Comments:</label>
+                <textarea id="comments" name="comments" style="background-color: beige; width: 100%; height: 150px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;"></textarea>
+            </div>
+            
+            <!-- Hidden fields -->
+            <input type="hidden" name="leaseid" value="{{ lease.id }}">
+            <input type="hidden" name="tenantid" value="{{ tenant.id }}">
+
+            <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 20px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; grid-column: span 2; padding: 15px 30px; width: 100%;">Submit Feedback</button>
+        </form>
+        
+        <a href="{% url 'tenant_dashboard' %}" class="cancel-link" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold;">
+            Cancel
+        </a>
+    </div>
 </div>
+
+{% block extra_css %}
+<style>
+    input[type="radio"]:checked + span {
+        color: #FFD700; /* Gold color for selected stars */
+    }
+
+    textarea, input[type="text"], select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
 {% endblock %}

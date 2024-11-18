@@ -34,12 +34,43 @@ def feedback_create(request, leaseid, tenantid):
             feedback.leaseId = lease
             feedback.tenantId = tenant
             feedback.save()
-            return redirect('feedback_list')
+            return redirect('feedback:feedback_list')  # Use the correct URL name
     else:
         form = FeedbackForm()
 
     return render(request, 'feedback/feedback_form.html', {
         'form': form,
         'lease': lease,
-        'tenant': tenant
+        'tenant': tenant,
+         'stars': range(1, 11), 
+        
+    })
+
+
+@login_required
+def my_bookings(request):
+    # Filter bookings
+    active_bookings = Lease.objects.filter(tenant=request.user, status='active')
+    pending_bookings = Lease.objects.filter(tenant=request.user, status='pending')
+    old_bookings = Lease.objects.filter(tenant=request.user, status__in=['inactive', 'terminated'])
+
+    # Paginate bookings
+    paginator_active = Paginator(active_bookings, 5)  # 5 rows per page for active bookings
+    paginator_pending = Paginator(pending_bookings, 5)  # 5 rows per page for pending bookings
+    paginator_old = Paginator(old_bookings, 5)  # 5 rows per page for old bookings
+
+    # Get current page numbers
+    page_active = request.GET.get('page_active', 1)
+    page_pending = request.GET.get('page_pending', 1)
+    page_old = request.GET.get('page_old', 1)
+
+    # Get the corresponding page objects
+    active_page = paginator_active.get_page(page_active)
+    pending_page = paginator_pending.get_page(page_pending)
+    old_page = paginator_old.get_page(page_old)
+
+    return render(request, 'leases/my_bookings.html', {
+        'active_page': active_page,
+        'pending_page': pending_page,
+        'old_page': old_page,
     })

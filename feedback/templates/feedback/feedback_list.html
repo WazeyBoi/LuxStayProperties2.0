@@ -10,42 +10,42 @@
 
     <h2>Feedback</h2>
     {% if page_obj %}
-    <table>
+    <table style="width: 100%; border-collapse: collapse;">
         <thead>
-            <tr>
-                <th>Property</th>
-                <th>Submission Date</th>
-                <th>Star Rating</th>
-                <th>Comments</th>
+            <tr style="background-color: #f5f5f5;">
+                <th style="padding: 10px; text-align: left;">Property</th>
+                <th style="padding: 10px; text-align: left;">Submission Date</th>
+                <th style="padding: 10px; text-align: left;">Star Rating</th>
+                <th style="padding: 10px; text-align: left;">Comments</th>
             </tr>
         </thead>
         <tbody>
             {% for feedback in page_obj %}
             <tr>
-                <td>{{ feedback.leaseId.property.property_name }}</td>
-                <td>{{ feedback.submissionDate }}</td>
-                <td>{{ feedback.starRating }}</td>
-                <td>{{ feedback.comments }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ feedback.leaseId.property.property_name }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ feedback.submissionDate }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ feedback.starRating }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ feedback.comments }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <div class="pagination">
+    <div class="pagination" style="text-align: center; margin-top: 20px;">
         <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-        <div>
+        <div style="display: inline-flex; gap: 10px; margin-top: 10px;">
             {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            <a href="?page={{ page_obj.previous_page_number }}" style="padding: 8px 16px; background-color: #800000; color: white; text-decoration: none; border-radius: 5px;">Previous</a>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
                 {% if num == page_obj.number %}
-                    <span style="padding: 5px 10px; background-color: #800000; color: white; border-radius: 5px;">{{ num }}</span>
+                    <span style="padding: 8px 16px; background-color: #800000; color: white; border-radius: 5px;">{{ num }}</span>
                 {% else %}
-                    <a href="?page={{ num }}" style="padding: 5px 10px; border: 1px solid #800000; color: #800000; border-radius: 5px;">{{ num }}</a>
+                    <a href="?page={{ num }}" style="padding: 8px 16px; background-color: #ffffff; color: #800000; border: 1px solid #800000; border-radius: 5px; text-decoration: none;">{{ num }}</a>
                 {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.next_page_number }}" style="padding: 8px 16px; background-color: #800000; color: white; text-decoration: none; border-radius: 5px;">Next</a>
             {% endif %}
         </div>
     </div>

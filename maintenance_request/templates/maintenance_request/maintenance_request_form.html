@@ -1,15 +1,29 @@
 {% extends 'users/base.html' %}
+{% load static %}
 
 {% block title %}Create Maintenance Request{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Create Maintenance Request</h2>
-    <form method="post">
+<div class="container" style="max-width: 800px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="back-link">
+        <a href="{% url 'my_bookings' %}">&larr; Back to My Bookings List</a>
+    </div>
+    <h1 style="color: #800000; text-align: center;">Create Maintenance Request</h1>
+
+    <form method="post" style="display: grid; grid-template-columns: 1fr; gap: 25px;">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit Request</button>
+        <label for="description" style="text-align: center; font-size: 16px; font-weight: bold;">Description:</label>
+        <textarea id="description" name="description" style="background-color: beige; width: 100%; height: 150px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;"></textarea>
+        
+        <!-- Hidden fields for leaseId and tenantId -->
+        <input type="hidden" name="leaseid" value="{{ lease.id }}">
+        <input type="hidden" name="tenantid" value="{{ tenant.id }}">
+
+        <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 20px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; padding: 15px 30px; width: 100%;">Submit Request</button>
     </form>
+
+    <a href="{% url 'tenant_dashboard' %}" class="cancel-link" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold;">
+        Cancel
+    </a>
 </div>
 {% endblock %}
-
