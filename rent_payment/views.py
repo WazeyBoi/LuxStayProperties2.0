@@ -1,22 +1,18 @@
-# rent_payment/views.py
-from pyexpat.errors import messages
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from leases.models import Lease
 from users.models import User
 from .models import Payment
 from .forms import PaymentForm
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required
 def payment_list(request):
-    # Filter payments for the current user (tenant)
-    payments = Payment.objects.filter(tenantId=request.user)  # Filtering payments by the logged-in user
+    payments = Payment.objects.filter(tenantId=request.user)
 
-    # Pagination: Show 5 payments per page
-    paginator = Paginator(payments, 5)  # 5 items per page
-    page_number = request.GET.get('page')  # Get the current page number from the request
+    paginator = Paginator(payments, 5)
+    page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
     except PageNotAnInteger:
@@ -26,28 +22,41 @@ def payment_list(request):
 
     return render(request, 'rent_payment/payment_list.html', {'page_obj': page_obj})
 
+
+@login_required
 def payment_create(request, leaseid, tenantid):
+    # Get the lease and tenant
     lease = get_object_or_404(Lease, id=leaseid, tenant_id=tenantid)
     tenant = get_object_or_404(User, id=tenantid)
+
+    # Get the price from the associated property
+    property_price = lease.property.price
 
     if request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
             payment = form.save(commit=False)
-            payment.leaseId = lease
-            payment.tenantId = tenant
-            payment.save()
+            
+            # Validate the totalAmount matches the property price
+            if payment.totalAmount != property_price:
+                form.add_error('totalAmount', 'Total amount must match the property price.')
+            else:
+                # Save payment details
+                payment.leaseId = lease
+                payment.tenantId = tenant
+                payment.save()
 
-            # Update lease status to 'paid' after successful payment
-            lease.status  = 'active'
-            lease.payment_status  = 'paid'
-            lease.save()
+                # Update lease status
+                lease.status = 'active'
+                lease.payment_status = 'paid'
+                lease.save()
 
-            # Redirect to the Pending List (which should filter paid leases)
-            return redirect('pending_list')  # Make sure 'pending_list' handles this filter
-
+                return redirect('pending_list')
     else:
-        form = PaymentForm()
+        # Pre-fill the form with the price and current date
+        form = PaymentForm(initial={
+            'totalAmount': property_price
+        })
 
     return render(request, 'rent_payment/payment_form.html', {
         'form': form,
@@ -55,6 +64,8 @@ def payment_create(request, leaseid, tenantid):
         'tenant': tenant
     })
 
+
+@login_required
 def payment_update(request, paymentId):
     payment = get_object_or_404(Payment, paymentId=paymentId)
     if request.method == "POST":
@@ -66,6 +77,8 @@ def payment_update(request, paymentId):
         form = PaymentForm(instance=payment)
     return render(request, 'rent_payment/payment_form.html', {'form': form})
 
+
+@login_required
 def payment_delete(request, paymentId):
     payment = get_object_or_404(Payment, paymentId=paymentId)
     if request.method == "POST":
@@ -73,17 +86,17 @@ def payment_delete(request, paymentId):
         return redirect('payment_list')
     return render(request, 'rent_payment/payment_confirm_delete.html', {'payment': payment})
 
+
+@login_required
 def pending_list(request):
-    # Filter leases based on payment_status and tenant's user status
     unpaid = Lease.objects.filter(tenant=request.user, payment_status='unpaid')
     paid = Lease.objects.filter(tenant=request.user, payment_status='paid')
 
-    # Pagination: 5 items per page for unpaid and paid lists
     unpaid_paginator = Paginator(unpaid, 5)
     paid_paginator = Paginator(paid, 5)
 
-    unpaid_page_number = request.GET.get('unpaid_page')  # Use a unique key for unpaid pagination
-    paid_page_number = request.GET.get('paid_page')  # Use a unique key for paid pagination
+    unpaid_page_number = request.GET.get('unpaid_page')
+    paid_page_number = request.GET.get('paid_page')
 
     try:
         unpaid_page_obj = unpaid_paginator.get_page(unpaid_page_number)
@@ -99,39 +112,36 @@ def pending_list(request):
     except EmptyPage:
         paid_page_obj = paid_paginator.page(paid_paginator.num_pages)
 
+    # Add prices to unpaid leases
+    for lease in unpaid_page_obj:
+        lease.price = lease.property.price
+
     return render(request, 'rent_payment/pending_list.html', {
         'unpaid_page_obj': unpaid_page_obj,
         'paid_page_obj': paid_page_obj
     })
 
+
 @login_required
 def payment_list_propertyowner(request):
-    # Check if the logged-in user is a property owner
     if request.user.role != 'property_owner':
-        return redirect('home')  # Redirect non-property owners to a home page or another page
+        return redirect('home')
 
-    # Get all leases for properties owned by the property owner
     leases = Lease.objects.filter(property_owner=request.user)
-
-    # Prepare a list to hold property details with payments
     properties_with_payments = []
 
     for lease in leases:
-        # Get the associated payments for the lease
         payments = Payment.objects.filter(leaseId=lease)
-
-        # Create a list of dictionaries for each property with payment details
         for payment in payments:
             properties_with_payments.append({
-                'property_name': lease.property.property_name,  # Corrected to 'property_name'
-                'property_id': lease.property.id,  # Add the property ID
-                'amount_paid': payment.totalAmount,  # Corrected to 'totalAmount'
-                'payment_date': payment.paymentDate  # Corrected to 'paymentDate'
+                'property_name': lease.property.property_name,
+                'property_id': lease.property.id,
+                'amount_paid': payment.totalAmount,
+                'payment_date': payment.paymentDate,
             })
 
-    # Pagination: Show 5 properties per page
-    paginator = Paginator(properties_with_payments, 5)  # 5 items per page
-    page_number = request.GET.get('page')  # Get the current page number from the request
+    paginator = Paginator(properties_with_payments, 5)
+    page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
     except PageNotAnInteger:

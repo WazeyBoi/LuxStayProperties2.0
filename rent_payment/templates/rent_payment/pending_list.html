@@ -18,6 +18,7 @@
             <tr>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Property Name</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Address</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Price</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Start Date</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">End Date</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Status</th>
@@ -29,6 +30,7 @@
             <tr>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.property_name }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.address }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">${{ booking.property.price }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #d9534f; font-weight: bold;">UNPAID</td>
@@ -60,6 +62,7 @@
             <tr>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Property Name</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Address</th>
+                <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Price</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Start Date</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">End Date</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Status</th>
@@ -70,6 +73,7 @@
             <tr>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.property_name }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.address }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">PHP {{ booking.property.price }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #5cb85c; font-weight: bold;">PAID</td>

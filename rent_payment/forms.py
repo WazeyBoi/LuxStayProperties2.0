@@ -6,14 +6,22 @@ class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
         fields = ['paymentDate', 'paymentMethod', 'totalAmount']
-    
+
+    paymentDate = forms.DateField(
+        widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+        initial=now().date()
+    )
+
     paymentMethod = forms.ChoiceField(
         choices=Payment.PAYMENT_METHOD_CHOICES,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-    paymentDate = forms.DateField(
-        widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
-        initial=now().date  # Set the default to today's date
+    totalAmount = forms.DecimalField(
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'readonly': 'readonly'
+        })
     )
+
 
