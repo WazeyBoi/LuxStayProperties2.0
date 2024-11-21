@@ -7,6 +7,7 @@ from .models import Lease
 from properties.models import Property
 from datetime import datetime
 from django.core.paginator import Paginator
+from datetime import datetime, timedelta
 
 @login_required
 def tenant_dashboard(request):
@@ -26,25 +27,57 @@ def book_property(request, property_id):
     property_obj = get_object_or_404(Property, id=property_id, status='available')
     
     if request.method == 'POST':
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date')
+        start_date_str = request.POST.get('start_date')
+        end_date_str = request.POST.get('end_date')
         
-        # Use the property's monthly price as the total amount
-        total_amount = property_obj.price
+        # Convert the string dates to datetime objects
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
 
-        # Save the lease with status as 'pending'
-        lease = Lease(
-            tenant=request.user,
-            property=property_obj,
-            start_date=start_date,
-            end_date=end_date,
-            total_amount=total_amount,
-            status='pending',  # Changed status to 'pending'
-            payment_status='unpaid'  # New field added here
-        )
-        lease.save()
+        # Check if the duration is at least 30 days
+        total_days = (end_date - start_date).days
+        if total_days < 30:
+            context = {
+                'property': property_obj,
+                'error_message': 'The booking duration must be at least 1 month (30 days).',
+            }
+            return render(request, 'leases/book_property.html', context)
+
+        # Calculate the number of 30-day intervals
+        interval_count = total_days // 30
+        remaining_days = total_days % 30
+
+        # Create bookings for each 30-day interval
+        for i in range(interval_count):
+            lease_start_date = start_date + timedelta(days=i * 30)
+            lease_end_date = lease_start_date + timedelta(days=30)
+
+            Lease.objects.create(
+                tenant=request.user,
+                property=property_obj,
+                start_date=lease_start_date,
+                end_date=lease_end_date,
+                total_amount=property_obj.price,
+                status='pending',
+                payment_status='unpaid'
+            )
         
-        # Update property status to 'leased'
+        # Handle any remaining days as a final booking if needed
+        if remaining_days > 0:
+            lease_start_date = start_date + timedelta(days=interval_count * 30)
+            lease_end_date = end_date
+
+            Lease.objects.create(
+                tenant=request.user,
+                property=property_obj,
+                start_date=lease_start_date,
+                end_date=lease_end_date,
+                total_amount=property_obj.price,  # Adjust total amount if needed
+                status='pending',
+                payment_status='unpaid'
+            )
+        
+        # Update the property status to 'leased'
         property_obj.status = 'leased'
         property_obj.save()
 
