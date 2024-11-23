@@ -9,4 +9,5 @@ urlpatterns = [
     path('tenant-landing/', views.tenant_landing_page, name='tenant_landing'),
     path('view-lease/<int:tenant_id>/', views.view_tenant_lease, name='view_tenant_lease'),
     path('edit-account/', views.edit_account, name='edit_account'),
+    path('edit-account-property-owner/', views.edit_account_property_owner, name='edit_account_property_owner'),
 ]
