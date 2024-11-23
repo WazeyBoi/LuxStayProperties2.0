@@ -33,7 +33,7 @@
             <tr style="border-bottom: 1px solid #ddd;">
                 <td style="padding: 10px;">{{ tenant.first_name }}</td>
                 <td style="padding: 10px;">{{ tenant.last_name }}</td>
-                <td style="padding: 10px;">{{ tenant.streetAddress|default:"N/A" }}, {{ tenant.city|default:"N/A" }} {{ tenant.zipcode|default:"N/A" }}</td>
+                <td style="padding: 10px;">{{ tenant.address |default:"N/A" }}, {{ tenant.province|default:"N/A" }}, {{ tenant.city|default:"N/A" }} {{ tenant.zipcode|default:"N/A" }}</td>
                 <td style="padding: 10px;">{{ tenant.email }}</td>
                 <td style="padding: 10px;">{{ tenant.contact|default:"N/A" }}</td>
                 <td style="padding: 10px;">

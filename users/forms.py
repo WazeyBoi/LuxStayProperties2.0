@@ -26,7 +26,8 @@ class CustomUserCreationForm(UserCreationForm):
             'email', 
             'contact',
             'birthdate', 
-            'streetAddress', 
+            'address', 
+            'province',
             'city', 
             'zipcode'
         ]
@@ -37,7 +38,8 @@ class CustomUserCreationForm(UserCreationForm):
             'email': forms.EmailInput(attrs={'placeholder': 'Enter email address'}),
             'contact': forms.TextInput(attrs={'placeholder': 'Enter contact number'}),
             'birthdate': forms.DateInput(attrs={'placeholder': 'YYYY-MM-DD', 'type': 'date'}),
-            'streetAddress': forms.TextInput(attrs={'placeholder': 'Enter street address'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Enter street address'}),
+            'province': forms.TextInput(attrs={'placeholder': 'Enter province'}),
             'city': forms.TextInput(attrs={'placeholder': 'Enter city'}),
             'zipcode': forms.TextInput(attrs={'placeholder': 'Enter ZIP code'}),
         }
