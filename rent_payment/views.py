@@ -22,47 +22,52 @@ def payment_list(request):
 
     return render(request, 'rent_payment/payment_list.html', {'page_obj': page_obj})
 
-
 @login_required
 def payment_create(request, leaseid, tenantid):
-    # Get the lease and tenant
     lease = get_object_or_404(Lease, id=leaseid, tenant_id=tenantid)
     tenant = get_object_or_404(User, id=tenantid)
 
-    # Get the price from the associated property
-    property_price = lease.property.price
+    # Calculate total paid and remaining balance
+    from django.db.models import Sum
+    total_paid = Payment.objects.filter(leaseId=lease).aggregate(Sum('totalAmount'))['totalAmount__sum'] or 0
+    remaining_balance = lease.remaining_balance  # This will use the actual remaining balance
 
     if request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
             payment = form.save(commit=False)
-            
-            # Validate the totalAmount matches the property price
-            if payment.totalAmount != property_price:
-                form.add_error('totalAmount', 'Total amount must match the property price.')
-            else:
-                # Save payment details
-                payment.leaseId = lease
-                payment.tenantId = tenant
-                payment.save()
+            payment.leaseId = lease
+            payment.tenantId = tenant
+            payment.save()
 
-                # Update lease status
-                lease.status = 'active'
+            # Update the remaining balance after the payment is made
+            total_paid = Payment.objects.filter(leaseId=lease).aggregate(Sum('totalAmount'))['totalAmount__sum'] or 0
+            remaining_balance = lease.property.price - total_paid
+
+            # Update the lease payment status and remaining balance
+            if remaining_balance <= 0:
                 lease.payment_status = 'paid'
-                lease.save()
+                lease.remaining_balance = 0
+            else:
+                lease.payment_status = 'partially_paid'
+                lease.remaining_balance = remaining_balance
 
-                return redirect('pending_list')
+            lease.save()
+
+            return redirect('pending_list')
     else:
-        # Pre-fill the form with the price and current date
-        form = PaymentForm(initial={
-            'totalAmount': property_price
-        })
+        form = PaymentForm()
 
     return render(request, 'rent_payment/payment_form.html', {
         'form': form,
         'lease': lease,
-        'tenant': tenant
+        'tenant': tenant,
+        'remaining_balance': remaining_balance  # Pass remaining_balance to the template
     })
+
+
+
+
 
 
 @login_required
@@ -89,13 +94,18 @@ def payment_delete(request, paymentId):
 
 @login_required
 def pending_list(request):
+    # Fetch leases based on payment status
     unpaid = Lease.objects.filter(tenant=request.user, payment_status='unpaid')
+    partially_paid = Lease.objects.filter(tenant=request.user, payment_status='partially_paid')
     paid = Lease.objects.filter(tenant=request.user, payment_status='paid')
 
+    # Paginator for unpaid, partially paid, and paid leases
     unpaid_paginator = Paginator(unpaid, 5)
+    partially_paid_paginator = Paginator(partially_paid, 5)
     paid_paginator = Paginator(paid, 5)
 
     unpaid_page_number = request.GET.get('unpaid_page')
+    partially_paid_page_number = request.GET.get('partially_paid_page')
     paid_page_number = request.GET.get('paid_page')
 
     try:
@@ -106,6 +116,13 @@ def pending_list(request):
         unpaid_page_obj = unpaid_paginator.page(unpaid_paginator.num_pages)
 
     try:
+        partially_paid_page_obj = partially_paid_paginator.get_page(partially_paid_page_number)
+    except PageNotAnInteger:
+        partially_paid_page_obj = partially_paid_paginator.page(1)
+    except EmptyPage:
+        partially_paid_page_obj = partially_paid_paginator.page(partially_paid_paginator.num_pages)
+
+    try:
         paid_page_obj = paid_paginator.get_page(paid_page_number)
     except PageNotAnInteger:
         paid_page_obj = paid_paginator.page(1)
@@ -114,12 +131,18 @@ def pending_list(request):
 
     # Add prices to unpaid leases
     for lease in unpaid_page_obj:
-        lease.price = lease.property.price
+        lease.price = lease.remaining_balance
+    for lease in partially_paid_page_obj:
+        lease.price = lease.remaining_balance
+    for lease in paid_page_obj:
+        lease.price = lease.remaining_balance
 
     return render(request, 'rent_payment/pending_list.html', {
         'unpaid_page_obj': unpaid_page_obj,
+        'partially_paid_page_obj': partially_paid_page_obj,
         'paid_page_obj': paid_page_obj
     })
+
 
 
 @login_required

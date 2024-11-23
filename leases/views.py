@@ -47,35 +47,23 @@ def book_property(request, property_id):
         interval_count = total_days // 30
         remaining_days = total_days % 30
 
-        # Create bookings for each 30-day interval
-        for i in range(interval_count):
-            lease_start_date = start_date + timedelta(days=i * 30)
-            lease_end_date = lease_start_date + timedelta(days=30)
+        # Calculate the daily rate based on the monthly price
+        daily_rate = property_obj.price / 30
 
-            Lease.objects.create(
-                tenant=request.user,
-                property=property_obj,
-                start_date=lease_start_date,
-                end_date=lease_end_date,
-                total_amount=property_obj.price,
-                status='pending',
-                payment_status='unpaid'
-            )
-        
-        # Handle any remaining days as a final booking if needed
-        if remaining_days > 0:
-            lease_start_date = start_date + timedelta(days=interval_count * 30)
-            lease_end_date = end_date
+        # Calculate the total amount for the booking, including the remaining days
+        total_amount = (interval_count * property_obj.price) + (remaining_days * daily_rate)
 
-            Lease.objects.create(
-                tenant=request.user,
-                property=property_obj,
-                start_date=lease_start_date,
-                end_date=lease_end_date,
-                total_amount=property_obj.price,  # Adjust total amount if needed
-                status='pending',
-                payment_status='unpaid'
-            )
+        # Create the lease
+        lease = Lease.objects.create(
+            tenant=request.user,
+            property=property_obj,
+            start_date=start_date,
+            end_date=end_date,
+            total_amount=total_amount,
+            remaining_balance=total_amount,  # Set the remaining balance to the total amount
+            status='active',
+            payment_status='unpaid'
+        )
         
         # Update the property status to 'leased'
         property_obj.status = 'leased'

@@ -23,6 +23,7 @@ class Lease(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
     payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS_CHOICES, default='unpaid')  # New field
+    remaining_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
     def is_active(self):
         return self.status == 'active' and self.end_date >= date.today()
