@@ -148,11 +148,13 @@ def pending_list(request):
 @login_required
 def payment_list_propertyowner(request):
     if request.user.role != 'property_owner':
-        return redirect('home')
+        return redirect('home')  # Restrict access to property owners only
 
-    leases = Lease.objects.filter(property_owner=request.user)
+    # Filter leases where the property belongs to the logged-in property owner
+    leases = Lease.objects.filter(property__owner=request.user)
     properties_with_payments = []
 
+    # Gather payment details for properties owned by the property owner
     for lease in leases:
         payments = Payment.objects.filter(leaseId=lease)
         for payment in payments:
@@ -163,6 +165,7 @@ def payment_list_propertyowner(request):
                 'payment_date': payment.paymentDate,
             })
 
+    # Paginate the payments
     paginator = Paginator(properties_with_payments, 5)
     page_number = request.GET.get('page')
     try:
