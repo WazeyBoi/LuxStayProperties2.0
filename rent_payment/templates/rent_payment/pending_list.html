@@ -30,7 +30,7 @@
             <tr>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.property_name }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.address }}</td>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">PHP {{ booking.property.price }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">PHP {{ booking.remaining_balance }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #d9534f; font-weight: bold;">UNPAID</td>
@@ -54,6 +54,50 @@
     <p class="no-bookings" style="text-align: center; color: #666; margin-top: 20px; font-size: 16px;">No pending payments.</p>
     {% endif %}
 
+        <!-- Partially Paid -->
+        <h3 style="color: #333; margin-top: 40px;">Partially Paid</h3>
+        {% if partially_paid_page_obj %}
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead style="background-color: #800000; color: white;">
+                <tr>
+                    <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Property Name</th>
+                    <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Address</th>
+                    <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Price</th>
+                    <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Start Date</th>
+                    <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">End Date</th>
+                    <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Status</th>
+                    <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in partially_paid_page_obj %}
+                <tr>
+                    <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.property_name }}</td>
+                    <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.address }}</td>
+                    <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">PHP {{ booking.remaining_balance }}</td>
+                    <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
+                    <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
+                    <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #f0ad4e; font-weight: bold;">PARTIALLY PAID</td>
+                    <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px;"><a href="{% url 'payment_create' leaseid=booking.id tenantid=booking.tenant.id %}" class="pay-button" style="background-color: #800000; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">PAY</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <!-- Pagination for Partially Paid -->
+        <div style="text-align: center; margin-top: 20px;">
+            {% if partially_paid_page_obj.has_previous %}
+            <a href="?partially_paid_page={{ partially_paid_page_obj.previous_page_number }}" class="pay-button" style="background-color: #800000; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">Previous</a>
+            {% endif %}
+            <span style="font-size: 16px; font-weight: bold;">Page {{ partially_paid_page_obj.number }} of {{ partially_paid_page_obj.paginator.num_pages }}</span>
+            {% if partially_paid_page_obj.has_next %}
+            <a href="?partially_paid_page={{ partially_paid_page_obj.next_page_number }}" class="pay-button" style="background-color: #800000; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">Next</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="no-bookings" style="text-align: center; color: #666; margin-top: 20px; font-size: 16px;">No partially paid bookings.</p>
+        {% endif %}
+
     <!-- Paid -->
     <h3 style="color: #333; margin-top: 40px;">Paid</h3>
     {% if paid_page_obj %}
@@ -73,7 +117,7 @@
             <tr>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.property_name }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.property.address }}</td>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">PHP {{ booking.property.price }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">PHP {{ booking.remaining_balance }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #5cb85c; font-weight: bold;">PAID</td>

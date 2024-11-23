@@ -4,15 +4,21 @@
 {% block title %}Payment Form{% endblock %}
 
 {% block content %}
-
-
 <div class="container" style="max-width: 800px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
     <div class="container">
         <div class="back-link">
             <a href="{% url 'pending_list' %}">&larr; Back to Pending List</a>
         </div>
     <h1 style="color: #800000; text-align: center;">Payment</h1>
-    
+
+    <!-- Display remaining balance as text (not input) -->
+    <div style="margin-bottom: 20px;">
+        <label for="remaining_balance" style="font-weight: bold;">Remaining Balance</label>
+        <div id="remaining_balance" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: #f9f9f9; text-align: center;">
+            {{ remaining_balance }}
+        </div>
+    </div>
+
     <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
         {% csrf_token %}
         {{ form.as_p }}
@@ -53,7 +59,6 @@
             text-decoration: underline;
             font-size: 14px;
         }
-    
 </style>
 {% endblock %}
 {% endblock %}

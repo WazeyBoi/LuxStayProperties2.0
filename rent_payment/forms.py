@@ -18,10 +18,5 @@ class PaymentForm(forms.ModelForm):
     )
 
     totalAmount = forms.DecimalField(
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'readonly': 'readonly'
-        })
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
-
-
