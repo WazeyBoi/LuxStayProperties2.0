@@ -50,12 +50,15 @@
             <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
             <td class="status-pending" style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #ffc107; font-weight: bold;">Pending</td>
             <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px;">
+                {% if booking.status != 'pending' %}
                 <a href="{% url 'maintenance_request:maintenance_request_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #800000; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Request</a>
+                {% endif %}
             </td>
             <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px;">
+                {% if booking.status != 'pending' %}
                 <a href="{% url 'feedback:feedback_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #007bff; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Feedback</a>
+                {% endif %}
             </td>
-            
         </tr>
         {% endfor %}
     </tbody>
