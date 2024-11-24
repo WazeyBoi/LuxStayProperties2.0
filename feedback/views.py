@@ -27,8 +27,11 @@ def feedback_create(request, leaseid, tenantid):
             feedback = form.save(commit=False)
             feedback.leaseId = lease
             feedback.tenantId = tenant
+            feedback.status = 'new'  # Set the default value for status
             feedback.save()
             return redirect('feedback:feedback_list')
+        else:
+            print(form.errors)  # For debugging
     else:
         form = FeedbackForm()
 
@@ -46,7 +49,7 @@ def feedback_ownerlist(request):
 
 @login_required
 def mark_feedback_as_viewed(request, feedbackId):
-    feedback = get_object_or_404(Feedback, feedbackId=feedbackId)
+    feedback = get_object_or_404(Feedback, feedbackId=feedbackId)  # Use feedbackId
 
     if feedback.leaseId.property.owner != request.user:
         return redirect('feedback:feedback_ownerlist')

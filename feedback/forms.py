@@ -4,4 +4,4 @@ from .models import Feedback
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-        exclude = ['leaseId', 'tenantId']
+        fields = ['starRating', 'comments'] 
