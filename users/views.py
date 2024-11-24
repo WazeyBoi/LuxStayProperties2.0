@@ -7,6 +7,8 @@ from leases.models import Lease
 from .forms import CustomUserCreationForm
 from datetime import date
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.hashers import check_password
 
 def register_view(request):
     if request.method == "POST":
@@ -104,18 +106,80 @@ def view_tenant_lease(request, tenant_id):
 def edit_account(request):
     user = request.user  # Fetch the currently logged-in user
     if request.method == 'POST':
-        # Update all user details
+        current_password = request.POST.get('current_password')
+
+        # Validate current password
+        if not check_password(current_password, user.password):
+            messages.error(request, "Incorrect current password.")
+            return render(request, 'users/edit_account.html', {'user': user})
+
+        # Update user details
         user.username = request.POST.get('username', user.username)
         user.first_name = request.POST.get('first_name', user.first_name)
         user.last_name = request.POST.get('last_name', user.last_name)
         user.email = request.POST.get('email', user.email)
-        user.phone = request.POST.get('phone', user.phone)
-        user.address = request.POST.get('address', user.address)  # Assuming you have an address field
+        user.contact = request.POST.get('contact', user.contact)
+        user.address = request.POST.get('address', user.address)
+        user.province = request.POST.get('province', user.province)
         user.city = request.POST.get('city', user.city)
-        user.zip_code = request.POST.get('zip_code', user.zip_code)
-        user.save()
+        user.zipcode = request.POST.get('zipcode', user.zipcode)
 
+        # Update password if provided
+        new_password = request.POST.get('new_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
+        if new_password:
+            if new_password == confirm_new_password:
+                user.set_password(new_password)
+                update_session_auth_hash(request, user)  # Prevent logout after password change
+            else:
+                messages.error(request, "New passwords do not match.")
+                return render(request, 'users/edit_account.html', {'user': user})
+
+        user.save()
         messages.success(request, "Your account details have been updated.")
-        return redirect('tenant_dashboard')  # Redirect after updating
+        return redirect('tenant_dashboard')
 
     return render(request, 'users/edit_account.html', {'user': user})
+
+@login_required
+def edit_account_property_owner(request):
+    user = request.user  # Fetch the currently logged-in user
+    if user.role != 'property_owner':
+        messages.error(request, "Access denied. This page is for Property Owners only.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password')
+
+        # Validate current password
+        if not check_password(current_password, user.password):
+            messages.error(request, "Incorrect current password.")
+            return render(request, 'users/edit_account_property_owner.html', {'user': user})
+
+        # Update user details
+        user.username = request.POST.get('username', user.username)
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        user.contact = request.POST.get('contact', user.contact)
+        user.address = request.POST.get('address', user.address)
+        user.province = request.POST.get('province', user.province)
+        user.city = request.POST.get('city', user.city)
+        user.zipcode = request.POST.get('zipcode', user.zipcode)
+
+        # Update password if provided
+        new_password = request.POST.get('new_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
+        if new_password:
+            if new_password == confirm_new_password:
+                user.set_password(new_password)
+                update_session_auth_hash(request, user)  # Prevent logout after password change
+            else:
+                messages.error(request, "New passwords do not match.")
+                return render(request, 'users/edit_account_property_owner.html', {'user': user})
+
+        user.save()
+        messages.success(request, "Your account details have been updated.")
+        return redirect('property_owner_dashboard')
+
+    return render(request, 'users/edit_account_property_owner.html', {'user': user})

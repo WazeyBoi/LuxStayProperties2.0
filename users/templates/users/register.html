@@ -8,31 +8,41 @@
     <form method="post">
         {% csrf_token %}
         {{ form.non_field_errors }}
-        
+
         <label for="username">Username:</label>
         {{ form.username }}
-        
+
         <label for="password1">Password:</label>
-        {{ form.password1 }}
-        
+        <div style="position: relative;">
+            {{ form.password1 }}
+            <span id="toggle-password1" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                👁️
+            </span>
+        </div>
+
         <label for="password2">Password confirmation:</label>
-        {{ form.password2 }}
-        
+        <div style="position: relative;">
+            {{ form.password2 }}
+            <span id="toggle-password2" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                👁️
+            </span>
+        </div>
+
         <label for="first_name">First name:</label>
         {{ form.first_name }}
-        
+
         <label for="last_name">Last name:</label>
         {{ form.last_name }}
-        
+
         <label for="email">Email address:</label>
         {{ form.email }}
 
         <label for="contact">Contact:</label>
         {{ form.contact }}
-        
+
         <label for="birthdate">Birthdate:</label>
         {{ form.birthdate }}
-        
+
         <label for="address">Address:</label>
         {{ form.address }}
 
@@ -41,10 +51,10 @@
 
         <label for="city">City:</label>
         {{ form.city }}
-        
+
         <label for="zipcode">Zipcode:</label>
         {{ form.zipcode }}
-        
+
         <button type="submit">Register</button>
     </form>
 
@@ -52,4 +62,24 @@
         Already have an account? <a href="{% url 'login' %}">Login here</a>
     </p>
 </div>
+
+<script>
+    const togglePassword1 = document.getElementById('toggle-password1');
+    const passwordField1 = document.getElementById('id_password1');
+
+    const togglePassword2 = document.getElementById('toggle-password2');
+    const passwordField2 = document.getElementById('id_password2');
+
+    togglePassword1.addEventListener('click', function () {
+        const type = passwordField1.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField1.setAttribute('type', type);
+        this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+
+    togglePassword2.addEventListener('click', function () {
+        const type = passwordField2.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField2.setAttribute('type', type);
+        this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+</script>
 {% endblock %}
