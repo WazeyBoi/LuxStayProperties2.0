@@ -7,7 +7,7 @@
 <div class="container" style="max-width: 800px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
     <div class="container">
         <div class="back-link">
-            <a href="{% url 'my_bookings' % }"style="color: #800000; font-weight: bold; text-decoration: underline; font-size: 14px;">&larr; Back to My Bookings List</a>
+            <a href="{% url 'my_bookings' %}"  style="color: #800000; font-weight: bold; text-decoration: underline; font-size: 14px;">&larr; Back to My Bookings List</a>
         </div>
         <h1 style="color: #800000; text-align: center;">Submit Feedback</h1>
         
@@ -20,7 +20,7 @@
                 <div>
                     {% for i in stars %}
                     <label>
-                        <input type="radio" name="starRating" value="{{ i }}" style="display: none;">
+                        <input type="radio" name="starRating" value="{{ i }}" style="visibility: hidden; position: absolute;">
                         <span style="font-size: 24px; color: #800000; cursor: pointer;" onclick="this.style.color='#FFD700';">
                             &#9733;
                         </span>

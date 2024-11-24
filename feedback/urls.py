@@ -1,13 +1,11 @@
-# feedback/urls.py
-from django.urls import include, path
+from django.urls import path
 from . import views
 
 app_name = 'feedback'
 
 urlpatterns = [
-    # ... other URL patterns
-    path('', include([
-        path('', views.feedback_list, name='feedback_list'),
-        path('form/<int:leaseid>/<int:tenantid>/', views.feedback_create, name='feedback_create'),
-    ])),
+    path('', views.feedback_list, name='feedback_list'),
+    path('form/<int:leaseid>/<int:tenantid>/', views.feedback_create, name='feedback_create'),
+    path('owner/', views.feedback_ownerlist, name='feedback_ownerlist'),
+    path('mark_as_viewed/<int:feedback_id>/', views.mark_feedback_as_viewed, name='mark_as_viewed'),
 ]

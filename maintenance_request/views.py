@@ -1,3 +1,4 @@
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -43,4 +44,30 @@ def maintenance_request_create(request, leaseid, tenantid):
         'lease': lease,
         'tenant': tenant
     })
+@login_required
+def owner_maintenance_requests(request):
+    # Adjust the filter according to your actual model relationships
+    requests = MaintenanceRequest.objects.filter(leaseId__property__owner=request.user)
+    return render(request, 'maintenance_request/maintenance_request_ownerlist.html', {
+        'requests': requests,
+        'has_requests': requests.exists(),
+    })
 
+@login_required
+def accept_maintenance_request(request, requestid):
+    # Get the maintenance request by ID
+    maintenance_request = MaintenanceRequest.objects.get(requestId=requestid)
+    
+    # Change the status to "in_progress" when accepted
+    maintenance_request.status = 'in_progress'
+    maintenance_request.save()
+
+    # Redirect back to the maintenance request list page for the tenant (or lease)
+    return redirect('maintenance_request:maintenance_request_ownerlist')  # Corrected view for tenant's requests
+
+@login_required
+def complete_maintenance_request(request, requestid):
+    maintenance_request = MaintenanceRequest.objects.get(requestId=requestid)
+    maintenance_request.status = 'completed'
+    maintenance_request.save()
+    return redirect('maintenance_request:maintenance_request_ownerlist')  # Redirect to a relevant page
