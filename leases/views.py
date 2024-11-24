@@ -61,7 +61,7 @@ def book_property(request, property_id):
             end_date=end_date,
             total_amount=total_amount,
             remaining_balance=total_amount,  # Set the remaining balance to the total amount
-            status='active',
+            status='pending',
             payment_status='unpaid'
         )
         
