@@ -43,15 +43,17 @@ def book_property(request, property_id):
             }
             return render(request, 'leases/book_property.html', context)
 
-        # Calculate the number of 30-day intervals
-        interval_count = total_days // 30
-        remaining_days = total_days % 30
+        # Calculate the total amount for the booking
+        if total_days <= 30:
+            # If the total duration is 30 days or less, calculate based on the daily rate
+            total_amount = (total_days * property_obj.price) / 30
+        else:
+            # If the duration exceeds 30 days, calculate for the first 30 days
+            total_amount = property_obj.price  # Monthly price for the first 30 days
+            remaining_days = total_days - 30
 
-        # Calculate the daily rate based on the monthly price
-        daily_rate = property_obj.price / 30
-
-        # Calculate the total amount for the booking, including the remaining days
-        total_amount = (interval_count * property_obj.price) + (remaining_days * daily_rate)
+            # Add the remaining days' cost to the total amount
+            total_amount += (remaining_days * property_obj.price) / 30
 
         # Create the lease
         lease = Lease.objects.create(
