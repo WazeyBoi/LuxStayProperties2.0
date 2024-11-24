@@ -9,30 +9,32 @@
         <div class="back-link">
             <a href="{% url 'pending_list' %}">&larr; Back to Pending List</a>
         </div>
-    <h1 style="color: #800000; text-align: center;">Payment</h1>
+        <h1 style="color: #800000; text-align: center;">Payment</h1>
 
-    <!-- Display remaining balance as text (not input) -->
-    <div style="margin-bottom: 20px;">
-        <label for="remaining_balance" style="font-weight: bold;">Remaining Balance</label>
-        <div id="remaining_balance" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: #f9f9f9; text-align: center;">
-            {{ remaining_balance }}
+        <!-- Display remaining balance styled as text -->
+        <div style="margin-top: 20px; margin-bottom: 20px; text-align: center;">
+            <span style="font-weight: bold;">Remaining Balance: </span>
+            <span style="font-size: 18px; color: #800000; font-weight: bold;">
+                PHP {{ remaining_balance|floatformat:2 }}
+            </span>
         </div>
+        
+
+        <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <!-- Hidden fields for leaseid and tenantid -->
+            <input type="hidden" name="leaseid" value="{{ lease.id }}">
+            <input type="hidden" name="tenantid" value="{{ tenant.id }}">
+
+            <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 20px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; grid-column: span 2; padding: 15px 30px; width: 100%;">PAY</button>
+        </form>
+
+        <a href="{% url 'tenant_dashboard' %}" class="cancel-link" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold;">
+            Cancel
+        </a>
     </div>
-
-    <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <!-- Hidden fields for leaseid and tenantid -->
-        <input type="hidden" name="leaseid" value="{{ lease.id }}">
-        <input type="hidden" name="tenantid" value="{{ tenant.id }}">
-
-        <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 20px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; grid-column: span 2; padding: 15px 30px; width: 100%;">PAY</button>
-    </form>
-    
-    <a href="{% url 'tenant_dashboard' %}" class="cancel-link" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold;">
-        Cancel
-    </a>
 </div>
 
 {% block extra_css %}
@@ -49,16 +51,18 @@
         padding: 15px 30px; /* Increases the padding to make the button larger */
         width: 100%; /* Ensures the button takes up the full width */
     }
+
     .back-link {
-            text-align: left;
-            margin-bottom: 20px;
-        }
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
     .back-link a {
-            color: #800000;
-            font-weight: bold;
-            text-decoration: underline;
-            font-size: 14px;
-        }
+        color: #800000;
+        font-weight: bold;
+        text-decoration: underline;
+        font-size: 14px;
+    }
 </style>
 {% endblock %}
 {% endblock %}
