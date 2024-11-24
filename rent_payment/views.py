@@ -48,6 +48,7 @@ def payment_create(request, leaseid, tenantid):
             if remaining_balance <= 0:
                 lease.payment_status = 'paid'
                 lease.remaining_balance = 0
+                lease.status = 'active'
             else:
                 lease.payment_status = 'partially_paid'
                 lease.remaining_balance = remaining_balance

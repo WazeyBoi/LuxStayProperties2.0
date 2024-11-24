@@ -95,17 +95,11 @@ def my_bookings(request):
     pending_page = paginator_pending.get_page(page_pending)
     old_page = paginator_old.get_page(page_old)
 
-    context = {
+    return render(request, 'leases/my_bookings.html', {
         'active_page': active_page,
         'pending_page': pending_page,
         'old_page': old_page,
-    }
-
-    # Add a flag to ensure empty pending bookings list still shows a message in template
-    if not pending_bookings:
-        context['no_pending_message'] = 'No pending bookings.'
-
-    return render(request, 'leases/my_bookings.html', context)
+    })
 
 
 @login_required
