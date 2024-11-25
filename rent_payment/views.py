@@ -27,10 +27,8 @@ def payment_create(request, leaseid, tenantid):
     lease = get_object_or_404(Lease, id=leaseid, tenant_id=tenantid)
     tenant = get_object_or_404(User, id=tenantid)
 
-    # Calculate total paid and remaining balance
-    from django.db.models import Sum
-    total_paid = Payment.objects.filter(leaseId=lease).aggregate(Sum('totalAmount'))['totalAmount__sum'] or 0
-    remaining_balance = lease.remaining_balance  # This will use the actual remaining balance
+    # Get the remaining balance from the lease
+    remaining_balance = lease.remaining_balance
 
     if request.method == 'POST':
         form = PaymentForm(request.POST)
@@ -38,13 +36,12 @@ def payment_create(request, leaseid, tenantid):
             payment = form.save(commit=False)
             payment.leaseId = lease
             payment.tenantId = tenant
-            payment.save()
 
-            # Update the remaining balance after the payment is made
-            total_paid = Payment.objects.filter(leaseId=lease).aggregate(Sum('totalAmount'))['totalAmount__sum'] or 0
-            remaining_balance = lease.property.price - total_paid
+            # Deduct the payment amount from the remaining balance
+            payment_amount = payment.totalAmount
+            remaining_balance -= payment_amount
 
-            # Update the lease payment status and remaining balance
+            # Update lease fields
             if remaining_balance <= 0:
                 lease.payment_status = 'paid'
                 lease.remaining_balance = 0
@@ -55,6 +52,7 @@ def payment_create(request, leaseid, tenantid):
                 lease.status = 'active'
 
             lease.save()
+            payment.save()
 
             return redirect('pending_list')
     else:
@@ -64,7 +62,7 @@ def payment_create(request, leaseid, tenantid):
         'form': form,
         'lease': lease,
         'tenant': tenant,
-        'remaining_balance': remaining_balance  # Pass remaining_balance to the template
+        'remaining_balance': remaining_balance
     })
 
 
