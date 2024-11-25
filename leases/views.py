@@ -44,16 +44,19 @@ def book_property(request, property_id):
             return render(request, 'leases/book_property.html', context)
 
         # Calculate the total amount for the booking
-        if total_days <= 30:
-            # If the total duration is 30 days or less, calculate based on the daily rate
-            total_amount = (total_days * property_obj.price) / 30
+        if total_days % 30 == 0:
+            # If the days are exactly divisible by 30, calculate based on monthly price
+            months = total_days // 30
+            total_amount = months * property_obj.price
+            print(f"Divisible by 30: {total_days} days = {months} months at ${property_obj.price} per month.")
         else:
-            # If the duration exceeds 30 days, calculate for the first 30 days
-            total_amount = property_obj.price  # Monthly price for the first 30 days
-            remaining_days = total_days - 30
-
-            # Add the remaining days' cost to the total amount
-            total_amount += (remaining_days * property_obj.price) / 30
+            # If not divisible by 30, calculate for complete months and extra days
+            months = total_days // 30
+            extra_days = total_days % 30
+            daily_rate = property_obj.price / 30  # Calculate daily rate from monthly price
+            total_amount = (months * property_obj.price) + (extra_days * daily_rate)
+            print(f"Not divisible by 30: {total_days} days = {months} months + {extra_days} extra days.")
+            print(f"Monthly price: ${property_obj.price}, Daily rate: ${daily_rate:.2f}, Total amount: ${total_amount:.2f}.")
 
         # Create the lease
         lease = Lease.objects.create(
@@ -74,6 +77,7 @@ def book_property(request, property_id):
         return redirect('tenant_dashboard')
     
     return render(request, 'leases/book_property.html', {'property': property_obj})
+
 
 @login_required
 def my_bookings(request):
