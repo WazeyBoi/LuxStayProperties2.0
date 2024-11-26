@@ -37,8 +37,20 @@ def payment_create(request, leaseid, tenantid):
             payment.leaseId = lease
             payment.tenantId = tenant
 
-            # Deduct the payment amount from the remaining balance
+            # Get the payment amount
             payment_amount = payment.totalAmount
+
+            # Check if the payment amount exceeds the remaining balance
+            if payment_amount > remaining_balance:
+                form.add_error('totalAmount', f'Payment amount cannot exceed the remaining balance of {remaining_balance:.2f}.')
+                return render(request, 'rent_payment/payment_form.html', {
+                    'form': form,
+                    'lease': lease,
+                    'tenant': tenant,
+                    'remaining_balance': remaining_balance
+                })
+
+            # Deduct the payment amount from the remaining balance
             remaining_balance -= payment_amount
 
             # Update lease fields
@@ -64,11 +76,6 @@ def payment_create(request, leaseid, tenantid):
         'tenant': tenant,
         'remaining_balance': remaining_balance
     })
-
-
-
-
-
 
 @login_required
 def payment_update(request, paymentId):

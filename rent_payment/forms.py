@@ -6,6 +6,11 @@ class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
         fields = ['paymentDate', 'paymentMethod', 'totalAmount']
+        labels = {
+            'paymentDate': 'Payment Date',
+            'paymentMethod': 'Payment Method',
+            'totalAmount': 'Total Amount',
+        }
 
     paymentDate = forms.DateField(
         widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),

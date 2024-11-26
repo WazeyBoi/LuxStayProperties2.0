@@ -18,17 +18,47 @@
                 PHP {{ remaining_balance|floatformat:2 }}
             </span>
         </div>
-        
 
-        <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+        <!-- Display form-level errors -->
+        {% if form.non_field_errors %}
+        <div class="error-message" style="color: red; margin-bottom: 15px; text-align: center;">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: center;">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <!-- Field-specific errors -->
+            <div style="display: flex; flex-direction: column;">
+                <label for="id_paymentDate" style="font-weight: bold; margin-bottom: 5px;">Payment Date:</label>
+                {{ form.paymentDate }}
+                {% if form.paymentDate.errors %}
+                <span class="error-message" style="color: red;">{{ form.paymentDate.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div style="display: flex; flex-direction: column;">
+                <label for="id_paymentMethod" style="font-weight: bold; margin-bottom: 5px;">Payment Method:</label>
+                {{ form.paymentMethod }}
+                {% if form.paymentMethod.errors %}
+                <span class="error-message" style="color: red;">{{ form.paymentMethod.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div style="grid-column: span 2; display: flex; flex-direction: column;">
+                <label for="id_totalAmount" style="font-weight: bold; margin-bottom: 5px;">Total Amount:</label>
+                {{ form.totalAmount }}
+                {% if form.totalAmount.errors %}
+                <span class="error-message" style="color: red;">{{ form.totalAmount.errors }}</span>
+                {% endif %}
+            </div>
 
             <!-- Hidden fields for leaseid and tenantid -->
             <input type="hidden" name="leaseid" value="{{ lease.id }}">
             <input type="hidden" name="tenantid" value="{{ tenant.id }}">
 
-            <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 20px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; grid-column: span 2; padding: 15px 30px; width: 100%;">PAY</button>
+            <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 20px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; grid-column: span 2; padding: 15px; text-align: center;">PAY</button>
         </form>
 
         <a href="{% url 'tenant_dashboard' %}" class="cancel-link" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold;">
@@ -49,6 +79,7 @@
     button {
         font-size: 20px; /* Makes the font bigger */
         padding: 15px 30px; /* Increases the padding to make the button larger */
+        text-align: center; /* Ensures the button text is centered */
         width: 100%; /* Ensures the button takes up the full width */
     }
 
@@ -62,6 +93,21 @@
         font-weight: bold;
         text-decoration: underline;
         font-size: 14px;
+    }
+
+    label {
+        margin-bottom: 5px; /* Adds spacing between label and input */
+        display: block; /* Ensures labels are on separate lines */
+        font-weight: bold; /* Emphasizes the labels */
+    }
+
+    form div {
+        margin-bottom: 15px; /* Adds spacing between form fields */
+    }
+
+    .error-message {
+        font-size: 14px;
+        margin-top: 5px;
     }
 </style>
 {% endblock %}
