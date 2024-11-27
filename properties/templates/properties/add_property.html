@@ -1,66 +1,71 @@
+{% extends 'users/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Property</title>
-</head>
-<body style="font-family: Arial, sans-serif; background-color: #f4f6f9; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;">
 
-    <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); width: 400px; margin: 20px;">
-        <h2 style="text-align: center; color: #800000; margin-bottom: 20px; font-size: 24px; font-weight: bold;">Add Property</h2>
-        
-        <form method="post" style="display: flex; flex-direction: column; gap: 10px;">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
+{% block title %}Add Property{% endblock %}
 
-            <label for="property_name" style="font-weight: normal; color: #333; font-size: 14px;">Property Name:</label>
-            {{ form.property_name }}
+{% block content %}
+<div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); max-width: 500px; margin: auto;">
+    <h2 style="text-align: center; color: #800000; margin-bottom: 20px; font-size: 24px; font-weight: bold;">Add Property</h2>
+    
+    <form id="addForm" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
 
-            <label for="address" style="font-weight: normal; color: #333; font-size: 14px;">Address:</label>
-            {{ form.address }}
+        <label for="property_name" style="font-weight: bold; color: #333;">Property Name:</label>
+        <input type="text" id="property_name" name="property_name" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
-            <label for="property_type" style="font-weight: normal; color: #333; font-size: 14px;">Property Type:</label>
-            {{ form.property_type }}
+        <label for="address" style="font-weight: bold; color: #333;">Address:</label>
+        <input type="text" id="address" name="address" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
-            <label for="number_of_rooms" style="font-weight: normal; color: #333; font-size: 14px;">Number of Rooms:</label>
-            {{ form.number_of_rooms }}
+        <label for="property_type" style="font-weight: bold; color: #333;">Property Type:</label>
+        <select id="property_type" name="property_type" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+            {% for choice in form.property_type.field.choices %}
+                <option value="{{ choice.0 }}" {% if choice.1 == "House" %}selected{% endif %}>{{ choice.1 }}</option>
+            {% endfor %}
+        </select>
 
-            <label for="num_of_bathrooms" style="font-weight: normal; color: #333; font-size: 14px;">Number of Bathrooms:</label>
-            {{ form.num_of_bathrooms }}
+        <label for="number_of_rooms" style="font-weight: bold; color: #333;">Number of Rooms:</label>
+        <input type="number" id="number_of_rooms" name="number_of_rooms" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
-            <label for="sqft" style="font-weight: normal; color: #333; font-size: 14px;">Square Feet:</label>
-            {{ form.sqft }}
+        <label for="num_of_bathrooms" style="font-weight: bold; color: #333;">Number of Bathrooms:</label>
+        <input type="number" id="num_of_bathrooms" name="num_of_bathrooms" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
-            <label for="price" style="font-weight: normal; color: #333; font-size: 14px;">Price:</label>
-            {{ form.price }}
+        <label for="sqft" style="font-weight: bold; color: #333;">Square Feet:</label>
+        <input type="number" id="sqft" name="sqft" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
-            <label for="is_furnished" style="font-weight: normal; color: #333; font-size: 14px;">Furnished:</label>
-            {{ form.is_furnished }}
+        <label for="price" style="font-weight: bold; color: #333;">Price:</label>
+        <input type="number" id="price" name="price" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
-            <label for="parking_spaces" style="font-weight: normal; color: #333; font-size: 14px;">Parking Spaces:</label>
-            {{ form.parking_spaces }}
+        <label for="is_furnished" style="font-weight: bold; color: #333;">Furnished:</label>
+        <select id="is_furnished" name="is_furnished" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+            <option value="True">Yes</option>
+            <option value="False">No</option>
+        </select>
 
-            <label for="pet_policy" style="font-weight: normal; color: #333; font-size: 14px;">Pet Policy:</label>
-            <select name="pet_policy" id="pet_policy" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
-                <option value="True" {% if form.pet_policy.value == "True" %}selected{% endif %}>Not Allowed</option>
-                <option value="False" {% if form.pet_policy.value == "False" %}selected{% endif %}>Allowed</option>
-            </select>
+        <label for="parking_spaces" style="font-weight: bold; color: #333;">Parking Spaces:</label>
+        <input type="number" id="parking_spaces" name="parking_spaces" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
-            <label for="status" style="font-weight: normal; color: #333; font-size: 14px;">Status:</label>
-            {{ form.status }}
+        <label for="pet_policy" style="font-weight: bold; color: #333;">Pet Policy:</label>
+        <select id="pet_policy" name="pet_policy" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+            <option value="not_allowed">Not Allowed</option>
+            <option value="allowed">Allowed</option>
+        </select>
 
-            <label for="description" style="font-weight: normal; color: #333; font-size: 14px;">Description:</label>
-            {{ form.description }}
+        <label for="status" style="font-weight: bold; color: #333;">Status:</label>
+        <select id="status" name="status" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+            {% for choice in form.status.field.choices %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endfor %}
+        </select>
 
-            <button type="submit" style="padding: 10px; background-color: #800000; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; width: 100%; margin-top: 15px;">Add Property</button>
-        </form>
+        <label for="description" style="font-weight: bold; color: #333;">Description:</label>
+        <textarea id="description" name="description" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; height: 150px;"></textarea>
 
-        <div style="text-align: center; margin-top: 15px;">
-            <a href="{% url 'property_listing_management' %}" style="color: #800000; font-weight: bold; text-decoration: none; font-size: 14px;">Back to My Properties</a>
-        </div>
+        <button type="submit" style="padding: 10px 20px; background-color: #800000; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer;">Add Property</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="{% url 'property_listing_management' %}" style="color: #800000; font-weight: bold; text-decoration: none; font-size: 14px;">Back to My Properties</a>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}
