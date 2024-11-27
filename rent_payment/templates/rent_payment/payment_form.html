@@ -32,9 +32,7 @@
             <!-- Field-specific errors -->
             <div style="display: flex; flex-direction: column;">
                 <label for="id_paymentDate" style="font-weight: bold; margin-bottom: 5px;">Payment Date:</label>
-                <!-- Render the Payment Date field as a text input with disabled attribute and formatted as month/day/year -->
-                <input type="text" name="paymentDate" value="{{ form.paymentDate.value|date:"m/d/Y" }}" disabled 
-                       style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; color: black; background-color: #f9f9f9; cursor: not-allowed;" />
+                {{ form.paymentDate }}
                 {% if form.paymentDate.errors %}
                 <span class="error-message" style="color: red;">{{ form.paymentDate.errors }}</span>
                 {% endif %}
@@ -76,11 +74,6 @@
         padding: 10px; /* Adds some padding inside the input fields */
         border-radius: 5px; /* Optional: rounds the corners of the input fields */
         border: 1px solid #ccc; /* Adds a light border around the fields */
-    }
-
-    input[disabled] {
-        background-color: #f9f9f9; /* Light gray background to indicate disabled */
-        cursor: not-allowed; /* Changes cursor to indicate disabled state */
     }
 
     button {
