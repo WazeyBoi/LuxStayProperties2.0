@@ -15,7 +15,7 @@
         {{ form.username }}
         <!-- Display errors specific to the username field -->
         {% for error in form.username.errors %}
-            <p class="error">{{ error }}</p>
+            <p class="error" style="color: red;">{{ error }}</p>
         {% endfor %}
 
         <label for="password1">Password:</label>
@@ -36,10 +36,10 @@
 
         <!-- Display errors specific to the password fields -->
         {% for error in form.password1.errors %}
-            <p class="error">{{ error }}</p>
+            <p class="error" style="color: red;">{{ error }}</p>
         {% endfor %}
         {% for error in form.password2.errors %}
-            <p class="error">{{ error }}</p>
+            <p class="error" style="color: red;">{{ error }}</p>
         {% endfor %}
 
         <label for="first_name">First name:</label>
