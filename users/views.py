@@ -41,8 +41,10 @@ def login_view(request):
                 # Default redirect (if needed)
                 return redirect('home')  # Replace 'home' with a suitable default page if needed
             else:
+                # Only show this message if the authentication fails
                 messages.error(request, "Username or Password is Incorrect")
         else:
+            # Form is invalid, show a general error message
             messages.error(request, "Username or Password is Incorrect")
     else:
         form = AuthenticationForm()

@@ -104,7 +104,7 @@ def terminate_lease(request, lease_id):
         lease.status = 'terminated'  # Ensure lease status is inactive
         lease.save()
 
-        messages.success(request, "Lease terminated successfully.")
+
         return redirect('property_bookings')
 
     return render(request, 'leases/terminate_confirmation.html', {'lease': lease})
