@@ -5,6 +5,16 @@
 {% block content %}
 <div class="form-container">
     <h2>Login</h2>
+
+    <!-- Display error message if exists -->
+    {% if messages %}
+        <div class="error-message" style="color: red; font-weight: bold; margin-bottom: 15px; text-align: center;">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
     <form method="post">
         {% csrf_token %}
         <label for="username">Username:</label>

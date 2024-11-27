@@ -43,8 +43,25 @@ class CustomUserCreationForm(UserCreationForm):
             'city': forms.TextInput(attrs={'placeholder': 'Enter city'}),
             'zipcode': forms.TextInput(attrs={'placeholder': 'Enter ZIP code'}),
         }
-        
-        # Removing default help text for username
+
         help_texts = {
             'username': None,
         }
+
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+
+        # Check if the username already exists in the database
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("This username is already taken. Please choose a different one.")
+        
+        return username
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        # Check if passwords match and modify error message
+        
+        return cleaned_data

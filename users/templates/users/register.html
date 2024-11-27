@@ -7,10 +7,16 @@
     <h2>Register</h2>
     <form method="post">
         {% csrf_token %}
+        
+        <!-- Display non-field errors, if any -->
         {{ form.non_field_errors }}
 
         <label for="username">Username:</label>
         {{ form.username }}
+        <!-- Display errors specific to the username field -->
+        {% for error in form.username.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="password1">Password:</label>
         <div style="position: relative;">
@@ -28,32 +34,67 @@
             </span>
         </div>
 
+        <!-- Display errors specific to the password fields -->
+        {% for error in form.password1.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        {% for error in form.password2.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+
         <label for="first_name">First name:</label>
         {{ form.first_name }}
+        {% for error in form.first_name.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="last_name">Last name:</label>
         {{ form.last_name }}
+        {% for error in form.last_name.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="email">Email address:</label>
         {{ form.email }}
+        {% for error in form.email.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="contact">Contact:</label>
         {{ form.contact }}
+        {% for error in form.contact.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="birthdate">Birthdate:</label>
         {{ form.birthdate }}
+        {% for error in form.birthdate.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="address">Address:</label>
         {{ form.address }}
+        {% for error in form.address.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="province">Province:</label>
         {{ form.province }}
+        {% for error in form.province.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="city">City:</label>
         {{ form.city }}
+        {% for error in form.city.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <label for="zipcode">Zipcode:</label>
         {{ form.zipcode }}
+        {% for error in form.zipcode.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
 
         <button type="submit">Register</button>
     </form>
@@ -82,4 +123,5 @@
         this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
     });
 </script>
+
 {% endblock %}
