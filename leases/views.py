@@ -117,7 +117,7 @@ def property_listing(request):
     # Fetch dropdown values
     property_types = [choice[0] for choice in Property.PROPERTY_TYPE_CHOICES]
     furnished_status = [True, False]  # For 'is_furnished' dropdown
-    pet_policies = [True, False]  # For 'pet_policy' dropdown
+    pet_policies = [choice[0] for choice in Property.PET_POLICY_CHOICES]  # For 'pet_policy' dropdown
     
     # Get filter parameters
     search_query = request.GET.get('search', '')
@@ -145,8 +145,8 @@ def property_listing(request):
         properties = properties.filter(property_type=property_type)
     if is_furnished in ['True', 'False']:
         properties = properties.filter(is_furnished=(is_furnished == 'True'))
-    if pet_policy in ['True', 'False']:
-        properties = properties.filter(pet_policy=(pet_policy == 'True'))
+    if pet_policy:
+        properties = properties.filter(pet_policy=pet_policy)
     if rooms_min.isdigit():
         properties = properties.filter(number_of_rooms__gte=int(rooms_min))
     if rooms_max.isdigit():

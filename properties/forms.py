@@ -22,4 +22,7 @@ class PropertyForm(forms.ModelForm):
             'property_type': forms.Select(attrs={
                 'class': 'form-control',  # Optional styling
             }),
+            'pet_policy': forms.Select(attrs={
+                'class': 'form-control',  # Optional styling
+            }),
         }

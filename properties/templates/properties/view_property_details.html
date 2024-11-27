@@ -36,7 +36,7 @@
         <p style="margin: 0; font-size: 15px; color: #555;">{{ property.parking_spaces }}</p>
 
         <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Pet Policy:</strong></p>
-        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.pet_policy|yesno:"Allowed,Not Allowed" }}</p>
+        <p style="margin: 0; font-size: 15px; color: #555;">{{ property.get_pet_policy_display }}</p>
 
         <p style="margin: 0; font-size: 15px; color: #555;"><strong style="color: #800000; font-size: 16px;">Status:</strong></p>
         <p style="margin: 0; font-size: 15px; color: #555;">{{ property.get_status_display }}</p>

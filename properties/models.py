@@ -8,16 +8,21 @@ class Property(models.Model):
     ]
 
     PROPERTY_TYPE_CHOICES = [
-    ('apartment', 'Apartment'),
-    ('house', 'House'),
-    ('condo', 'Condominium'),
-    ('townhouse', 'Townhouse'),
-    ('studio', 'Studio'),
+        ('apartment', 'Apartment'),
+        ('house', 'House'),
+        ('condo', 'Condominium'),
+        ('townhouse', 'Townhouse'),
+        ('studio', 'Studio'),
+    ]
+    
+    PET_POLICY_CHOICES = [
+        ('allowed', 'Allowed'),
+        ('not_allowed', 'Not Allowed'),
     ]
     
     owner = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'property_owner'})
     address = models.CharField(max_length=255)
-    property_name = models.CharField(max_length=100, default= '')
+    property_name = models.CharField(max_length=100, default='')
     property_type = models.CharField(max_length=50, choices=PROPERTY_TYPE_CHOICES, default='apartment')
     number_of_rooms = models.PositiveIntegerField(default=1)
     num_of_bathrooms = models.PositiveIntegerField(default=1)
@@ -27,8 +32,8 @@ class Property(models.Model):
     listing_date = models.DateField(auto_now_add=True)
     sqft = models.PositiveIntegerField(default=0)
     is_furnished = models.BooleanField(default=False)
-    parking_spaces = models.PositiveIntegerField(default=False)
-    pet_policy = models.BooleanField(default=False)
+    parking_spaces = models.PositiveIntegerField(default=0)
+    pet_policy = models.CharField(max_length=11, choices=PET_POLICY_CHOICES, default='not_allowed')
     
     def __str__(self):
         return f"{self.property_name or self.address} - {self.get_status_display()}"

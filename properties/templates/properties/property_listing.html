@@ -75,8 +75,8 @@
                 <label for="pet_policy" style="display: block; margin-bottom: 5px;">Pet Policy:</label>
                 <select id="pet_policy" name="pet_policy" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                     <option value="">Select Pet Policy</option>
-                    <option value="False" {% if pet_policy == 'False' %}selected{% endif %}>Allowed</option>
-                    <option value="True" {% if pet_policy == 'True' %}selected{% endif %}>Not Allowed</option>
+                    <option value="not_allowed" {% if pet_policy == 'not_allowed' %}selected{% endif %}>Not Allowed</option>
+                    <option value="allowed" {% if pet_policy == 'allowed' %}selected{% endif %}>Allowed</option>
                 </select>
             </div>                       
 

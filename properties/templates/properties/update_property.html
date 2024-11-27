@@ -17,7 +17,11 @@
         <input type="text" id="address" name="address" value="{{ form.address.value }}" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
         <label for="property_type" style="font-weight: bold; color: #333;">Property Type:</label>
-        <input type="text" id="property_type" name="property_type" value="{{ form.property_type.value }}" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        <select id="property_type" name="property_type" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+            {% for choice in form.property_type.field.choices %}
+                <option value="{{ choice.0 }}" {% if form.property_type.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+            {% endfor %}
+        </select>
 
         <label for="number_of_rooms" style="font-weight: bold; color: #333;">Number of Rooms:</label>
         <input type="number" id="number_of_rooms" name="number_of_rooms" value="{{ form.number_of_rooms.value }}" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
@@ -33,8 +37,8 @@
 
         <label for="is_furnished" style="font-weight: bold; color: #333;">Furnished:</label>
         <select id="is_furnished" name="is_furnished" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
-            <option value="True" {% if form.is_furnished.value == "True" %}selected{% endif %}>Yes</option>
-            <option value="False" {% if form.is_furnished.value == "False" %}selected{% endif %}>No</option>
+            <option value="True" {% if form.is_furnished.value == True %}selected{% endif %}>Yes</option>
+            <option value="False" {% if form.is_furnished.value == False %}selected{% endif %}>No</option>
         </select>
 
         <label for="parking_spaces" style="font-weight: bold; color: #333;">Parking Spaces:</label>
@@ -42,8 +46,8 @@
 
         <label for="pet_policy" style="font-weight: bold; color: #333; font-size: 14px;">Pet Policy:</label>
         <select name="pet_policy" id="pet_policy" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
-            <option value="True" {% if form.pet_policy.value == "True" %}selected{% endif %}>Not Allowed</option>
-            <option value="False" {% if form.pet_policy.value == "False" %}selected{% endif %}>Allowed</option>
+            <option value="not_allowed" {% if form.pet_policy.value == 'not_allowed' %}selected{% endif %}>Not Allowed</option>
+            <option value="allowed" {% if form.pet_policy.value == 'allowed' %}selected{% endif %}>Allowed</option>
         </select>
 
         <label for="status" style="font-weight: bold; color: #333; font-size: 14px;">Status:</label>
