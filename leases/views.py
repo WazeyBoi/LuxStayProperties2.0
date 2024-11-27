@@ -44,7 +44,10 @@ def book_property(request, property_id):
             return render(request, 'leases/book_property.html', context)
 
         # Calculate the total amount for the booking
-        if total_days % 30 == 0:
+        if total_days == 365:  # Exactly 12 months
+            total_amount = property_obj.price * 12
+            print(f"Booking for 12 months: ${property_obj.price} per month * 12 months = ${total_amount}.")
+        elif total_days % 30 == 0:
             # If the days are exactly divisible by 30, calculate based on monthly price
             months = total_days // 30
             total_amount = months * property_obj.price
@@ -77,7 +80,6 @@ def book_property(request, property_id):
         return redirect('tenant_dashboard')
     
     return render(request, 'leases/book_property.html', {'property': property_obj})
-
 
 @login_required
 def my_bookings(request):
