@@ -8,16 +8,16 @@
 
     <!-- Display error message if exists -->
     {% if messages %}
-        <div class="error-message" style="color: red; font-weight: bold; margin-bottom: 15px; text-align: center;">
+        <div class="error-message" style="color: red; margin-bottom: 10px; text-align: center;">
             {% for message in messages %}
-                <p>{{ message }}</p>
+                <p style="color: red;">{{ message }}</p>
             {% endfor %}
         </div>
     {% endif %}
     
     <form method="post">
         {% csrf_token %}
-        <label for="username">Username:</label>
+        <label for="username" >Username:</label>
         <input type="text" name="username" placeholder="Enter username" required>
 
         <label for="password">Password:</label>
@@ -30,6 +30,7 @@
 
         <button type="submit">Login</button>
     </form>
+
     <p>
         Don't have an account? <a href="{% url 'register' %}">Register here</a>
     </p>
@@ -37,15 +38,5 @@
 
 <script>
     const togglePassword = document.getElementById('toggle-password');
-    const passwordField = document.getElementById('password');
-
-    togglePassword.addEventListener('click', function () {
-        // Toggle password visibility
-        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordField.setAttribute('type', type);
-
-        // Change the icon (optional)
-        this.textContent = type === 'password' ? '👁️' : '👁‍🗨'; // You can use different icons here
-    });
 </script>
 {% endblock %}
