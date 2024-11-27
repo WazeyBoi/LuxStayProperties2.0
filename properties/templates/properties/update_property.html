@@ -42,8 +42,8 @@
 
         <label for="pet_policy" style="font-weight: bold; color: #333; font-size: 14px;">Pet Policy:</label>
         <select name="pet_policy" id="pet_policy" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
-            <option value="True" {% if form.pet_policy.value == "True" %}selected{% endif %}>Yes</option>
-            <option value="False" {% if form.pet_policy.value == "False" %}selected{% endif %}>No</option>
+            <option value="True" {% if form.pet_policy.value == "True" %}selected{% endif %}>Not Allowed</option>
+            <option value="False" {% if form.pet_policy.value == "False" %}selected{% endif %}>Allowed</option>
         </select>
 
         <label for="status" style="font-weight: bold; color: #333; font-size: 14px;">Status:</label>

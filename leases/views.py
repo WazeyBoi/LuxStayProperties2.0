@@ -3,11 +3,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from datetime import date
 from django.contrib.auth.decorators import login_required
-from .models import Lease
-from properties.models import Property
+from .models import Lease, Property
 from datetime import datetime
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
+from django.db.models import Q
 
 @login_required
 def tenant_dashboard(request):
@@ -107,11 +107,87 @@ def my_bookings(request):
         'old_page': old_page,
     })
 
-
 @login_required
 def property_listing(request):
-    available_properties = Property.objects.filter(status='available')
-    return render(request, 'properties/property_listing.html', {'properties': available_properties})
+    # Fetch only available properties
+    properties = Property.objects.filter(status='available')
+    
+    # Fetch dropdown values
+    property_types = [choice[0] for choice in Property.PROPERTY_TYPE_CHOICES]
+    furnished_status = [True, False]  # For 'is_furnished' dropdown
+    pet_policies = [True, False]  # For 'pet_policy' dropdown
+    
+    # Get filter parameters
+    search_query = request.GET.get('search', '')
+    property_type = request.GET.get('property_type', '')
+    is_furnished = request.GET.get('is_furnished', '')
+    pet_policy = request.GET.get('pet_policy', '')
+    rooms_min = request.GET.get('rooms_min', '')
+    rooms_max = request.GET.get('rooms_max', '')
+    baths_min = request.GET.get('baths_min', '')
+    baths_max = request.GET.get('baths_max', '')
+    square_ft_min = request.GET.get('square_ft_min', '')
+    square_ft_max = request.GET.get('square_ft_max', '')
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    parking_spaces_min = request.GET.get('parking_spaces_min', '')
+    parking_spaces_max = request.GET.get('parking_spaces_max', '')
+
+    # Apply filters
+    if search_query:
+        properties = properties.filter(
+            Q(property_name__icontains=search_query) |
+            Q(address__icontains=search_query)
+        )
+    if property_type:
+        properties = properties.filter(property_type=property_type)
+    if is_furnished in ['True', 'False']:
+        properties = properties.filter(is_furnished=(is_furnished == 'True'))
+    if pet_policy in ['True', 'False']:
+        properties = properties.filter(pet_policy=(pet_policy == 'True'))
+    if rooms_min.isdigit():
+        properties = properties.filter(number_of_rooms__gte=int(rooms_min))
+    if rooms_max.isdigit():
+        properties = properties.filter(number_of_rooms__lte=int(rooms_max))
+    if baths_min.isdigit():
+        properties = properties.filter(num_of_bathrooms__gte=int(baths_min))
+    if baths_max.isdigit():
+        properties = properties.filter(num_of_bathrooms__lte=int(baths_max))
+    if square_ft_min.isdigit():
+        properties = properties.filter(sqft__gte=int(square_ft_min))
+    if square_ft_max.isdigit():
+        properties = properties.filter(sqft__lte=int(square_ft_max))
+    if price_min.isdigit():
+        properties = properties.filter(price__gte=int(price_min))
+    if price_max.isdigit():
+        properties = properties.filter(price__lte=int(price_max))
+    if parking_spaces_min.isdigit():
+        properties = properties.filter(parking_spaces__gte=int(parking_spaces_min))
+    if parking_spaces_max.isdigit():
+        properties = properties.filter(parking_spaces__lte=int(parking_spaces_max))
+    
+    context = {
+        'properties': properties,
+        'property_types': property_types,
+        'furnished_status': furnished_status,
+        'pet_policies': pet_policies,
+        'search_query': search_query,
+        'property_type': property_type,
+        'is_furnished': is_furnished,
+        'pet_policy': pet_policy,
+        'rooms_min': rooms_min,
+        'rooms_max': rooms_max,
+        'baths_min': baths_min,
+        'baths_max': baths_max,
+        'square_ft_min': square_ft_min,
+        'square_ft_max': square_ft_max,
+        'price_min': price_min,
+        'price_max': price_max,
+        'parking_spaces_min': parking_spaces_min,
+        'parking_spaces_max': parking_spaces_max,
+    }
+    
+    return render(request, 'properties/property_listing.html', context)
 
 @login_required
 def view_property_details(request, property_id):

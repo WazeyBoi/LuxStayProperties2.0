@@ -27,7 +27,7 @@ class Property(models.Model):
     listing_date = models.DateField(auto_now_add=True)
     sqft = models.PositiveIntegerField(default=0)
     is_furnished = models.BooleanField(default=False)
-    parking_spaces = models.PositiveIntegerField(default=0)
+    parking_spaces = models.PositiveIntegerField(default=False)
     pet_policy = models.BooleanField(default=False)
     
     def __str__(self):

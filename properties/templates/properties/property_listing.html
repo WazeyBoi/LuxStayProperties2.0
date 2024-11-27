@@ -10,6 +10,12 @@
 
     <h2 style="text-align: center; color: #800000; margin-bottom: 20px;">Available Properties</h2>
 
+    <form method="get" action="{% url 'property_listing' %}" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search by property name or address" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer;">Search</button>
+        <button type="button" id="filterBtn" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer;">Filter</button>
+    </form>
+
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
             <tr style="background-color: #800000; color: white; text-align: left;">
@@ -39,4 +45,150 @@
         </tbody>
     </table>
 </div>
+
+<!-- Modal Structure -->
+<div id="filterModal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background-color: #fff; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+        <span id="closeModal" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+        <h2 style="text-align: center; color: #800000; margin-bottom: 20px;">Filter Search</h2>
+        <form id="filterForm" method="get" action="{% url 'property_listing' %}">
+            <div style="margin-bottom: 10px;">
+                <label for="property_type" style="display: block; margin-bottom: 5px;">Type:</label>
+                <select id="property_type" name="property_type" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="">Select Type</option>
+                    {% for type in property_types %}
+                    <option value="{{ type }}" {% if property_type == type %}selected{% endif %}>{{ type|capfirst }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <label for="is_furnished" style="display: block; margin-bottom: 5px;">Furnished:</label>
+                <select id="is_furnished" name="is_furnished" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="">Select Furnished</option>
+                    <option value="True" {% if is_furnished == 'True' %}selected{% endif %}>Yes</option>
+                    <option value="False" {% if is_furnished == 'False' %}selected{% endif %}>No</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <label for="pet_policy" style="display: block; margin-bottom: 5px;">Pet Policy:</label>
+                <select id="pet_policy" name="pet_policy" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="">Select Pet Policy</option>
+                    <option value="False" {% if pet_policy == 'False' %}selected{% endif %}>Allowed</option>
+                    <option value="True" {% if pet_policy == 'True' %}selected{% endif %}>Not Allowed</option>
+                </select>
+            </div>                       
+
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <label for="rooms_min" style="display: block; margin-bottom: 5px;">Rooms (Min):</label>
+                    <input type="number" id="rooms_min" name="rooms_min" value="{{ rooms_min }}" placeholder="Min" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="flex: 1;">
+                    <label for="rooms_max" style="display: block; margin-bottom: 5px;">Rooms (Max):</label>
+                    <input type="number" id="rooms_max" name="rooms_max" value="{{ rooms_max }}" placeholder="Max" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <label for="baths_min" style="display: block; margin-bottom: 5px;">Baths (Min):</label>
+                    <input type="number" id="baths_min" name="baths_min" value="{{ baths_min }}" placeholder="Min" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="flex: 1;">
+                    <label for="baths_max" style="display: block; margin-bottom: 5px;">Baths (Max):</label>
+                    <input type="number" id="baths_max" name="baths_max" value="{{ baths_max }}" placeholder="Max" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <label for="square_ft_min" style="display: block; margin-bottom: 5px;">Square Ft (Min):</label>
+                    <input type="number" id="square_ft_min" name="square_ft_min" value="{{ square_ft_min }}" placeholder="Min" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="flex: 1;">
+                    <label for="square_ft_max" style="display: block; margin-bottom: 5px;">Square Ft (Max):</label>
+                    <input type="number" id="square_ft_max" name="square_ft_max" value="{{ square_ft_max }}" placeholder="Max" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <label for="price_min" style="display: block; margin-bottom: 5px;">Price (Min):</label>
+                    <input type="number" id="price_min" name="price_min" value="{{ price_min }}" placeholder="Min" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="flex: 1;">
+                    <label for="price_max" style="display: block; margin-bottom: 5px;">Price (Max):</label>
+                    <input type="number" id="price_max" name="price_max" value="{{ price_max }}" placeholder="Max" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <label for="parking_spaces_min" style="display: block; margin-bottom: 5px;">Parking Space (Min):</label>
+                    <input type="number" id="parking_spaces_min" name="parking_spaces_min" value="{{ parking_spaces_min }}" placeholder="Min" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                <div style="flex: 1;">
+                    <label for="parking_spaces_max" style="display: block; margin-bottom: 5px;">Parking Space (Max):</label>
+                    <input type="number" id="parking_spaces_max" name="parking_spaces_max" value="{{ parking_spaces_max }}" placeholder="Max" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;">
+                <button type="submit" style="flex: 1; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer;">FILTER</button>
+                <button type="button" id="clearBtn" style="flex: 1; padding: 10px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer;">CLEAR</button>
+            </div>
+            <div style="text-align: center; margin-bottom: 10px;">
+                <button type="button" id="cancelBtn" style="width: 100%; padding: 10px; background-color: transparent; color: #dc3545; border: 2px solid #dc3545; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer;">CANCEL</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("filterModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("filterBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementById("closeModal");
+
+    // Get the cancel button
+    var cancelBtn = document.getElementById("cancelBtn");
+
+    // Get the clear button
+    var clearBtn = document.getElementById("clearBtn");
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks on cancel button, close the modal
+    cancelBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks on clear button, clear the form and submit
+    clearBtn.onclick = function() {
+        var form = document.getElementById("filterForm");
+        form.reset();
+        window.location.href = "{% url 'property_listing' %}";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 {% endblock %}
