@@ -5,7 +5,7 @@ from datetime import date
 from django.contrib.auth.decorators import login_required
 from .models import Lease, Property
 from datetime import datetime
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime, timedelta
 from django.db.models import Q
 
@@ -168,8 +168,18 @@ def property_listing(request):
     if parking_spaces_max.isdigit():
         properties = properties.filter(parking_spaces__lte=int(parking_spaces_max))
     
+    # Pagination
+    paginator = Paginator(properties, 5)  # Show 5 properties per page
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
     context = {
-        'properties': properties,
+        'page_obj': page_obj,
         'property_types': property_types,
         'furnished_status': furnished_status,
         'pet_policies': pet_policies,
