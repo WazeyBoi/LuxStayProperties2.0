@@ -35,7 +35,7 @@ body {
 }
 
 .header .login-btn, .header .signup-btn {
-    color: #fff;
+    color: #ffffff;
     padding: 8px 15px;
     border-radius: 5px;
     font-weight: bold;
@@ -127,4 +127,11 @@ body {
     color: #800000;
     text-decoration: none;
     font-weight: bold;
+}
+
+.error-message {
+    color: red !important;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
 }
