@@ -60,26 +60,33 @@ def delete_property(request, property_id):
 
 @login_required
 def property_bookings(request):
-    # Fetch all properties with active leases for the logged-in property owner and status 'leased'
-    active_leases_list = Lease.objects.filter(
-        property__owner=request.user,
-        property__status='leased',
-        status='active',
-        end_date__gte=date.today()
-    )
+    # Get properties owned by the logged-in user
+    properties = Property.objects.filter(owner=request.user)
+    
+    # Filter leases based on the properties owned by the logged-in user
+    active_leases = Lease.objects.filter(property__in=properties, status='active')
+    past_leases = Lease.objects.filter(property__in=properties, status='ended')
+    terminated_leases = Lease.objects.filter(property__in=properties, status='terminated')
 
-    # Set up pagination: Show 10 leases per page
-    paginator = Paginator(active_leases_list, 10)
-    page_number = request.GET.get('page')
-    try:
-        page_obj = paginator.get_page(page_number)
-    except PageNotAnInteger:
-        page_obj = paginator.page(1)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
+    # Paginate active leases
+    active_paginator = Paginator(active_leases, 10)  # Show 10 active leases per page
+    active_page_number = request.GET.get('page')
+    active_page_obj = active_paginator.get_page(active_page_number)
+
+    # Paginate past leases
+    past_paginator = Paginator(past_leases, 10)  # Show 10 past leases per page
+    past_page_number = request.GET.get('past_page')
+    past_page_obj = past_paginator.get_page(past_page_number)
+
+    # Paginate terminated leases
+    terminated_paginator = Paginator(terminated_leases, 10)  # Show 10 terminated leases per page
+    terminated_page_number = request.GET.get('terminated_page')
+    terminated_page_obj = terminated_paginator.get_page(terminated_page_number)
 
     context = {
-        'page_obj': page_obj,
+        'page_obj': active_page_obj,
+        'past_page_obj': past_page_obj,
+        'terminated_page_obj': terminated_page_obj,
     }
     return render(request, 'leases/property_bookings.html', context)
 

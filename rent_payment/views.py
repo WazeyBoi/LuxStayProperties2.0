@@ -168,6 +168,7 @@ def payment_list_propertyowner(request):
             properties_with_payments.append({
                 'property_name': lease.property.property_name,
                 'property_id': lease.property.id,
+                'tenant_first_name': lease.tenant.first_name,  # Include tenant's first name
                 'amount_paid': payment.totalAmount,
                 'payment_date': payment.paymentDate,
             })

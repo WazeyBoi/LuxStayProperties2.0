@@ -18,6 +18,7 @@
             <thead>
                 <tr style="background-color: #800000; color: white; text-align: left;">
                     <th style="padding: 10px;">Property Name</th>
+                    <th style="padding: 10px;">Tenant</th>
                     <th style="padding: 10px;">Payment Date</th>
                     <th style="padding: 10px;">Payment (PHP)</th>
                 </tr>
@@ -26,6 +27,7 @@
                 {% for payment in page_obj %}
                 <tr style="border-bottom: 1px solid #ddd; text-align: left;">
                     <td style="padding: 10px;">{{ payment.property_name }}</td>
+                    <td style="padding: 10px;">{{ payment.tenant_first_name }}</td>
                     <td style="padding: 10px;">{{ payment.payment_date }}</td>
                     <td style="padding: 10px;">{{ payment.amount_paid }}</td>
                 </tr>
