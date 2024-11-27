@@ -183,3 +183,21 @@ def payment_list_propertyowner(request):
         page_obj = paginator.page(paginator.num_pages)
 
     return render(request, 'rent_payment/payment_list_propertyowner.html', {'page_obj': page_obj})
+
+@login_required
+def payment_history(request):
+    # Fetch all payments made by the current tenant
+    payments = Payment.objects.filter(tenantId=request.user).order_by('-paymentDate')  # Order by most recent payments
+
+    # Paginate the payment history
+    paginator = Paginator(payments, 5)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    # Render the template with paginated payment history
+    return render(request, 'rent_payment/payment_history.html', {'page_obj': page_obj})
