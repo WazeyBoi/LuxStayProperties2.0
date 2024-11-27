@@ -41,9 +41,9 @@ def login_view(request):
                 # Default redirect (if needed)
                 return redirect('home')  # Replace 'home' with a suitable default page if needed
             else:
-                messages.error(request, "username or password is incorrect")
+                messages.error(request, "Username or Password is incorrect")
         else:
-            messages.error(request, "username or password is incorrect")
+            messages.error(request, "Username or Password is incorrect")
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})
