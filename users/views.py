@@ -9,6 +9,8 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.hashers import check_password
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q
 
 def register_view(request):
     if request.method == "POST":
@@ -51,12 +53,8 @@ def logout_view(request):
     logout(request)
     return redirect('login')  # Redirect to login page after logout
 
-from django.db.models import Q
-from datetime import date
-
 @login_required
 def tenant_management(request):
-    tenants = None
     search_query = request.GET.get("search", "").strip()
 
     if search_query:
@@ -79,7 +77,17 @@ def tenant_management(request):
         tenant.active_leases = Lease.objects.filter(tenant=tenant, end_date__gte=date.today())
         tenant.inactive_leases = Lease.objects.filter(tenant=tenant, end_date__lt=date.today())
 
-    return render(request, 'users/tenant_management.html', {'tenants': tenants})
+    # Paginate the tenants
+    paginator = Paginator(tenants, 5)  # Show 10 tenants per page
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    return render(request, 'users/tenant_management.html', {'page_obj': page_obj, 'search_query': search_query})
 
 @login_required
 def tenant_landing_page(request):
@@ -93,15 +101,17 @@ def tenant_landing_page(request):
 def view_tenant_lease(request, tenant_id):
     tenant = get_object_or_404(User, id=tenant_id, role='tenant')
 
-    # Fetch active and inactive leases
+    # Fetch active, inactive, and terminated leases
     active_leases = Lease.objects.filter(tenant=tenant, status='active')
     inactive_leases = Lease.objects.filter(tenant=tenant, status='inactive')
+    terminated_leases = Lease.objects.filter(tenant=tenant, status='terminated')
 
     # Pass data to the template
     context = {
         'tenant': tenant,
         'active_leases': active_leases,
         'inactive_leases': inactive_leases,
+        'terminated_leases': terminated_leases,
     }
     return render(request, 'users/view_lease.html', context)
 

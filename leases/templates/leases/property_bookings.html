@@ -13,12 +13,13 @@
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
             <tr style="background-color: #800000; color: white;">
-                <th style="padding: 10px;">Property Name</th>
-                <th style="padding: 10px;">Address</th>
-                <th style="padding: 10px;">Tenant</th>
-                <th style="padding: 10px;">Start Date</th>
-                <th style="padding: 10px;">End Date</th>
-                <th style="padding: 10px;">Action</th>
+                <th style="padding: 10px; text-align: left;">Property Name</th>
+                <th style="padding: 10px; text-align: left;">Address</th>
+                <th style="padding: 10px; text-align: left;">Tenant</th>
+                <th style="padding: 10px; text-align: left;">Start Date</th>
+                <th style="padding: 10px; text-align: left;">End Date</th>
+                <th style="padding: 10px; text-align: left;">Status</th>
+                <th style="padding: 10px; text-align: left;">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,7 @@
                 <td style="padding: 10px;">{{ lease.tenant.username }}</td>
                 <td style="padding: 10px;">{{ lease.start_date }}</td>
                 <td style="padding: 10px;">{{ lease.end_date }}</td>
+                <td style="padding: 10px;">ACTIVE</td>
                 <td style="padding: 10px;">
                     <a href="{% url 'terminate_confirmation' lease.id %}" style="text-decoration: none; color: white; background-color: #d9534f; padding: 5px 10px; border-radius: 5px; font-weight: bold;">Terminate</a>
                 </td>                                       
@@ -59,6 +61,112 @@
 
     {% else %}
     <p>No active leases found.</p>
+    {% endif %}
+</div>
+
+<div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(137, 81, 81, 0.1); max-width: 95%; margin: auto; margin-top: 40px;">
+    <h2 style="color: #800000; text-align: center; margin-bottom: 20px;">Past Bookings</h2>
+    {% if past_page_obj %}
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #800000; color: white;">
+                <th style="padding: 10px; text-align: left;">Property Name</th>
+                <th style="padding: 10px; text-align: left;">Address</th>
+                <th style="padding: 10px; text-align: left;">Tenant</th>
+                <th style="padding: 10px; text-align: left;">Start Date</th>
+                <th style="padding: 10px; text-align: left;">End Date</th>
+                <th style="padding: 10px; text-align: left;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lease in past_page_obj %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;">{{ lease.property.property_name }}</td>
+                <td style="padding: 10px;">{{ lease.property.address }}</td>
+                <td style="padding: 10px;">{{ lease.tenant.username }}</td>
+                <td style="padding: 10px;">{{ lease.start_date }}</td>
+                <td style="padding: 10px;">{{ lease.end_date }}</td>
+                <td style="padding: 10px;">ENDED</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div style="margin-top: 20px; text-align: center;">
+        <span style="display: inline-block; margin-right: 10px;">Page {{ past_page_obj.number }} of {{ past_page_obj.paginator.num_pages }}</span>
+        <div style="display: inline-flex; gap: 5px;">
+            {% if past_page_obj.has_previous %}
+            <a href="?past_page={{ past_page_obj.previous_page_number }}" style="text-decoration: none; color: #800000; font-weight: bold;">Previous</a>
+            {% endif %}
+            {% for num in past_page_obj.paginator.page_range %}
+                {% if num == past_page_obj.number %}
+                    <span style="padding: 5px 10px; background-color: #800000; color: white; border-radius: 5px;">{{ num }}</span>
+                {% else %}
+                    <a href="?past_page={{ num }}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #800000; color: #800000; border-radius: 5px;">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if past_page_obj.has_next %}
+            <a href="?past_page={{ past_page_obj.next_page_number }}" style="text-decoration: none; color: #800000; font-weight: bold;">Next</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% else %}
+    <p>No past leases found.</p>
+    {% endif %}
+</div>
+
+<div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(137, 81, 81, 0.1); max-width: 95%; margin: auto; margin-top: 40px;">
+    <h2 style="color: #800000; text-align: center; margin-bottom: 20px;">Terminated Bookings</h2>
+    {% if terminated_page_obj %}
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #800000; color: white;">
+                <th style="padding: 10px; text-align: left;">Property Name</th>
+                <th style="padding: 10px; text-align: left;">Address</th>
+                <th style="padding: 10px; text-align: left;">Tenant</th>
+                <th style="padding: 10px; text-align: left;">Start Date</th>
+                <th style="padding: 10px; text-align: left;">End Date</th>
+                <th style="padding: 10px; text-align: left;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lease in terminated_page_obj %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;">{{ lease.property.property_name }}</td>
+                <td style="padding: 10px;">{{ lease.property.address }}</td>
+                <td style="padding: 10px;">{{ lease.tenant.username }}</td>
+                <td style="padding: 10px;">{{ lease.start_date }}</td>
+                <td style="padding: 10px;">{{ lease.end_date }}</td>
+                <td style="padding: 10px;">TERMINATED</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div style="margin-top: 20px; text-align: center;">
+        <span style="display: inline-block; margin-right: 10px;">Page {{ terminated_page_obj.number }} of {{ terminated_page_obj.paginator.num_pages }}</span>
+        <div style="display: inline-flex; gap: 5px;">
+            {% if terminated_page_obj.has_previous %}
+            <a href="?terminated_page={{ terminated_page_obj.previous_page_number }}" style="text-decoration: none; color: #800000; font-weight: bold;">Previous</a>
+            {% endif %}
+            {% for num in terminated_page_obj.paginator.page_range %}
+                {% if num == terminated_page_obj.number %}
+                    <span style="padding: 5px 10px; background-color: #800000; color: white; border-radius: 5px;">{{ num }}</span>
+                {% else %}
+                    <a href="?terminated_page={{ num }}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #800000; color: #800000; border-radius: 5px;">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if terminated_page_obj.has_next %}
+            <a href="?terminated_page={{ terminated_page_obj.next_page_number }}" style="text-decoration: none; color: #800000; font-weight: bold;">Next</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% else %}
+    <p>No terminated leases found.</p>
     {% endif %}
 </div>
 {% endblock %}

@@ -12,7 +12,7 @@
 
     <!-- Search Form -->
     <form method="get" action="{% url 'tenant_management' %}" style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <input type="text" name="search" placeholder="Search by first or last name" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search by first or last name" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
         <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer;">Search</button>
     </form>
 
@@ -20,28 +20,57 @@
     <table style="width: 100%; border-collapse: collapse;">
         <thead>
             <tr style="background-color: #800000; color: white;">
-                <th style="padding: 10px;">First Name</th>
-                <th style="padding: 10px;">Last Name</th>
-                <th style="padding: 10px;">Address</th>
-                <th style="padding: 10px;">Email</th>
-                <th style="padding: 10px;">Phone</th>
-                <th style="padding: 10px;">Leases</th>
+                <th style="padding: 10px; text-align: left;">First Name</th>
+                <th style="padding: 10px; text-align: left;">Last Name</th>
+                <th style="padding: 10px; text-align: left;">Address</th>
+                <th style="padding: 10px; text-align: left;">Email</th>
+                <th style="padding: 10px; text-align: left;">Phone</th>
+                <th style="padding: 10px; text-align: left;">Leases</th>
             </tr>
         </thead>
         <tbody>
-            {% for tenant in tenants %}
+            {% for tenant in page_obj %}
             <tr style="border-bottom: 1px solid #ddd;">
                 <td style="padding: 10px;">{{ tenant.first_name }}</td>
                 <td style="padding: 10px;">{{ tenant.last_name }}</td>
-                <td style="padding: 10px;">{{ tenant.address |default:"N/A" }}, {{ tenant.province|default:"N/A" }}, {{ tenant.city|default:"N/A" }} {{ tenant.zipcode|default:"N/A" }}</td>
+                <td style="padding: 10px;">{{ tenant.address|default:"N/A" }}, {{ tenant.province|default:"N/A" }}, {{ tenant.city|default:"N/A" }} {{ tenant.zipcode|default:"N/A" }}</td>
                 <td style="padding: 10px;">{{ tenant.email }}</td>
                 <td style="padding: 10px;">{{ tenant.contact|default:"N/A" }}</td>
                 <td style="padding: 10px;">
                     <a href="{% url 'view_tenant_lease' tenant.id %}" style="color: #800000; text-decoration: none; font-weight: bold;">View</a>
                 </td>
             </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">No tenants found.</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Pagination Controls -->
+    <div style="margin-top: 20px; text-align: center;">
+        <!-- Page Info -->
+        <div style="margin-bottom: 10px;">
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </div>
+
+        <!-- Pagination Links -->
+        <div style="display: inline-flex; gap: 5px; justify-content: center;">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}" style="text-decoration: none; color: #800000; font-weight: bold;">Previous</a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <span style="padding: 5px 10px; background-color: #800000; color: white; border-radius: 5px;">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}&search={{ search_query }}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #800000; color: #800000; border-radius: 5px;">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}" style="text-decoration: none; color: #800000; font-weight: bold;">Next</a>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}
