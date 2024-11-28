@@ -169,7 +169,7 @@ def property_listing(request):
         properties = properties.filter(parking_spaces__lte=int(parking_spaces_max))
     
     # Pagination
-    paginator = Paginator(properties, 10)  # Show 5 properties per page
+    paginator = Paginator(properties, 5)  # Show 5 properties per page
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)

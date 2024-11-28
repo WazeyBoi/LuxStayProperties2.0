@@ -1,0 +1,87 @@
+<div style="max-width: 941px; margin: auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;">
+    <!-- Header Section -->
+    <div style="background-color: #800000; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="margin: 0; font-size: 28px; font-weight: bold;">{{ property.property_name }}</h1>
+            <p style="margin: 0; font-size: 18px;">{{ property.address }}</p>
+        </div>
+        <div style="font-size: 28px; font-weight: bold;">₱{{ property.price }}/mo.</div>
+    </div>
+
+    <!-- Property Details Section -->
+    <div style="padding: 15px 20px; margin-bottom: 10px;">
+        <!-- Type and Status Line -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 16px;">
+            <div>
+                <span style="font-weight: bold; text-transform: uppercase;">TYPE:</span>
+                <span style="margin-left: 10px; text-transform: uppercase;;">{{ property.property_type|capfirst }}</span>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-weight: bold;">STATUS:</span>
+                <span class="status-available" style="margin-left: 10px; color: #28a745; font-weight: bold;">
+                    {{ property.status|capfirst }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Compressed Property Details Line -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0px; font-size: 14px; white-space: nowrap;">
+            <div style="flex: 1; display: flex; align-items: center;">
+                <span style="font-weight: bold;">ROOMS:</span>
+                <span style="margin-left: 5px;">{{ property.number_of_rooms }}</span>
+            </div>
+            <div style="flex: 1; display: flex; align-items: center;">
+                <span style="font-weight: bold;">BATHS:</span>
+                <span style="margin-left: 5px;">{{ property.num_of_bathrooms }}</span>
+            </div>
+            <div style="flex: 1; display: flex; align-items: center;">
+                <span style="font-weight: bold;">SQFT:</span>
+                <span style="margin-left: 5px;">{{ property.sqft }}</span>
+            </div>
+            <div style="flex: 1; display: flex; align-items: center;">
+                <span style="font-weight: bold;">PARKING SPACE:</span>
+                <span style="margin-left: 5px;">{{ property.parking_spaces }}</span>
+            </div>
+            <div style="flex: 1; display: flex; align-items: center;">
+                <span style="font-weight: bold;">FURNISHED:</span>
+                <span style="margin-left: 5px;">{{ property.is_furnished|yesno:"YES,NO" }}</span>
+            </div>
+            <div style="flex: 1; display: flex; align-items: center;">
+                <span style="font-weight: bold;">PET POLICY:</span>
+                <span style="margin-left: 5px;">
+                    {% if property.pet_policy == "Not_allowed" %}
+                        Not Allowed
+                    {% else %}
+                        {{ property.pet_policy|capfirst }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Section -->
+    <div style="padding: 0 20px;">
+        <p style="font-weight: bold; padding-top: 0px;">DESCRIPTION</p>
+        <p style="font-size: 14px; padding: 2.5px 5px;">{{ property.description }}</p>
+    </div>
+
+    <!-- Image Section -->
+    <div style="padding: 15px 20px;">
+        <div style="background-color: #f4f4f4; padding: 0; display: flex; justify-content: center; width: 100%; height: 400px; overflow: hidden;">
+            {% if property.image %}
+                <img src="{{ property.image.url }}" alt="Property Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
+            {% else %}
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #e0e0e0; border-radius: 10px;">
+                    <p>No Image Attached</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Booking Button Section -->
+    <div style="padding: 5px 20px 15px 20px; text-align: right;">
+        <a href="{% url 'book_property' property.id %}" style="display: inline-block; padding: 10px 20px; background-color: #800000; color: #ffffff; font-weight: bold; text-decoration: none; border-radius: 5px; font-size: 16px;">
+            BOOK PROPERTY
+        </a>
+    </div>
+</div>

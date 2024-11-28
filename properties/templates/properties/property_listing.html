@@ -16,34 +16,15 @@
         <button type="button" id="filterBtn" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer;">Filter</button>
     </form>
 
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <thead>
-            <tr style="background-color: #800000; color: white; text-align: left;">
-                <th style="padding: 10px;">Name</th>
-                <th style="padding: 10px;">Address</th>
-                <th style="padding: 10px;">Type</th>
-                <th style="padding: 10px;">Price per month (PHP)</th>
-                <th style="padding: 10px;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for property in page_obj %}
-            <tr style="border-bottom: 1px solid #ddd; text-align: left;">
-                <td style="padding: 10px;">{{ property.property_name }}</td>
-                <td style="padding: 10px;">{{ property.address }}</td>
-                <td style="padding: 10px;">{{ property.property_type|capfirst }}</td>
-                <td style="padding: 10px;">{{ property.price }}</td>
-                <td style="padding: 10px;">
-                    <a href="{% url 'view_property_details' property.id %}" style="text-decoration: none; color: #800000; font-weight: bold;">VIEW DETAILS</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" style="padding: 20px; text-align: center; color: #666;">No properties available.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div style="margin-top: 20px;">
+        {% for property in page_obj %}
+            <div style="margin-bottom: 20px;">
+                {% include 'properties/property_card.html' with property=property %}
+            </div>
+        {% empty %}
+        <div style="padding: 20px; text-align: center; color: #666;">No properties available.</div>
+        {% endfor %}
+    </div>
 
     <!-- Pagination Controls -->
     <div style="text-align: center; margin-top: 20px;">
