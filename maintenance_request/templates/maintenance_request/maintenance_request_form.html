@@ -6,48 +6,24 @@
 {% block content %}
 <div class="container" style="max-width: 800px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
     <div class="back-link">
-        <a href="{% url 'my_bookings' %}" style="color: #800000; font-weight: bold; text-decoration: underline; font-size: 14px;">&larr; Back to My Bookings List</a>
+        <a href="{% url 'my_bookings' %}"  style="color: #800000; font-weight: bold; text-decoration: underline; font-size: 14px;">&larr; Back to My Bookings List</a>
     </div>
-    <h1 style="color: #800000; text-align: center;">Maintenance Requests</h1>
+    <h1 style="color: #800000; text-align: center;">Create Maintenance Request</h1>
 
-    <button id="openModal" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Create Request</button>
+    <form method="post" style="display: grid; grid-template-columns: 1fr; gap: 25px;">
+        {% csrf_token %}
+        <label for="description" style="text-align: center; font-size: 16px; font-weight: bold;">Description:</label>
+        <textarea id="description" name="description" style="background-color: beige; width: 100%; height: 150px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;"></textarea>
+        
+        <!-- Hidden fields for leaseId and tenantId -->
+        <input type="hidden" name="leaseid" value="{{ lease.id }}">
+        <input type="hidden" name="tenantid" value="{{ tenant.id }}">
 
-    <!-- Modal -->
-    <div id="requestModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
-            <h2 style="color: #800000; text-align: center;">Create Maintenance Request</h2>
-            <form method="post" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
-                {% csrf_token %}
-                <label for="description" style="font-size: 14px; font-weight: bold;">Description:</label>
-                <textarea id="description" name="description" style="background-color: white; width: 100%; height: 100px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;"></textarea>
+        <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 20px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; padding: 15px 30px; width: 100%;">Submit Request</button>
+    </form>
 
-                <!-- Hidden fields for leaseId and tenantId -->
-                <input type="hidden" name="leaseid" value="{{ lease.id }}">
-                <input type="hidden" name="tenantid" value="{{ tenant.id }}">
-
-                <div style="display: flex; justify-content: space-between;">
-                    <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Submit</button>
-                    <button type="button" id="closeModal" style="background-color: #ccc; color: black; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <a href="{% url 'tenant_dashboard' %}" class="cancel-link" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold;">
+        Cancel
+    </a>
 </div>
-
-<script>
-    document.getElementById('openModal').addEventListener('click', function () {
-        document.getElementById('requestModal').style.display = 'block';
-    });
-
-    document.getElementById('closeModal').addEventListener('click', function () {
-        document.getElementById('requestModal').style.display = 'none';
-    });
-
-    window.addEventListener('click', function (event) {
-        const modal = document.getElementById('requestModal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-</script>
 {% endblock %}
