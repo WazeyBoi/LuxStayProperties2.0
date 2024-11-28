@@ -33,9 +33,16 @@ def maintenance_request_create(request, leaseid, tenantid):
             maintenance_request = form.save(commit=False)
             maintenance_request.leaseId = lease
             maintenance_request.tenantId = tenant
-            maintenance_request.status = 'pending'  # Set default status
+            maintenance_request.status = 'pending'  # Default status
             maintenance_request.save()
+            
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # AJAX check
+                return JsonResponse({'success': True, 'message': 'Request created successfully!'})
+            
             return redirect('maintenance_request:maintenance_request_list')
+        else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # AJAX check
+                return JsonResponse({'success': False, 'errors': form.errors}, status=400)
     else:
         form = MaintenanceRequestForm()
 
