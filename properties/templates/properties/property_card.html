@@ -62,7 +62,7 @@
     <!-- Description Section -->
     <div style="padding: 0 20px;">
         <p style="font-weight: bold; padding-top: 0px;">DESCRIPTION</p>
-        <p style="font-size: 14px; padding: 2.5px 1px;">{{ property.description }}</p>
+        <p style="font-size: 14px; padding: 2.5px 1px; 3px 1px">{{ property.description }}</p>
     </div>
 
     <!-- Image Section -->
@@ -80,8 +80,114 @@
 
     <!-- Booking Button Section -->
     <div style="padding: 5px 20px 15px 20px; text-align: right;">
-        <a href="{% url 'book_property' property.id %}" style="display: inline-block; padding: 10px 20px; background-color: #800000; color: #ffffff; font-weight: bold; text-decoration: none; border-radius: 5px; font-size: 16px;">
+        <a id="openModalLink" href="javascript:void(0);" style="display: inline-block; padding: 10px 20px; background-color: #800000; color: #ffffff; font-weight: bold; text-decoration: none; border-radius: 5px; font-size: 16px;">
             BOOK PROPERTY
         </a>
     </div>
 </div>
+
+<!-- Modal Structure -->
+<div id="bookPropertyModal" class="modal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; background-color: rgba(0,0,0,0.4);">
+    <div class="modal-content" style="background-color: #ffffff; margin: auto; padding: 30px; border: 1px solid #888; width: 400px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <span class="close" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+        
+        <h2 style="text-align: center; color: #800000; margin-bottom: 20px;">Book Property</h2>
+        
+        {% if error_message %}
+            <div class="error-message" style="color: red; font-weight: bold; font-size: 14px; text-align: center; margin-bottom: 20px;">
+                {{ error_message }}
+            </div>
+        {% endif %}
+        
+        <form method="post" action="{% url 'book_property' property.id %}" style="display: flex; flex-direction: column; gap: 15px;">
+            {% csrf_token %}
+            <label for="start_date" style="font-weight: bold; color: #333; font-size: 14px;">Start Date:</label>
+            <input type="date" id="start_date" name="start_date" required style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+            
+            <label for="end_date" style="font-weight: bold; color: #333; font-size: 14px;">End Date:</label>
+            <input type="date" id="end_date" name="end_date" required style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+            
+            <div class="button-group" style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
+                <button type="button" id="set-2-months" style="flex: 1; background-color: #800000; color: white; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px;">2 Months</button>
+                <button type="button" id="set-6-months" style="flex: 1; background-color: #800000; color: white; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px;">6 Months</button>
+                <button type="button" id="set-12-months" style="flex: 1; background-color: #800000; color: white; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px;">12 Months</button>
+            </div>
+            
+            <div class="amount" style="font-size: 16px; font-weight: bold; color: #333; margin-top: 15px; text-align: center;">
+                Initial Amount to Pay: <span style="color: #800000;">PHP {{ property.price }}</span>
+            </div>
+            
+            <button type="submit" style="background-color: #800000; color: white; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px;">Book Property</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Get the modal
+    const modal = document.getElementById('bookPropertyModal');
+
+    // Get the link that opens the modal
+    const link = document.getElementById('openModalLink');
+
+    // Get the <span> element that closes the modal
+    const span = document.getElementsByClassName('close')[0];
+
+    // When the user clicks the link, open the modal 
+    link.onclick = function() {
+        modal.style.display = 'block';
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    const startDateInput = document.getElementById('start_date');
+    const endDateInput = document.getElementById('end_date');
+    const button2Months = document.getElementById('set-2-months');
+    const button6Months = document.getElementById('set-6-months');
+    const button12Months = document.getElementById('set-12-months');
+
+    function calculateEndDate(startDate, daysToAdd) {
+        const start = new Date(startDate);
+        const end = new Date(start);
+        end.setDate(start.getDate() + daysToAdd);
+        return end.toISOString().split('T')[0];
+    }
+
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+
+    // Set the minimum allowed date for the start date
+    startDateInput.min = today;
+
+    // Initialize default values for start and end dates
+    startDateInput.value = today;
+    endDateInput.value = calculateEndDate(today, 30);
+
+    // Update end date when the start date changes
+    startDateInput.addEventListener('change', () => {
+        const newStartDate = startDateInput.value;
+        endDateInput.value = calculateEndDate(newStartDate, 30);
+    });
+
+    // Event listeners for buttons
+    button2Months.addEventListener('click', () => {
+        endDateInput.value = calculateEndDate(startDateInput.value, 60);
+    });
+
+    button6Months.addEventListener('click', () => {
+        endDateInput.value = calculateEndDate(startDateInput.value, 180);
+    });
+
+    button12Months.addEventListener('click', () => {
+        endDateInput.value = calculateEndDate(startDateInput.value, 365);
+    });
+</script>
