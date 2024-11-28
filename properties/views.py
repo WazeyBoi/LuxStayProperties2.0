@@ -28,7 +28,7 @@ def property_listing_management(request):
 @login_required
 def add_property(request):
     if request.method == "POST":
-        form = PropertyForm(request.POST)
+        form = PropertyForm(request.POST, request.FILES)
         if form.is_valid():
             property = form.save(commit=False)
             property.owner = request.user  # Set the property owner to the logged-in user
@@ -42,8 +42,11 @@ def add_property(request):
 def update_property(request, property_id):
     property = get_object_or_404(Property, id=property_id, owner=request.user)
     if request.method == "POST":
-        form = PropertyForm(request.POST, instance=property)
+        form = PropertyForm(request.POST, request.FILES, instance=property)
         if form.is_valid():
+            if 'delete_image' in request.POST and request.POST['delete_image'] == 'on':
+                property.image.delete()
+                property.image = None
             form.save()
             return redirect('property_listing_management')
     else:

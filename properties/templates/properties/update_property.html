@@ -6,7 +6,7 @@
 <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); max-width: 500px; margin: auto;">
     <h2 style="text-align: center; color: #800000; margin-bottom: 20px; font-size: 24px; font-weight: bold;">Update Property</h2>
     
-    <form id="updateForm" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+    <form id="updateForm" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
@@ -60,6 +60,19 @@
         <label for="description" style="font-weight: bold; color: #333; font-size: 14px;">Description:</label>
         <textarea id="description" name="description" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; height: 150px;">{{ form.description.value }}</textarea>
 
+        {% if form.instance.image %}
+            <label for="current_image" style="font-weight: bold; color: #333;">Current Image:</label>
+            <div id="currentImageContainer" style="margin-bottom: 15px;">
+                <img src="{{ form.instance.image.url }}" alt="Current Image" style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+            </div>
+        {% endif %}
+
+        <label for="image" style="font-weight: bold; color: #333;">Update Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;" onchange="previewImage(event)">
+        <div id="imagePreviewContainer" style="margin-top: 15px; display: none;">
+            <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+
         <button type="button" onclick="showConfirmationModal()" style="padding: 10px 20px; background-color: #800000; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer;">Update Property</button>
     </form>
 
@@ -95,6 +108,16 @@ function closeConfirmationModal() {
 
 function submitForm() {
     document.getElementById('updateForm').submit();
+}
+
+function previewImage(event) {
+    var reader = new FileReader();
+    reader.onload = function(){
+        var output = document.getElementById('imagePreview');
+        output.src = reader.result;
+        document.getElementById('imagePreviewContainer').style.display = 'block';
+    };
+    reader.readAsDataURL(event.target.files[0]);
 }
 </script>
 {% endblock %}

@@ -7,7 +7,7 @@
 <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); max-width: 500px; margin: auto;">
     <h2 style="text-align: center; color: #800000; margin-bottom: 20px; font-size: 24px; font-weight: bold;">Add Property</h2>
     
-    <form id="addForm" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+    <form id="addForm" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
@@ -61,6 +61,12 @@
         <label for="description" style="font-weight: bold; color: #333;">Description:</label>
         <textarea id="description" name="description" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; height: 150px;"></textarea>
 
+        <label for="image" style="font-weight: bold; color: #333;">Upload Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;" onchange="previewImage(event)">
+        <div id="imagePreviewContainer" style="margin-top: 15px; display: none;">
+            <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+
         <button type="submit" style="padding: 10px 20px; background-color: #800000; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer;">Add Property</button>
     </form>
 
@@ -68,4 +74,16 @@
         <a href="{% url 'property_listing_management' %}" style="color: #800000; font-weight: bold; text-decoration: none; font-size: 14px;">Back to My Properties</a>
     </div>
 </div>
+
+<script>
+function previewImage(event) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        var output = document.getElementById('imagePreview');
+        output.src = reader.result;
+        document.getElementById('imagePreviewContainer').style.display = 'block';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
 {% endblock %}

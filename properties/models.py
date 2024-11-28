@@ -34,6 +34,7 @@ class Property(models.Model):
     is_furnished = models.BooleanField(default=False)
     parking_spaces = models.PositiveIntegerField(default=0)
     pet_policy = models.CharField(max_length=11, choices=PET_POLICY_CHOICES, default='not_allowed')
+    image = models.ImageField(upload_to='property_images/', blank=True, null=True)  # Add this line
     
     def __str__(self):
         return f"{self.property_name or self.address} - {self.get_status_display()}"

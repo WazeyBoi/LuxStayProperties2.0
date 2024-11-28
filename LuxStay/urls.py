@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', lambda request: redirect('login')),  # Redirects root URL to the login page
@@ -28,3 +30,6 @@ urlpatterns = [
     path('maintenance_request/', include('maintenance_request.urls')),
     path('feedback/', include('feedback.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

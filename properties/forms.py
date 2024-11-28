@@ -17,6 +17,7 @@ class PropertyForm(forms.ModelForm):
             'is_furnished',
             'parking_spaces',
             'pet_policy',
+            'image',
         ]
         widgets = {
             'property_type': forms.Select(attrs={
