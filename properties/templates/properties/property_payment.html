@@ -31,16 +31,17 @@
         {% endfor %}
     </ul>
 
-    <!-- Pagination Controls -->
-    <div style="text-align: center; margin-top: 20px;">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">Previous</a>
-        {% endif %}
-        <span style="font-weight: bold; font-size: 16px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">Next</a>
-        {% endif %}
-    </div>
+ <!-- Pagination -->
+<div style="text-align: center; margin-top: 20px;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">Previous</a>
+    {% endif %}
+    <span style="font-weight: bold; font-size: 16px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">Next</a>
+    {% endif %}
+</div>
+
 
 </div>
 {% endblock %}

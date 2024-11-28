@@ -54,25 +54,17 @@
                 </tbody>
             </table>
 
-            <!-- Pagination Controls -->
-            <div style="margin-top: 20px; text-align: center;">
-                <span style="display: inline-block; margin-right: 10px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                <div style="display: inline-flex; gap: 5px;">
-                    {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" style="text-decoration: none; color: #800000; font-weight: bold;">Previous</a>
-                    {% endif %}
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if num == page_obj.number %}
-                            <span style="padding: 5px 10px; background-color: #800000; color: white; border-radius: 5px;">{{ num }}</span>
-                        {% else %}
-                            <a href="?page={{ num }}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #800000; color: #800000; border-radius: 5px;">{{ num }}</a>
-                        {% endif %}
-                    {% endfor %}
-                    {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" style="text-decoration: none; color: #800000; font-weight: bold;">Next</a>
-                    {% endif %}
-                </div>
-            </div>
+<!-- Pagination -->
+<div style="text-align: center; margin-top: 20px;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">Previous</a>
+    {% endif %}
+    <span style="font-weight: bold; font-size: 16px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">Next</a>
+    {% endif %}
+</div>
+
         </div>
     </div>
 
