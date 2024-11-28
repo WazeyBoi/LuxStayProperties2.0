@@ -8,11 +8,11 @@
         <a href="{% url 'tenant_dashboard' %}" style="color: #800000; font-weight: bold; text-decoration: underline; font-size: 14px;">&larr; Back to Dashboard</a>
     </div>
 
-    <h2 style="text-align: center; color: #800000; margin-bottom: 20px; font-size: 26px; font-weight: bold;">Maintenance Requests</h2>
+    <h2>Maintenance Requests</h2>
     {% if page_obj %}
     <table style="width: 100%; border-collapse: collapse;">
-        <thead style="background-color: #800000; color: white;">
-            <tr>
+        <thead>
+            <tr style="background-color: #f5f5f5;">
                 <th style="padding: 10px; text-align: left;">Property</th>
                 <th style="padding: 10px; text-align: left;">Request Date</th>
                 <th style="padding: 10px; text-align: left;">Description</th>
@@ -22,20 +22,10 @@
         <tbody>
             {% for request in page_obj %}
             <tr>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.leaseId.property.property_name }}</td>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.requestDate }}</td>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.description }}</td>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; font-weight: bold;
-                {% if request.get_status_display == 'Pending' %}
-                    color: #ffc107; /* Mustard yellow */
-                {% elif request.get_status_display == 'Completed' %}
-                    color: #28a745; /* Green */
-                {% else %}
-                    color: #333; /* Default */
-                {% endif %}
-            ">
-                {{ request.get_status_display }}
-            </td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ request.leaseId.property.property_name }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ request.requestDate }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ request.description }}</td>
+                <td style="padding: 10px; border-bottom: 1px solid #ddd;" class="status-{{ request.status }}">{{ request.get_status_display }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -27,7 +27,7 @@ def feedback_create(request, leaseid, tenantid):
             feedback = form.save(commit=False)
             feedback.leaseId = lease
             feedback.tenantId = tenant
-            feedback.status = 'new'
+            feedback.status = 'new'  # Set the default value for status
             feedback.save()
             return redirect('feedback:feedback_list')
         else:
@@ -35,18 +35,12 @@ def feedback_create(request, leaseid, tenantid):
     else:
         form = FeedbackForm()
 
-    emojis = ["angry", "sad-face", "neutral-face", "smile", "satisfied"]
-    stars_with_emojis = [(i, emojis[i - 1]) for i in range(1, 6)]
-
-    context = {
+    return render(request, 'feedback/feedback_form.html', {
         'form': form,
         'lease': lease,
         'tenant': tenant,
-        'stars_with_emojis': stars_with_emojis,
-    }
-
-    return render(request, 'feedback/feedback_form.html', context)
-
+        'stars': range(1, 11),
+    })
 
 @login_required
 def feedback_ownerlist(request):
