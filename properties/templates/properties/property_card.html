@@ -9,46 +9,46 @@
     </div>
 
     <!-- Property Details Section -->
-    <div style="padding: 15px 20px 7.5px 20px; margin-bottom: 10px;">
+    <div style="padding: 15px 20px 7.5px 20px; margin-bottom: 5px;">
         <!-- Type and Status Line -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 16px;">
             <div>
                 <span style="font-weight: bold; text-transform: uppercase;">TYPE:</span>
-                <span style="margin-left: 10px; text-transform: uppercase;;">{{ property.property_type|capfirst }}</span>
+                <span style="margin-left: 10px; text-transform: uppercase; color: #800000; font-weight: bold; background-color: #fceaea; padding: 5px 10px; border-radius: 5px;">{{ property.property_type|capfirst }}</span>
             </div>
             <div style="text-align: right;">
                 <span style="font-weight: bold;">STATUS:</span>
-                <span class="status-available" style="margin-left: 10px; color: #28a745; font-weight: bold;">
+                <span class="status-available" style="margin-left: 10px; color: #28a745; font-weight: bold; background-color: #e8f5e9; padding: 5px 10px; border-radius: 5px;">
                     {{ property.status|capfirst }}
                 </span>
             </div>
         </div>
 
         <!-- Compressed Property Details Line -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0px; font-size: 14px; white-space: nowrap;">
-            <div style="flex: 1; display: flex; align-items: center;">
-                <span style="font-weight: bold;">ROOMS:</span>
-                <span style="margin-left: 5px;">{{ property.number_of_rooms }}</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px; font-size: 14px; white-space: nowrap; padding-top: 10px;">
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-bed" style="color: #333; margin-right: 5px;"></i>
+                <span style="font-size: 14px; color: #000;">{{ property.number_of_rooms }}</span>
             </div>
-            <div style="flex: 1; display: flex; align-items: center;">
-                <span style="font-weight: bold;">BATHS:</span>
-                <span style="margin-left: 5px;">{{ property.num_of_bathrooms }}</span>
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-bath" style="color: #333; margin-right: 5px;"></i>
+                <span style="font-size: 14px; color: #000;">{{ property.num_of_bathrooms }}</span>
             </div>
-            <div style="flex: 1; display: flex; align-items: center;">
-                <span style="font-weight: bold;">SQFT:</span>
-                <span style="margin-left: 5px;">{{ property.sqft }}</span>
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-ruler-combined" style="color: #333; margin-right: 5px;"></i>
+                <span style="font-size: 14px; color: #000;">{{ property.sqft }}</span>
             </div>
-            <div style="flex: 1; display: flex; align-items: center;">
-                <span style="font-weight: bold;">PARKING SPACE:</span>
-                <span style="margin-left: 5px;">{{ property.parking_spaces }}</span>
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-car" style="color: #333; margin-right: 5px;"></i>
+                <span style="font-size: 14px; color: #000;">{{ property.parking_spaces }}</span>
             </div>
-            <div style="flex: 1; display: flex; align-items: center;">
-                <span style="font-weight: bold;">FURNISHED:</span>
-                <span style="margin-left: 5px;">{{ property.is_furnished|yesno:"YES,NO" }}</span>
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-couch" style="color: #333; margin-right: 5px;"></i>
+                <span style="font-size: 14px; color: #000;">{{ property.is_furnished|yesno:"YES,NO" }}</span>
             </div>
-            <div style="flex: 1; display: flex; align-items: center;">
-                <span style="font-weight: bold;">PET POLICY:</span>
-                <span style="margin-left: 5px;">
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-paw" style="color: #333; margin-right: 5px;"></i>
+                <span style="font-size: 14px; color: #000; white-space: nowrap;">
                     {% if property.pet_policy == "Not_allowed" %}
                         Not Allowed
                     {% else %}
@@ -57,12 +57,13 @@
                 </span>
             </div>
         </div>
+
     </div>
 
     <!-- Description Section -->
     <div style="padding: 0 20px;">
         <p style="font-weight: bold; padding-top: 0px;">DESCRIPTION</p>
-        <p style="font-size: 14px; padding: 2.5px 1px; 3px 1px">{{ property.description }}</p>
+        <p style="font-size: 14px; padding: 7.5px 1px; 3px 1px">{{ property.description }}</p>
     </div>
 
     <!-- Image Section -->
@@ -80,14 +81,15 @@
 
     <!-- Booking Button Section -->
     <div style="padding: 5px 20px 15px 20px; text-align: right;">
-        <a id="openModalLink" href="javascript:void(0);" style="display: inline-block; padding: 10px 20px; background-color: #800000; color: #ffffff; font-weight: bold; text-decoration: none; border-radius: 5px; font-size: 16px;">
+        <a class="openModalLink" data-modal-id="bookPropertyModal_{{ modal_id }}" href="javascript:void(0);" 
+           style="display: inline-block; padding: 10px 20px; background-color: #800000; color: #ffffff; font-weight: bold; text-decoration: none; border-radius: 5px; font-size: 16px;">
             BOOK PROPERTY
         </a>
     </div>
 </div>
 
-<!-- Modal Structure -->
-<div id="bookPropertyModal" class="modal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; background-color: rgba(0,0,0,0.4);">
+<!-- Updated Modal Structure -->
+<div id="bookPropertyModal_{{ modal_id }}" class="bookPropertyModal modal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; background-color: rgba(0,0,0,0.4);">
     <div class="modal-content" style="background-color: #ffffff; margin: auto; padding: 30px; border: 1px solid #888; width: 400px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
         <span class="close" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
         
@@ -122,72 +124,69 @@
     </div>
 </div>
 
+<!-- Include Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <script>
-    // Get the modal
-    const modal = document.getElementById('bookPropertyModal');
+    document.querySelectorAll('.openModalLink').forEach(link => {
+        link.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal-id');
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        });
+    });
 
-    // Get the link that opens the modal
-    const link = document.getElementById('openModalLink');
-
-    // Get the <span> element that closes the modal
-    const span = document.getElementsByClassName('close')[0];
-
-    // When the user clicks the link, open the modal 
-    link.onclick = function() {
-        modal.style.display = 'block';
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        modal.style.display = 'none';
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
+    document.querySelectorAll('.modal .close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', function() {
+            const modal = this.closest('.modal');
             modal.style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', function(event) {
+        document.querySelectorAll('.modal').forEach(modal => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    document.querySelectorAll('.bookPropertyModal').forEach(modal => {
+        const startDateInput = modal.querySelector('#start_date');
+        const endDateInput = modal.querySelector('#end_date');
+        const button2Months = modal.querySelector('#set-2-months');
+        const button6Months = modal.querySelector('#set-6-months');
+        const button12Months = modal.querySelector('#set-12-months');
+
+        function calculateEndDate(startDate, daysToAdd) {
+            const start = new Date(startDate);
+            const end = new Date(start);
+            end.setDate(start.getDate() + daysToAdd);
+            return end.toISOString().split('T')[0];
         }
-    }
 
-    const startDateInput = document.getElementById('start_date');
-    const endDateInput = document.getElementById('end_date');
-    const button2Months = document.getElementById('set-2-months');
-    const button6Months = document.getElementById('set-6-months');
-    const button12Months = document.getElementById('set-12-months');
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.min = today;
+        startDateInput.value = today;
+        endDateInput.value = calculateEndDate(today, 30);
 
-    function calculateEndDate(startDate, daysToAdd) {
-        const start = new Date(startDate);
-        const end = new Date(start);
-        end.setDate(start.getDate() + daysToAdd);
-        return end.toISOString().split('T')[0];
-    }
+        startDateInput.addEventListener('change', () => {
+            const newStartDate = startDateInput.value;
+            endDateInput.value = calculateEndDate(newStartDate, 30);
+        });
 
-    // Get today's date in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0];
+        button2Months.addEventListener('click', () => {
+            endDateInput.value = calculateEndDate(startDateInput.value, 60);
+        });
 
-    // Set the minimum allowed date for the start date
-    startDateInput.min = today;
+        button6Months.addEventListener('click', () => {
+            endDateInput.value = calculateEndDate(startDateInput.value, 180);
+        });
 
-    // Initialize default values for start and end dates
-    startDateInput.value = today;
-    endDateInput.value = calculateEndDate(today, 30);
-
-    // Update end date when the start date changes
-    startDateInput.addEventListener('change', () => {
-        const newStartDate = startDateInput.value;
-        endDateInput.value = calculateEndDate(newStartDate, 30);
-    });
-
-    // Event listeners for buttons
-    button2Months.addEventListener('click', () => {
-        endDateInput.value = calculateEndDate(startDateInput.value, 60);
-    });
-
-    button6Months.addEventListener('click', () => {
-        endDateInput.value = calculateEndDate(startDateInput.value, 180);
-    });
-
-    button12Months.addEventListener('click', () => {
-        endDateInput.value = calculateEndDate(startDateInput.value, 365);
+        button12Months.addEventListener('click', () => {
+            endDateInput.value = calculateEndDate(startDateInput.value, 365);
+        });
     });
 </script>
