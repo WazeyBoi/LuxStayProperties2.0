@@ -69,17 +69,17 @@ def property_bookings(request):
     terminated_leases = Lease.objects.filter(property__in=properties, status='terminated')
 
     # Paginate active leases
-    active_paginator = Paginator(active_leases, 10)  # Show 10 active leases per page
+    active_paginator = Paginator(active_leases, 5)  # Show 10 active leases per page
     active_page_number = request.GET.get('page')
     active_page_obj = active_paginator.get_page(active_page_number)
 
     # Paginate past leases
-    past_paginator = Paginator(past_leases, 10)  # Show 10 past leases per page
+    past_paginator = Paginator(past_leases, 5)  # Show 10 past leases per page
     past_page_number = request.GET.get('past_page')
     past_page_obj = past_paginator.get_page(past_page_number)
 
     # Paginate terminated leases
-    terminated_paginator = Paginator(terminated_leases, 10)  # Show 10 terminated leases per page
+    terminated_paginator = Paginator(terminated_leases, 5)  # Show 10 terminated leases per page
     terminated_page_number = request.GET.get('terminated_page')
     terminated_page_obj = terminated_paginator.get_page(terminated_page_number)
 
