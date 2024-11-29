@@ -21,7 +21,7 @@
                 <th style="padding: 10px; text-align: left;">Tenant Name</th>
                 <th style="padding: 10px; text-align: left;">Description</th>
                 <th style="padding: 10px; text-align: left;">Date Submitted</th>
-                <th style="padding: 10px; text-align: left;">Status</th>
+                <th style="padding: 10px; text-align: center;">Status</th>
                 <th style="padding: 10px; text-align: center;">Actions</th>
             </tr>
         </thead>
@@ -35,9 +35,9 @@
                 <td style="padding: 10px;">{{ request.requestDate|date:"F j, Y" }}</td>
                 <td style="padding: 10px;">
                     <span style="padding: 5px 10px; border-radius: 4px; 
-{% if request.status == 'pending' %} background-color: orange;
-{% elif request.status == 'in_progress' %} background-color: blue; color: white;
-{% elif request.status == 'completed' %} background-color: green; color: white;
+{% if request.status == 'pending' %} font-weight:bold; color: orange;
+{% elif request.status == 'in_progress' %}font-weight:bold; color: blue;
+{% elif request.status == 'completed' %} font-weight:bold;color: green;
 {% else %} background-color: gray; color: white;
 {% endif %}">
                         {{ request.get_status_display }}
@@ -47,14 +47,14 @@
                     {% if request.status == 'pending' %}
                     <form method="POST" action="{% url 'maintenance_request:accept_request' request.requestId %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" style="padding: 5px 10px; background-color: blue; color: white; border: none; border-radius: 4px;">Accept</button>
+                        <button type="submit" style="padding: 5px 10px; background-color: #800000; color: white; border: none; border-radius: 4px;">Accept</button>
                     </form>
                     {% endif %}
                     
                     {% if request.status == 'in_progress' %}
                     <form method="POST" action="{% url 'maintenance_request:complete_request' request.requestId %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" style="padding: 5px 10px; background-color: green; color: white; border: none; border-radius: 4px;">Complete</button>
+                        <button type="submit" style="padding: 5px 10px; background-color:  #800000; color: white; border: none; border-radius: 4px;">Complete</button>
                     </form>
                     {% endif %}
                 </td>

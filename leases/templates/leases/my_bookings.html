@@ -11,6 +11,7 @@
 <h2 style="text-align: center; color: #800000; margin-bottom: 20px; font-size: 26px; font-weight: bold;">My Bookings</h2>
 
 <!-- Active and Pending Bookings -->
+
 <h3 style="color: #333; margin-top: 20px;">Active & Pending Bookings</h3>
 {% if pending_page.object_list or active_page.object_list%}
 <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
@@ -21,8 +22,7 @@
             <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Start Date</th>
             <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">End Date</th>
             <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Status</th>
-            <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Action</th>
-            <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Feedback</th>
+            <th style="padding: 10px 15px; text-align: center; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -33,13 +33,13 @@
             <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
             <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
             <td class="status-active" style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #28a745; font-weight: bold;">Active</td>
-            <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px;">
-                <a href="{% url 'maintenance_request:maintenance_request_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #800000; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Request</a>
+
+            <td style="padding: 10px; text-align:left; white-space: nowrap;font-size: 14px;border-bottom: 1px solid #ddd;" >
+                <a href="{% url 'maintenance_request:maintenance_request_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #800000;padding: 8px 12px; text-decoration: none;border-radius: 4px; color:#fdf3f2; font-weight: bold;">Request</a>
+              
+
+<a href="{% url 'feedback:feedback_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #800000; text-decoration: none;padding: 8px 12px; color: #fdf3f2;border-radius: 4px; font-weight: bold;">Feedback</a>
             </td>
-            <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px;">
-                <a href="{% url 'feedback:feedback_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #007bff; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Feedback</a>
-            </td>
-            
         </tr>
         {% endfor %}
         {% for booking in pending_page %}
@@ -86,7 +86,6 @@
 {% else %}
 <p class="no-bookings" style="text-align: center; color: #666; margin-top: 20px; font-size: 16px;">No active or pending bookings.</p>
 {% endif %}
-
 
     
     
@@ -145,5 +144,5 @@
     {% else %}
     <p class="no-bookings" style="text-align: center; color: #666; margin-top: 20px; font-size: 16px;">No old bookings.</p>
     {% endif %}
-</div>
+
 {% endblock %}
