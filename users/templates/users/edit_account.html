@@ -9,6 +9,17 @@
     </div>
     <h2 style="color: #800000; text-align: center; margin-bottom: 20px;">Edit Account</h2>
 
+    <!-- Display error messages -->
+    {% if messages %}
+        <div class="messages" style="margin-bottom: 20px;">
+            {% for message in messages %}
+                <div style="color: red; font-weight: bold; text-align: center; margin-bottom: 5px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <form method="POST" onsubmit="return confirm('Are you sure you want to update your details?');" style="display: flex; flex-direction: column; gap: 15px;">
         {% csrf_token %}
 
@@ -54,5 +65,4 @@
         <button type="submit" style="padding: 10px 20px; background-color: #800000; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer;">Update Details</button>
     </form>
 </div>
-
 {% endblock %}

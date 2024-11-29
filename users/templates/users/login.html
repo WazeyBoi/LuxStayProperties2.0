@@ -6,14 +6,15 @@
 <div class="form-container">
     <h2>Login</h2>
 
-    <!-- Display error message if authentication fails -->
     {% if messages %}
-        <div class="error-message" style="color: red; margin-bottom: 10px; text-align: center;">
-            {% for message in messages %}
+    <div class="error-message" style="color: red; margin-bottom: 10px; text-align: center;">
+        {% for message in messages %}
+            {% if 'login' in message.tags %}
                 <p style="color: red;">{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
     
     <form method="post">
         {% csrf_token %}

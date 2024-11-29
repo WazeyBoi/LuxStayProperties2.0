@@ -11,6 +11,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.hashers import check_password
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
+from django.contrib.messages import constants
 
 def register_view(request):
     if request.method == "POST":
@@ -41,9 +42,9 @@ def login_view(request):
                 # Default redirect (if needed)
                 return redirect('home')  # Replace 'home' with a suitable default page if needed
             else:
-                messages.error(request, "Username or Password is incorrect")
+                messages.error(request, "Username or Password is incorrect", extra_tags='login')
         else:
-            messages.error(request, "Username or Password is incorrect")
+            messages.error(request, "Username or Password is incorrect", extra_tags='login')
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})
@@ -149,7 +150,6 @@ def edit_account(request):
                 return render(request, 'users/edit_account.html', {'user': user})
 
         user.save()
-        messages.success(request, "Your account details have been updated.")
         return redirect('tenant_dashboard')
 
     return render(request, 'users/edit_account.html', {'user': user})
