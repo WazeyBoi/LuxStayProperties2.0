@@ -192,7 +192,6 @@ def edit_account_property_owner(request):
                 return render(request, 'users/edit_account_property_owner.html', {'user': user})
 
         user.save()
-        messages.success(request, "Your account details have been updated.")
         return redirect('property_owner_dashboard')
 
     return render(request, 'users/edit_account_property_owner.html', {'user': user})
