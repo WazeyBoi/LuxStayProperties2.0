@@ -64,14 +64,24 @@
     </tbody>
 </table>
 
-<div class="pagination" style="text-align: center; margin-top: 20px;">
-    {% if active_page.has_previous %}
-        <a href="?page_active={{ active_page.previous_page_number }}" style="color: #800000; padding: 8px 16px; text-decoration: none; font-size: 14px; margin: 0 5px; border: 1px solid #ddd; border-radius: 4px;">Previous</a>
-    {% endif %}
-    <span style="font-size: 16px; font-weight: bold;">Page {{ active_page.number }} of {{ active_page.paginator.num_pages }}</span>
-    {% if active_page.has_next %}
-        <a href="?page_active={{ active_page.next_page_number }}" style="color: #800000; padding: 8px 16px; text-decoration: none; font-size: 14px; margin: 0 5px; border: 1px solid #ddd; border-radius: 4px;">Next</a>
-    {% endif %}
+<div style="text-align: center; margin-top: 20px;">
+    <div style="display: inline-flex; gap: 5px; align-items: center;">
+        {% if active_page.has_previous %}
+        <a href="?page_active={{ active_page.previous_page_number }}" 
+           style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">
+            Previous
+        </a>
+        {% endif %}
+        
+        <span style="font-weight: bold; font-size: 16px;">Page {{ active_page.number }} of {{ active_page.paginator.num_pages }}</span>
+        
+        {% if active_page.has_next %}
+        <a href="?page_active={{ active_page.next_page_number }}" 
+           style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">
+            Next
+        </a>
+        {% endif %}
+    </div>
 </div>
 {% else %}
 <p class="no-bookings" style="text-align: center; color: #666; margin-top: 20px; font-size: 16px;">No active or pending bookings.</p>
@@ -112,15 +122,26 @@
         </tbody>
     </table>
 
-    <div class="pagination" style="text-align: center; margin-top: 20px;">
-        {% if old_page.has_previous %}
-            <a href="?page_old={{ old_page.previous_page_number }}" style="color: #800000; padding: 8px 16px; text-decoration: none; font-size: 14px; margin: 0 5px; border: 1px solid #ddd; border-radius: 4px;">Previous</a>
-        {% endif %}
-        <span style="font-size: 16px; font-weight: bold;">Page {{ old_page.number }} of {{ old_page.paginator.num_pages }}</span>
-        {% if old_page.has_next %}
-            <a href="?page_old={{ old_page.next_page_number }}" style="color: #800000; padding: 8px 16px; text-decoration: none; font-size: 14px; margin: 0 5px; border: 1px solid #ddd; border-radius: 4px;">Next</a>
-        {% endif %}
+    <div style="text-align: center; margin-top: 20px;">
+        <div style="display: inline-flex; gap: 5px; align-items: center;">
+            {% if old_page.has_previous %}
+            <a href="?page_old={{ old_page.previous_page_number }}" 
+               style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">
+                Previous
+            </a>
+            {% endif %}
+            
+            <span style="font-weight: bold; font-size: 16px;">Page {{ old_page.number }} of {{ old_page.paginator.num_pages }}</span>
+            
+            {% if old_page.has_next %}
+            <a href="?page_old={{ old_page.next_page_number }}" 
+               style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">
+                Next
+            </a>
+            {% endif %}
+        </div>
     </div>
+    
     {% else %}
     <p class="no-bookings" style="text-align: center; color: #666; margin-top: 20px; font-size: 16px;">No old bookings.</p>
     {% endif %}
