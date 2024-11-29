@@ -42,7 +42,7 @@
     </table>
 
     <div class="pagination" style="text-align: center; margin-top: 20px;">
-        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        <span style=" font-weight: bold;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
         <div style="display: inline-flex; gap: 10px; margin-top: 10px;">
             {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}" style="padding: 8px 16px; background-color: #800000; color: white; text-decoration: none; border-radius: 5px;">Previous</a>
