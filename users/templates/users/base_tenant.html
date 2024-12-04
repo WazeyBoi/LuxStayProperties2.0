@@ -7,18 +7,82 @@
     <title>{% block title %}Page{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'users/style.css' %}">
     <style>
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body and Main Styling */
         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
             background-image: url("{% static 'users/images/TemplateBackground.png' %}");
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
 
-        .main-container {
+        /* Header */
+        .header {
+            background-color: #54010b;
+            padding: 15px 20px;
             display: flex;
-            margin: 20px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap; /* Ensure content wraps on smaller screens */
         }
 
+        .header .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0; /* Prevent the logo from shrinking */
+        }
+
+        .header nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 15px;
+            flex-grow: 1; /* Allow links to grow and adjust */
+        }
+
+        .header nav a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+            white-space: nowrap; /* Prevent links from breaking into multiple lines */
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .header nav a:last-child {
+            margin-right: 0;
+        }
+
+        /* Media Queries for Small Screens */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column; /* Stack content vertically */
+                align-items: center;
+                padding: 10px;
+            }
+
+            .header nav {
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .header nav a {
+                margin: 5px 10px; /* Adjust spacing for smaller screens */
+            }
+        }
+
+        /* Sidebar */
         .sidebar {
             width: 310px;
             background-color: #ffffff;
@@ -53,6 +117,12 @@
             background-color: #660000;
         }
 
+        /* Main Content */
+        .main-container {
+            display: flex;
+            margin: 20px;
+        }
+
         .main-content {
             flex: 1;
             background-color: #f9f9f9;
@@ -64,21 +134,36 @@
             align-items: center;
             color: #555;
         }
+
+        /* Footer */
+        footer {
+            background-color: #54010b;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        footer img {
+            height: 65px;
+            width: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
     </style>
 </head>
-<body style="font-family: Arial, sans-serif; color: #333; margin: 0;">
+<body>
 
     <!-- Header -->
-    <header class="header" style="background-color: #54010b; padding: 10px 30px;">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="logo" style="display: flex; align-items: center;">
-                <img src="{% static 'users/images/LSP_Header.png' %}" alt="LuxStay Properties" style="height: 65px; width: auto;">
-            </div>
-            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-left: 1200px;">
-                <a href="{% url 'property_listing' %}" style="color: white; font-weight: bold; text-decoration: none; font-size: 14px;">DASHBOARD</a>
-                <a href="{% url 'logout' %}" style="color: white; font-weight: bold; text-decoration: none; font-size: 14px;">LOGOUT</a>
-            </div>
+    <header class="header">
+        <div class="logo">
+            <img src="{% static 'users/images/LSP_Header.png' %}" alt="LuxStay Properties" style="height: 65px; width: auto;">
         </div>
+        <nav>
+            <a href="{% url 'property_listing' %}">DASHBOARD</a>
+            <a href="{% url 'logout' %}">LOGOUT</a>
+        </nav>
     </header>
 
     <!-- Main Content -->
@@ -109,8 +194,8 @@
     </div>
 
     <!-- Footer -->
-    <footer style="background-color: #54010b; color: white; text-align: center; padding: 10px; font-size: 14px; width: 100%; bottom: 0;">
-        <img src="{% static 'users/images/LSP_Footer.png' %}" alt="LuxStay Footer" style="height: 65px; width: auto; display: block; margin: 0 auto 10px;">
+    <footer>
+        <img src="{% static 'users/images/LSP_Footer.png' %}" alt="LuxStay Footer">
         &copy; EST. 2024 | All Rights Reserved
     </footer>
 

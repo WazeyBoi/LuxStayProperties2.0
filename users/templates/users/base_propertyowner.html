@@ -14,6 +14,38 @@
             background-attachment: fixed;
         }
 
+        /* Header */
+        .header {
+            background-color: #54010b;
+            padding: 10px 30px;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .auth-buttons a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* Sidebar Styles */
         .main-container {
             display: flex;
             margin: 20px;
@@ -43,10 +75,10 @@
             padding: 12px 15px;
             border-radius: 5px;
             font-weight: bold;
-            text-align: left; /* Align text to the left */
+            text-align: left;
             transition: background-color 0.3s;
             width: 100%;
-            margin-bottom: 10px; /* Added margin for spacing */
+            margin-bottom: 10px;
         }
 
         .sidebar a:hover {
@@ -64,19 +96,50 @@
             align-items: center;
             color: #555;
         }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            /* Adjust container and header layout */
+            .header .container {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+
+            .auth-buttons {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+
+            .main-container {
+                flex-direction: column;
+                margin: 10px;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+            }
+
+            .main-content {
+                width: 100%;
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
 <body style="font-family: Arial, sans-serif; color: #333; margin: 0;">
 
     <!-- Header -->
-    <header class="header" style="background-color: #54010b; padding: 10px 30px;">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="logo" style="display: flex; align-items: center;">
+    <header class="header">
+        <div class="container">
+            <div class="logo">
                 <img src="{% static 'users/images/LSP_Header.png' %}" alt="LuxStay Properties" style="height: 65px; width: auto;">
             </div>
-            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-left: 1200px;">
-                <a href="{% url 'property_listing_management' %}" style="color: white; font-weight: bold; text-decoration: none; font-size: 14px;">DASHBOARD</a>
-                <a href="{% url 'logout' %}" style="color: white; font-weight: bold; text-decoration: none; font-size: 14px;">LOGOUT</a>
+            <div class="auth-buttons">
+                <a href="{% url 'property_listing_management' %}">DASHBOARD</a>
+                <a href="{% url 'logout' %}">LOGOUT</a>
             </div>
         </div>
     </header>

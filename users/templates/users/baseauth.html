@@ -13,17 +13,78 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
+
+        /* Base styles for the header */
+        .header {
+            background-color: #54010b;
+            padding: 10px 20px;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-right: auto; /* Ensures logo takes up space on the left */
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: auto; /* Keeps buttons aligned to the right */
+        }
+
+        .auth-buttons a {
+            padding: 10px 20px;
+            background-color: white;
+            color: #54010b;
+            font-weight: bold;
+            border: 2px solid #54010b;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            flex: 1 1 auto;
+            min-width: 100px;
+        }
+
+        .auth-buttons a:first-child {
+            background-color: #ffd600;
+            color: #54010b;
+        }
+
+        /* Responsive styles for smaller screens */
+        @media screen and (max-width: 768px) {
+            .header .container {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .auth-buttons {
+                width: auto;
+                margin-left: auto; /* Keep the buttons aligned to the right */
+            }
+
+            .auth-buttons a {
+                width: auto; /* Keep buttons at their original width */
+            }
+        }
     </style>
 </head>
 <body style="font-family: Arial, sans-serif; color: #333; margin: 0;">
 
     <!-- Header -->
-    <header class="header" style="background-color: #54010b; padding: 10px 30px;">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="logo" style="display: flex; align-items: center;">
+    <header class="header">
+        <div class="container">
+            <div class="logo">
                 <img src="{% static 'users/images/LSP_Header.png' %}" alt="LuxStay Properties" style="height: 65px; width: auto;">
             </div>
-            <div class="auth-buttons" style="display: flex; gap: 10px; margin-left: 1110px; align-items: right">
+            <div class="auth-buttons">
                 <a href="{% url 'login' %}" style="width: 125px; padding: 10px 20px; background-color: white; color: #54010b; font-weight: bold; border: 2px solid #54010b; border-radius: 5px; text-decoration: none; text-align: center;">
                     LOGIN
                 </a>
