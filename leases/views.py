@@ -77,7 +77,7 @@ def book_property(request, property_id):
         property_obj.status = 'leased'
         property_obj.save()
 
-        return redirect('tenant_dashboard')
+        return redirect('property_listing')
     
     return render(request, 'leases/book_property.html', {'property': property_obj})
 
