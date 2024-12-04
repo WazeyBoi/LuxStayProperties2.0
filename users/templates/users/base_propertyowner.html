@@ -74,10 +74,10 @@
             <div class="logo" style="display: flex; align-items: center;">
                 <img src="{% static 'users/images/LSP_Header.png' %}" alt="LuxStay Properties" style="height: 65px; width: auto;">
             </div>
-            {% comment %} <div style="display: flex; gap: 15px;">
-                <a href="#" style="color: white; font-weight: bold; text-decoration: none;">DASHBOARD</a>
-                <a href="{% url 'logout' %}" style="color: white; font-weight: bold; text-decoration: none;">LOG OUT</a>
-            </div> {% endcomment %}
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-left: 1200px;">
+                <a href="{% url 'property_listing_management' %}" style="color: white; font-weight: bold; text-decoration: none; font-size: 14px;">DASHBOARD</a>
+                <a href="{% url 'logout' %}" style="color: white; font-weight: bold; text-decoration: none; font-size: 14px;">LOGOUT</a>
+            </div>
         </div>
     </header>
 

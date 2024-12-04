@@ -20,7 +20,7 @@
                 <th style="padding: 10px;">Baths</th>
                 <th style="padding: 10px;">Furnished</th>
                 <th style="padding: 10px;">Parking</th>
-                <th style="padding: 10px;">Pets Policy</th>
+                {% comment %} <th style="padding: 10px;">Pets Policy</th> {% endcomment %}
                 <th style="padding: 10px;">Price (PHP)</th>
                 <th style="padding: 10px;">Status</th>
                 <th style="padding: 10px;">Actions</th>
@@ -37,7 +37,7 @@
                 <td style="padding: 10px;">{{ property.num_of_bathrooms }}</td>
                 <td style="padding: 10px;">{{ property.is_furnished|yesno:"Yes,No" }}</td>
                 <td style="padding: 10px;">{{ property.parking_spaces }}</td>
-                <td style="padding: 10px;">{{ property.get_pet_policy_display }}</td>
+                {% comment %} <td style="padding: 10px;">{{ property.get_pet_policy_display }}</td> {% endcomment %}
                 <td style="padding: 10px;">{{ property.price }}</td>
                 <td style="padding: 10px;">{{ property.get_status_display }}</td>
                 <td style="padding: 10px;">
