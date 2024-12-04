@@ -7,7 +7,7 @@
 <div style="height: 135px;"></div>
 
 <div class="form-container" style="width: 500px; height: auto">
-    <h2 style="color: #54010b; text-align: center;">Login</h2>
+    <h2 style="color: #800000; text-align: center;">Login</h2>
 
     {% if messages %}
     <div class="error-message" style="color: red; margin-bottom: 10px; text-align: center;">
@@ -22,24 +22,24 @@
     <form method="post" style="display: grid; grid-template-columns: 1fr; row-gap: 15px; text-align: center;">
         {% csrf_token %}
         <div style="display: flex; flex-direction: column;">
-            <label for="username" style="font-weight: bold; color: #54010b; margin-bottom: 5px;">Username:</label>
+            <label for="username" style="font-weight: bold; color: #800000; margin-bottom: 5px;">Username:</label>
             <input type="text" name="username" placeholder="Enter username" required style="width: 100%;">
         </div>
 
         <div style="display: flex; flex-direction: column; position: relative;">
-            <label for="password" style="font-weight: bold; color: #54010b; margin-bottom: 5px;">Password:</label>
+            <label for="password" style="font-weight: bold; color: #800000; margin-bottom: 5px;">Password:</label>
             <input type="password" id="password" name="password" placeholder="Enter password" required style="padding-right: 30px; width: 100%;">
             <span id="toggle-password" style="position: absolute; right: 10px; top: 40px; transform: translateY(-50%); cursor: pointer;">👁️</span>
         </div>
 
-        <button type="submit" style="width: 100%; padding: 10px 20px; background-color: #54010b; color: white; font-weight: bold; border: none; border-radius: 5px; cursor: pointer;">
+        <button type="submit" style="width: 100%; padding: 10px 20px; background-color: #800000; color: white; font-weight: bold; border: none; border-radius: 5px; cursor: pointer;">
             LOGIN
         </button>
 
     </form>
 
     <p style="text-align: center; margin-top: 20px;">
-        Don't have an account? <a href="{% url 'register' %}" style="color: #54010b; font-weight: bold;">Register here</a>
+        Don't have an account? <a href="{% url 'register' %}" style="color: #800000; font-weight: bold;">Register here</a>
     </p>
 </div>
 

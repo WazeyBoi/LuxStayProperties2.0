@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Page{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <style>
+        body {
+            background-image: url("{% static 'users/images/TemplateBackground.png' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .main-container {
+            display: flex;
+            margin: 20px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-right: 20px;
+            padding: 20px;
+        }
+
+        .sidebar .welcome {
+            font-size: 22px;
+            font-weight: bold;
+            color: #800000;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            background-color: #800000;
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: left; /* Align text to the left */
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-bottom: 10px; /* Added margin for spacing */
+        }
+
+        .sidebar a:hover {
+            background-color: #660000;
+        }
+
+        .main-content {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 0px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #555;
+        }
+    </style>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333; margin: 0;">
+
+    <!-- Header -->
+    <header class="header" style="background-color: #54010b; padding: 10px 30px;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo" style="display: flex; align-items: center;">
+                <img src="{% static 'users/images/LSP_Header.png' %}" alt="LuxStay Properties" style="height: 65px; width: auto;">
+            </div>
+            {% comment %} <div style="display: flex; gap: 15px;">
+                <a href="#" style="color: white; font-weight: bold; text-decoration: none;">DASHBOARD</a>
+                <a href="{% url 'logout' %}" style="color: white; font-weight: bold; text-decoration: none;">LOG OUT</a>
+            </div> {% endcomment %}
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Welcome Message -->
+            <div class="welcome">
+                Welcome, {{ request.user.username }}!
+            </div>
+
+            <!-- Sidebar Links -->
+            <a href="{% url 'tenant_management' %}">TENANT MANAGEMENT</a>
+            <a href="{% url 'property_listing_management' %}">PROPERTY MANAGEMENT</a>
+            <a href="{% url 'property_bookings' %}">PROPERTY BOOKINGS</a>
+            <a href="{% url 'payment_list_propertyowner' %}">PROPERTY PAYMENTS</a>
+            <a href="{% url 'feedback:feedback_ownerlist' %}">PROPERTY FEEDBACKS</a>
+            <a href="{% url 'maintenance_request:maintenance_request_ownerlist' %}">MAINTENANCE REQUESTS</a>
+            <a href="{% url 'edit_account_property_owner' %}">MY ACCOUNT</a>
+        </div>
+
+        <!-- Dynamic Content Area -->
+        <div class="main-content">
+            {% block content %}
+            Nothing to show, click a button.
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background-color: #54010b; color: white; text-align: center; padding: 10px; font-size: 14px; width: 100%; bottom: 0;">
+        <img src="{% static 'users/images/LSP_Footer.png' %}" alt="LuxStay Footer" style="height: 65px; width: auto; display: block; margin: 0 auto 10px;">
+        &copy; EST. 2024 | All Rights Reserved
+    </footer>
+
+</body>
+</html>

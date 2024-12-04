@@ -37,7 +37,7 @@ def login_view(request):
                 if user.role == 'tenant':
                     return redirect('tenant_dashboard')  # Redirect tenants to the tenant dashboard
                 elif user.role == 'property_owner':
-                    return redirect('property_owner_dashboard')  # Redirect property owners to their dashboard
+                    return redirect('property_listing_management')  # Redirect property owners to their dashboard
                 
                 # Default redirect (if needed)
                 return redirect('home')  # Replace 'home' with a suitable default page if needed
