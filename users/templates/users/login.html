@@ -1,10 +1,13 @@
-{% extends "users/base.html" %}
+{% extends "users/baseauth.html" %}
 
 {% block title %}Login | LuxStay Properties{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <h2>Login</h2>
+<!-- Invisible div to add space below the form -->
+<div style="height: 135px;"></div>
+
+<div class="form-container" style="width: 500px; height: auto">
+    <h2 style="color: #54010b; text-align: center;">Login</h2>
 
     {% if messages %}
     <div class="error-message" style="color: red; margin-bottom: 10px; text-align: center;">
@@ -14,39 +17,42 @@
             {% endif %}
         {% endfor %}
     </div>
-{% endif %}
+    {% endif %}
     
-    <form method="post">
+    <form method="post" style="display: grid; grid-template-columns: 1fr; row-gap: 15px; text-align: center;">
         {% csrf_token %}
-        <label for="username" >Username:</label>
-        <input type="text" name="username" placeholder="Enter username" required>
-
-        <label for="password">Password:</label>
-        <div style="position: relative;">
-            <input type="password" id="password" name="password" placeholder="Enter password" required style="padding-right: 30px;">
-            <span id="toggle-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-                👁️
-            </span>
+        <div style="display: flex; flex-direction: column;">
+            <label for="username" style="font-weight: bold; color: #54010b; margin-bottom: 5px;">Username:</label>
+            <input type="text" name="username" placeholder="Enter username" required style="width: 100%;">
         </div>
 
-        <button type="submit">Login</button>
+        <div style="display: flex; flex-direction: column; position: relative;">
+            <label for="password" style="font-weight: bold; color: #54010b; margin-bottom: 5px;">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter password" required style="padding-right: 30px; width: 100%;">
+            <span id="toggle-password" style="position: absolute; right: 10px; top: 40px; transform: translateY(-50%); cursor: pointer;">👁️</span>
+        </div>
+
+        <button type="submit" style="width: 100%; padding: 10px 20px; background-color: #54010b; color: white; font-weight: bold; border: none; border-radius: 5px; cursor: pointer;">
+            LOGIN
+        </button>
+
     </form>
 
-    <p>
-        Don't have an account? <a href="{% url 'register' %}">Register here</a>
+    <p style="text-align: center; margin-top: 20px;">
+        Don't have an account? <a href="{% url 'register' %}" style="color: #54010b; font-weight: bold;">Register here</a>
     </p>
 </div>
+
+<!-- Invisible div to add space below the form -->
+<div style="height: 135px;"></div>
 
 <script>
     const togglePassword = document.getElementById('toggle-password');
     const passwordField = document.getElementById('password');
 
     togglePassword.addEventListener('click', function() {
-        // Toggle the type attribute
         const type = passwordField.type === 'password' ? 'text' : 'password';
         passwordField.type = type;
-        
-        // Toggle the icon (optional)
         togglePassword.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
     });
 </script>

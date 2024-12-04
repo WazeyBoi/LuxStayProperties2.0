@@ -27,13 +27,6 @@ SECRET_KEY = 'django-insecure-3#yn84m&qqc$l3q$wgycbj7g8)6(tqjl!l*8*3x^4g8(d_op@a
 DEBUG = True
 
 ALLOWED_HOSTS = []
-STATIC_URL = '/static/'  # This should already be in your settings
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Adjust as necessary
-    "C:/Users/Admin/Documents/GitHub/LuxStayProperties2.0/feedback/static",  # If it's the intended path
-]  # Ensure your custom static folder is specified
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Add this line
-
 
 # Application definition
 

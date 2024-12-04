@@ -14,7 +14,7 @@ body {
 
 /* Header */
 .header {
-    background-color: #800000;
+    background-color: #54010b;
     padding: 15px 20px;
     display: flex;
     align-items: center;
@@ -51,7 +51,7 @@ body {
 
 /* Footer */
 .footer {
-    background-color: #800000;
+    background-color: #54010b;
     color: white;
     text-align: center;
     padding: 10px 0;
@@ -70,7 +70,7 @@ body {
 
 /* Form Elements */
 .form-container h2 {
-    color: #800000;
+    color: #54010b;
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
@@ -84,7 +84,7 @@ body {
 
 .form-container label {
     font-weight: normal;
-    color: #333;
+    color: #54010b;
     font-size: 14px;
     text-align: left;
 }
@@ -103,7 +103,7 @@ body {
 
 .form-container button {
     padding: 12px;
-    background-color: #800000;
+    background-color: #54010b;
     color: white;
     border: none;
     border-radius: 5px;
@@ -124,7 +124,7 @@ body {
 }
 
 .form-container a {
-    color: #800000;
+    color: #54010b;
     text-decoration: none;
     font-weight: bold;
 }

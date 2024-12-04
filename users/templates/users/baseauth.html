@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Page{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <style>
+        body {
+            background-image: url("{% static 'users/images/TemplateBackground.png' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333; margin: 0;">
+
+    <!-- Header -->
+    <header class="header" style="background-color: #54010b; padding: 10px 30px;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo" style="display: flex; align-items: center;">
+                <img src="{% static 'users/images/LSP_Header.png' %}" alt="LuxStay Properties" style="height: 65px; width: auto;">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="padding: 20px;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: #54010b; color: white; text-align: center; padding: 10px; font-size: 14px; width: 100%; bottom: 0;">
+        <img src="{% static 'users/images/LSP_Footer.png' %}" alt="LuxStay Footer" style="height: 65px; width: auto; display: block; margin: 0 auto 10px;">
+        &copy; EST. 2024 | All Rights Reserved
+    </footer>
+
+</body>
+</html>
