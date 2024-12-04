@@ -35,7 +35,7 @@ def login_view(request):
                 
                 # Redirect based on user role
                 if user.role == 'tenant':
-                    return redirect('tenant_dashboard')  # Redirect tenants to the tenant dashboard
+                    return redirect('property_listing')  # Redirect tenants to the tenant dashboard
                 elif user.role == 'property_owner':
                     return redirect('property_listing_management')  # Redirect property owners to their dashboard
                 
@@ -150,7 +150,7 @@ def edit_account(request):
                 return render(request, 'users/edit_account.html', {'user': user})
 
         user.save()
-        return redirect('tenant_dashboard')
+        return redirect('property_listing')
 
     return render(request, 'users/edit_account.html', {'user': user})
 
@@ -192,6 +192,6 @@ def edit_account_property_owner(request):
                 return render(request, 'users/edit_account_property_owner.html', {'user': user})
 
         user.save()
-        return redirect('property_owner_dashboard')
+        return redirect('property_listing_management')
 
     return render(request, 'users/edit_account_property_owner.html', {'user': user})
