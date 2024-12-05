@@ -1,85 +1,105 @@
-{% extends "users/base.html" %}
-{% load static %}
-
-{% block title %}Submit Feedback{% endblock %}
-
-{% block content %}
-<div class="feedback-container">
-    <h2 style="text-align: center; margin-bottom: 20px;">Submit Feedback</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-
-        <!-- Emoji Rating System -->
-        <div>
-            {{ form.starRating.errors }}
-            <label>Rate Your Experience:</label>
-            <div style="display: flex; justify-content: center; gap: 15px;">
-                <!-- Angry -->
-                <label>
-                    <input type="radio" name="starRating" value="1" id="star-1" style="display: none;">
-                    <img src="{% static 'images/emoji/angry.png' %}" 
-                         alt="Rating 1" 
-                         id="emoji-1" 
-                         onclick="selectEmoji(1)"
-                         style="width: 50px; height: 50px; cursor: pointer;">
-                </label>
-            
-                <!-- Sad -->
-                <label>
-                    <input type="radio" name="starRating" value="2" id="star-2" style="display: none;">
-                    <img src="{% static 'images/emoji/sad-face.png' %}" 
-                         alt="Rating 2" 
-                         id="emoji-2" 
-                         onclick="selectEmoji(2)"
-                         style="width: 50px; height: 50px; cursor: pointer;">
-                </label>
-            
-                <!-- Neutral -->
-                <label>
-                    <input type="radio" name="starRating" value="3" id="star-3" style="display: none;">
-                    <img src="{% static 'images/emoji/neutral-face.png' %}" 
-                         alt="Rating 3" 
-                         id="emoji-3" 
-                         onclick="selectEmoji(3)"
-                         style="width: 50px; height: 50px; cursor: pointer;">
-                </label>
-            
-                <!-- Smile -->
-                <label>
-                    <input type="radio" name="starRating" value="4" id="star-4" style="display: none;">
-                    <img src="{% static 'images/emoji/smile.png' %}" 
-                         alt="Rating 4" 
-                         id="emoji-4" 
-                         onclick="selectEmoji(4)"
-                         style="width: 50px; height: 50px; cursor: pointer;">
-                </label>
-            
-                <!-- Satisfied -->
-                <label>
-                    <input type="radio" name="starRating" value="5" id="star-5" style="display: none;">
-                    <img src="{% static 'images/emoji/satisfied.png' %}" 
-                         alt="Rating 5" 
-                         id="emoji-5" 
-                         onclick="selectEmoji(5)"
-                         style="width: 50px; height: 50px; cursor: pointer;">
-                </label>
-            </div>
-        </div>
-
-        <!-- Comments Section -->
-        <div style="margin-bottom: 20px;">
-            {{ form.comments.errors }}
-            <label for="comments" style="display: block; margin-bottom: 5px;">Comments:</label>
-            <textarea id="comments" name="comments" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">{{ form.comments.value }}</textarea>
-        </div>
-
-        <!-- Submit Button -->
-        <button type="submit" style="display: block; width: 100%; background-color:  #800000; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;">Submit Feedback</button>
-    </form>
-</div>
-
 <script>
+    // Maintenance Request Modal
+    document.getElementById('openModal').addEventListener('click', function () {
+        document.getElementById('requestModal').style.display = 'block';
+    });
+
+    document.getElementById('closeModal').addEventListener('click', function () {
+        document.getElementById('requestModal').style.display = 'none';
+    });
+
+    // Maintenance Request Form Submission
+    document.querySelector('#requestModal form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(this);
+
+        // Send AJAX request
+        fetch('{% url "maintenance_request:maintenance_request_create" leaseid=booking.id tenantid=booking.tenant.id %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Maintenance request submitted successfully!');
+                document.getElementById('requestModal').style.display = 'none';
+                // Optionally reload the page or update the UI
+                window.location.reload();
+            } else {
+                // Handle validation errors
+                alert('Error submitting maintenance request: ' + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the maintenance request.');
+        });
+    });
+
+    // Feedback Modal
+    document.getElementById('openModal1').addEventListener('click', function () {
+        document.getElementById('feedbackModal').style.display = 'block';
+    });
+
+    document.getElementById('closeModal1').addEventListener('click', function () {
+        document.getElementById('feedbackModal').style.display = 'none';
+    });
+
+    // Feedback Form Submission
+    document.querySelector('#feedbackModal form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(this);
+
+        // Send AJAX request
+        fetch('{% url "feedback:feedback_create" leaseid=booking.id tenantid=booking.tenant.id %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Feedback submitted successfully!');
+                document.getElementById('feedbackModal').style.display = 'none';
+                // Optionally reload the page or update the UI
+                window.location.reload();
+            } else {
+                // Handle validation errors
+                alert('Error submitting feedback: ' + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the feedback.');
+        });
+    });
+
+    // Close modal if clicked outside
+    window.addEventListener('click', function (event) {
+        const requestModal = document.getElementById('requestModal');
+        const feedbackModal = document.getElementById('feedbackModal');
+        
+        if (event.target === requestModal) {
+            requestModal.style.display = 'none';
+        }
+        
+        if (event.target === feedbackModal) {
+            feedbackModal.style.display = 'none';
+        }
+    });
+
+    // Emoji selection function remains the same
     function selectEmoji(selectedId) {
         // Map of unselected and selected emoji images
         const emojiMap = {
@@ -118,55 +138,3 @@
         document.getElementById('star-' + selectedId).checked = true;
     }
 </script>
-
-
-
-
-{% block extra_css %}
-<style>
-    .feedback-container {
-        background-color: white; /* Match the card-like background */
-        border: 1px solid #ccc; /* Subtle border */
-        border-radius: 10px; /* Rounded corners */
-        padding: 20px; /* Inner padding */
-        max-width: 600px; /* Limit the width */
-        margin: 40px auto; /* Center the box and add top/bottom margin */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a slight shadow */
-    }
-
-    img[id^="emoji-"] {
-        width: 50px; /* Emoji size */
-        height: 50px;
-        cursor: pointer;
-        filter: none; /* Default grayscale */
-        transition: filter 0.3s, transform 0.3s; /* Smooth transition */
-    }
-
-    /* Hover effect: slight zoom and color */
-    img[id^="emoji-"]:hover {
-        transform: scale(1.1); /* Slight zoom on hover */
-        filter: none; /* Remove grayscale */
-    }
-
-    /* Ensure proper spacing between emojis */
-    div[style*="justify-content: center"] {
-        gap: 15px; /* Adjust spacing between emojis */
-    }
-
-    button[type="submit"] {
-        background-color: #c0392b; /* LuxStay Properties theme */
-        color: white;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    button[type="submit"]:hover {
-        background-color: #e74c3c; /* Slightly lighter red on hover */
-    }
-</style>
-{% endblock %}
-{% endblock %}
