@@ -1,10 +1,10 @@
-{% extends "users/base.html" %}
+{% extends "users/base_tenant.html" %}
 {% load static %}
 
 {% block title %}Payment Form{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 800px; margin: 20px auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+<div class="container" style="max-width: 1400px; margin: 20px auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);">
     <div class="container">
         <div class="back-link">
             <a href="{% url 'pending_list' %}">&larr; Back to Pending List</a>
@@ -14,7 +14,7 @@
         <!-- Display remaining balance styled as text -->
         <div style="margin-top: 20px; margin-bottom: 20px; text-align: center;">
             <span style="font-weight: bold;">Remaining Balance: </span>
-            <span style="font-size: 18px; color: #800000; font-weight: bold;">
+            <span style="font-size: 20px; color: #800000; font-weight: bold;">
                 PHP {{ remaining_balance|floatformat:2 }}
             </span>
         </div>
@@ -26,7 +26,7 @@
         </div>
         {% endif %}
 
-        <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: center;">
+        <form method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
             {% csrf_token %}
 
             <!-- Field-specific errors -->
@@ -58,10 +58,10 @@
             <input type="hidden" name="leaseid" value="{{ lease.id }}">
             <input type="hidden" name="tenantid" value="{{ tenant.id }}">
 
-            <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 20px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; grid-column: span 2; padding: 15px; text-align: center;">PAY</button>
+            <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 22px; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; grid-column: span 2; padding: 20px; text-align: center;">PAY</button>
         </form>
 
-        <a href="{% url 'tenant_dashboard' %}" class="cancel-link" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold;">
+        <a href="{% url 'pending_list' %}" class="cancel-link" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold;">
             Cancel
         </a>
     </div>
@@ -71,14 +71,14 @@
 <style>
     input, select, textarea {
         width: 100%; /* Ensures the inputs span the full width */
-        padding: 10px; /* Adds some padding inside the input fields */
+        padding: 12px; /* Adds some padding inside the input fields */
         border-radius: 5px; /* Optional: rounds the corners of the input fields */
         border: 1px solid #ccc; /* Adds a light border around the fields */
     }
 
     button {
-        font-size: 20px; /* Makes the font bigger */
-        padding: 15px 30px; /* Increases the padding to make the button larger */
+        font-size: 22px; /* Makes the font bigger */
+        padding: 20px 40px; /* Increases the padding to make the button larger */
         text-align: center; /* Ensures the button text is centered */
         width: 100%; /* Ensures the button takes up the full width */
     }
@@ -102,7 +102,7 @@
     }
 
     form div {
-        margin-bottom: 15px; /* Adds spacing between form fields */
+        margin-bottom: 20px; /* Adds spacing between form fields */
     }
 
     .error-message {
