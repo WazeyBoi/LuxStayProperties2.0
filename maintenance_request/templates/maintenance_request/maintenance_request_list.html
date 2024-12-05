@@ -12,6 +12,7 @@
             <tr>
                 <th style="padding: 10px; text-align: left;">Property</th>
                 <th style="padding: 10px; text-align: left;">Request Date</th>
+                <th style="padding: 10px; text-align: left;">Subject</th>
                 <th style="padding: 10px; text-align: left;">Description</th>
                 <th style="padding: 10px; text-align: left;">Status</th>
             </tr>
@@ -21,6 +22,7 @@
             <tr>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.leaseId.property.property_name }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.requestDate }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.subject }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.description }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; font-weight: bold;
                 {% if request.get_status_display == 'Pending' %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-
+from django.http import JsonResponse
 from users.models import User
 from .models import Feedback
 from leases.models import Lease
@@ -29,23 +29,16 @@ def feedback_create(request, leaseid, tenantid):
             feedback.tenantId = tenant
             feedback.status = 'new'
             feedback.save()
+
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
             return redirect('feedback:feedback_list')
-        else:
-            print(form.errors)  # For debugging
-    else:
-        form = FeedbackForm()
 
-    emojis = ["angry", "sad-face", "neutral-face", "smile", "satisfied"]
-    stars_with_emojis = [(i, emojis[i - 1]) for i in range(1, 6)]
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
 
-    context = {
-        'form': form,
-        'lease': lease,
-        'tenant': tenant,
-        'stars_with_emojis': stars_with_emojis,
-    }
+    return render(request, 'feedback/feedback_form.html', {'form': form, 'lease': lease, 'tenant': tenant})
 
-    return render(request, 'feedback/feedback_form.html', context)
 
 
 @login_required

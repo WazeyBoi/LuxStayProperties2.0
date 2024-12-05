@@ -2,6 +2,9 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import logging
+
+logger = logging.getLogger(__name__)
 
 from users.models import User
 from .models import MaintenanceRequest
@@ -21,36 +24,33 @@ def maintenance_request_list(request):
         page_obj = paginator.page(paginator.num_pages)
 
     return render(request, 'maintenance_request/maintenance_request_list.html', {'page_obj': page_obj})
-
 @login_required
 def maintenance_request_create(request, leaseid, tenantid):
     lease = get_object_or_404(Lease, id=leaseid)
     tenant = get_object_or_404(User, id=tenantid)
 
     if request.method == 'POST':
+        logger.info(f"Received data: {request.POST}")  # Log incoming data
         form = MaintenanceRequestForm(request.POST)
         if form.is_valid():
             maintenance_request = form.save(commit=False)
             maintenance_request.leaseId = lease
             maintenance_request.tenantId = tenant
-            maintenance_request.status = 'pending'  # Default status
+            maintenance_request.status = 'pending'
+            maintenance_request.subject = form.cleaned_data['subject']
+            maintenance_request.description = form.cleaned_data['description']
             maintenance_request.save()
             
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # AJAX check
-                return JsonResponse({'success': True, 'message': 'Request created successfully!'})
-            
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
             return redirect('maintenance_request:maintenance_request_list')
-        else:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # AJAX check
-                return JsonResponse({'success': False, 'errors': form.errors}, status=400)
-    else:
-        form = MaintenanceRequestForm()
 
-    return render(request, 'maintenance_request/maintenance_request_form.html', {
-        'form': form,
-        'lease': lease,
-        'tenant': tenant
-    })
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+
+    form = MaintenanceRequestForm()
+    return render(request, 'maintenance_request/maintenance_request_form.html', {'form': form, 'lease': lease, 'tenant': tenant})
+
 @login_required
 def owner_maintenance_requests(request):
     # Adjust the filter according to your actual model relationships

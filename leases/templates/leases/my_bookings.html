@@ -1,5 +1,5 @@
 {% extends 'users/base_tenant.html' %}
-
+{% load static %}
 {% block title %}My Bookings{% endblock %}
 
 {% block content %}
@@ -30,8 +30,254 @@
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
                 <td class="status-active" style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #28a745; font-weight: bold;">Active</td>
                 <td style="padding: 10px; text-align:left; white-space: nowrap;font-size: 14px;border-bottom: 1px solid #ddd;">
-                    <a href="{% url 'maintenance_request:maintenance_request_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #800000;padding: 8px 12px; text-decoration: none;border-radius: 4px; color:#fdf3f2; font-weight: bold;">Request</a>
-                    <a href="{% url 'feedback:feedback_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #800000; text-decoration: none;padding: 8px 12px; color: #fdf3f2;border-radius: 4px; font-weight: bold;">Feedback</a>
+                    <button id="openModal" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Request</button>
+
+   <!-- Modal -->
+<div id="requestModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
+        <h2 style="color: #800000; text-align: center;">Create Maintenance Request</h2>
+        <form method="post" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+            {% csrf_token %}
+            
+            <!-- Subject Field -->
+            <label for="subject" style="font-size: 14px; font-weight: bold;">Subject:</label>
+            <input type="text" id="subject" name="subject" style="background-color: white; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;" required>
+        
+            <!-- Description Field -->
+            <label for="description" style="font-size: 14px; font-weight: bold;">Description:</label>
+            <textarea id="description" name="description" style="background-color: white; width: 100%; height: 100px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;" required></textarea>
+        
+            <!-- Hidden fields for leaseId and tenantId -->
+            <input type="hidden" name="leaseid" value="{{ booking.id }}">
+            <input type="hidden" name="tenantid" value="{{ booking.tenant.id }}">
+        
+            <!-- Button Section -->
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Submit</button>
+                <button type="button" id="closeModal" style="background-color: #ccc; color: black; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.getElementById('openModal').addEventListener('click', function () {
+        document.getElementById('requestModal').style.display = 'block';
+    });
+
+    document.getElementById('closeModal').addEventListener('click', function () {
+        document.getElementById('requestModal').style.display = 'none';
+    });
+
+    window.addEventListener('click', function (event) {
+        const modal = document.getElementById('requestModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    document.querySelector('#requestModal form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form data
+    const formData = new FormData(this);
+    
+    // Debugging: Log the form data
+    for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`); // Check if subject is logged here
+    }
+    // Send AJAX request
+    fetch('{% url "maintenance_request:maintenance_request_create" leaseid=booking.id tenantid=booking.tenant.id %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('requestModal').style.display = 'none';
+            window.location.reload();
+        } else {
+            alert('Error submitting maintenance request: ' + JSON.stringify(data.errors));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while submitting the maintenance request.');
+    });
+});
+</script>
+<button id="openModal1" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Feedback</button>
+
+<!-- Modal -->
+<div id="feedbackModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
+        <h2 style="color: #800000; text-align: center;">Submit Feedback</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <!-- Emoji Rating System -->
+            <div>
+                {{ form.starRating.errors }}
+                <label>Rate Your Experience:</label>
+                <div style="display: flex; justify-content: center; gap: 15px;">
+                    <!-- Angry -->
+                    <label>
+                        <input type="radio" name="starRating" value="1" id="star-1" style="display: none;">
+                        <img src="{% static 'images/emoji/angry.png' %}" 
+                             alt="Rating 1" 
+                             id="emoji-1" 
+                             onclick="selectEmoji(1)"
+                             style="width: 50px; height: 50px; cursor: pointer;">
+                    </label>
+                
+                    <!-- Sad -->
+                    <label>
+                        <input type="radio" name="starRating" value="2" id="star-2" style="display: none;">
+                        <img src="{% static 'images/emoji/sad-face.png' %}" 
+                             alt="Rating 2" 
+                             id="emoji-2" 
+                             onclick="selectEmoji(2)"
+                             style="width: 50px; height: 50px; cursor: pointer;">
+                    </label>
+                
+                    <!-- Neutral -->
+                    <label>
+                        <input type="radio" name="starRating" value="3" id="star-3" style="display: none;">
+                        <img src="{% static 'images/emoji/neutral-face.png' %}" 
+                             alt="Rating 3" 
+                             id="emoji-3" 
+                             onclick="selectEmoji(3)"
+                             style="width: 50px; height: 50px; cursor: pointer;">
+                    </label>
+                
+                    <!-- Smile -->
+                    <label>
+                        <input type="radio" name="starRating" value="4" id="star-4" style="display: none;">
+                        <img src="{% static 'images/emoji/smile.png' %}" 
+                             alt="Rating 4" 
+                             id="emoji-4" 
+                             onclick="selectEmoji(4)"
+                             style="width: 50px; height: 50px; cursor: pointer;">
+                    </label>
+                
+                    <!-- Satisfied -->
+                    <label>
+                        <input type="radio" name="starRating" value="5" id="star-5" style="display: none;">
+                        <img src="{% static 'images/emoji/satisfied.png' %}" 
+                             alt="Rating 5" 
+                             id="emoji-5" 
+                             onclick="selectEmoji(5)"
+                             style="width: 50px; height: 50px; cursor: pointer;">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div style="margin-bottom: 20px;">
+                {{ form.comments.errors }}
+                <label for="comments" style="display: block; margin-bottom: 5px;">Comments:</label>
+                <textarea id="comments" name="comments" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">{{ form.comments.value }}</textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Submit</button>
+                <button type="button" id="closeModal1" style="background-color: #ccc; color: black; border: none; font-size: 16px; cursor: pointer; border-radius: 8px; padding: 10px 20px;">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+document.getElementById('openModal1').addEventListener('click', function () {
+    document.getElementById('feedbackModal').style.display = 'block';
+});
+
+document.getElementById('closeModal1').addEventListener('click', function () {
+    document.getElementById('feedbackModal').style.display = 'none';
+});
+
+window.addEventListener('click', function (event) {
+    const modal = document.getElementById('feedbackModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+document.querySelector('#feedbackModal form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(this);
+
+        // Send AJAX request
+        fetch('{% url "feedback:feedback_create" leaseid=booking.id tenantid=booking.tenant.id %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                
+                document.getElementById('feedbackModal').style.display = 'none';
+                // Optionally reload the page or update the UI
+                window.location.reload();
+            } else {
+                // Handle validation errors
+                alert('Error submitting feedback: ' + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the feedback.');
+        });
+    });
+
+function selectEmoji(selectedId) {
+    // Map of unselected and selected emoji images
+    const emojiMap = {
+        1: {
+            unselected: "{% static 'images/emoji/angry.png' %}",
+            selected: "{% static 'images/emoji/angry_1.png' %}"
+        },
+        2: {
+            unselected: "{% static 'images/emoji/sad-face.png' %}",
+            selected: "{% static 'images/emoji/sad-face_1.png' %}"
+        },
+        3: {
+            unselected: "{% static 'images/emoji/neutral-face.png' %}",
+            selected: "{% static 'images/emoji/neutral-face_1.png' %}"
+        },
+        4: {
+            unselected: "{% static 'images/emoji/smile.png' %}",
+            selected: "{% static 'images/emoji/smile_1.png' %}"
+        },
+        5: {
+            unselected: "{% static 'images/emoji/satisfied.png' %}",
+            selected: "{% static 'images/emoji/satisfied_1.png' %}"
+        }
+    };
+
+    // Reset all emojis to their unselected images
+    document.querySelectorAll('[id^="emoji-"]').forEach((emoji, index) => {
+        const id = index + 1;
+        emoji.src = emojiMap[id].unselected;
+    });
+
+    // Change the clicked emoji to its selected image
+    document.getElementById('emoji-' + selectedId).src = emojiMap[selectedId].selected;
+
+    // Check the corresponding radio button
+    document.getElementById('star-' + selectedId).checked = true;
+}
+</script>
                 </td>
             </tr>
             {% endfor %}
