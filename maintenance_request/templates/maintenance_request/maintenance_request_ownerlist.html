@@ -22,12 +22,12 @@
         <tbody>
             {% for request in requests %}
             <tr style="border-bottom: 1px solid #ddd;">
-                <td style="padding: 10px;">{{ request.leaseId.property.property_name }}</td>
+                <td style="padding: 10px;">{{ request.propertyId.property_name }}</td>
                 <td style="padding: 10px;">{{ request.tenantId.username }}</td>
                 <td style="padding: 10px;">{{ request.subject }}</td>
                 <td style="padding: 10px;">{{ request.description }}</td>
                 <td style="padding: 10px;">{{ request.requestDate|date:"F j, Y" }}</td>
-                <td style="padding: 10px; color: {% if request.status == 'pending' %}orange{% elif request.status == 'in_progress' %}blue{% elif request.status == 'completed' %}green{% else %}gray{% endif %};">
+                <td style="padding: 10px;font-weight: bold; color: {% if request.status == 'pending' %}orange{% elif request.status == 'in_progress' %}blue{% elif request.status == 'completed' %}green{% else %}gray{% endif %};">
                     {{ request.get_status_display }}
                 </td>
                 <td style="padding: 10px; text-align: center;">

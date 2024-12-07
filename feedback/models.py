@@ -1,7 +1,6 @@
-# feedback/models.py
 from django.db import models
 from users.models import User
-from leases.models import Lease  # Assuming there's a Lease model in the leases app
+from properties.models import Property  # Assuming there's a Property model
 
 class Feedback(models.Model):
     STATUS_CHOICES = [
@@ -10,13 +9,12 @@ class Feedback(models.Model):
     ]
 
     feedbackId = models.AutoField(primary_key=True)
-    leaseId = models.ForeignKey(Lease, on_delete=models.CASCADE)
+    propertyId = models.ForeignKey(Property, on_delete=models.CASCADE, default=1)   # Replace Lease with Property
     tenantId = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'tenant'})
     submissionDate = models.DateField(auto_now_add=True)
     starRating = models.IntegerField()  # Assuming a scale of 1-5 or 1-10
     comments = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='new')  # New field
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='new')
 
     def __str__(self):
-        return f'Feedback {self.feedbackId} by Tenant {self.tenantId}'
-    
+        return f'Feedback {self.feedbackId} for Property {self.propertyId} by Tenant {self.tenantId}'
