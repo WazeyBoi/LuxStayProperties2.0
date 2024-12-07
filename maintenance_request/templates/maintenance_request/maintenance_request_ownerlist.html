@@ -22,21 +22,13 @@
         <tbody>
             {% for request in requests %}
             <tr style="border-bottom: 1px solid #ddd;">
-                
-                <td style="padding: 10px;">{{  request.leaseId.property.property_name  }}</td>
+                <td style="padding: 10px;">{{ request.leaseId.property.property_name }}</td>
                 <td style="padding: 10px;">{{ request.tenantId.username }}</td>
                 <td style="padding: 10px;">{{ request.subject }}</td>
                 <td style="padding: 10px;">{{ request.description }}</td>
                 <td style="padding: 10px;">{{ request.requestDate|date:"F j, Y" }}</td>
-                <td style="padding: 10px;">
-                    <span style="padding: 5px 10px; border-radius: 4px; 
-{% if request.status == 'pending' %} font-weight:bold; color: orange;
-{% elif request.status == 'in_progress' %}font-weight:bold; color: blue;
-{% elif request.status == 'completed' %} font-weight:bold;color: green;
-{% else %} background-color: gray; color: white;
-{% endif %}">
-                        {{ request.get_status_display }}
-                    </span>
+                <td style="padding: 10px; color: {% if request.status == 'pending' %}orange{% elif request.status == 'in_progress' %}blue{% elif request.status == 'completed' %}green{% else %}gray{% endif %};">
+                    {{ request.get_status_display }}
                 </td>
                 <td style="padding: 10px; text-align: center;">
                     {% if request.status == 'pending' %}
@@ -44,12 +36,10 @@
                         {% csrf_token %}
                         <button type="submit" style="padding: 5px 10px; background-color: #800000; color: white; border: none; border-radius: 4px;">Accept</button>
                     </form>
-                    {% endif %}
-                    
-                    {% if request.status == 'in_progress' %}
+                    {% elif request.status == 'in_progress' %}
                     <form method="POST" action="{% url 'maintenance_request:complete_request' request.requestId %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" style="padding: 5px 10px; background-color:  #800000; color: white; border: none; border-radius: 4px;">Complete</button>
+                        <button type="submit" style="padding: 5px 10px; background-color: #800000; color: white; border: none; border-radius: 4px;">Complete</button>
                     </form>
                     {% endif %}
                 </td>
@@ -57,6 +47,18 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <div>
+            {% if requests.has_previous %}
+            <a href="?page={{ requests.previous_page_number }}" style="margin: 0 10px; text-decoration: none; color: #800000;">&laquo; Previous</a>
+            {% endif %}
+            <span>Page {{ requests.number }} of {{ requests.paginator.num_pages }}</span>
+            {% if requests.has_next %}
+            <a href="?page={{ requests.next_page_number }}" style="margin: 0 10px; text-decoration: none; color: #800000;">Next &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
     {% else %}
     <p style="text-align: center; color: gray; font-size: 16px; margin-top: 20px;">No maintenance requests found.</p>
     {% endif %}

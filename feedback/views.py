@@ -44,7 +44,11 @@ def feedback_create(request, leaseid, tenantid):
 @login_required
 def feedback_ownerlist(request):
     feedbacks = Feedback.objects.filter(leaseId__property__owner=request.user)
-    return render(request, 'feedback/feedback_ownerlist.html', {'feedbacks': feedbacks})
+    paginator = Paginator(feedbacks, 5)  # Display 5 feedbacks per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'feedback/feedback_ownerlist.html', {'page_obj': page_obj})
+
 
 @login_required
 def mark_feedback_as_viewed(request, feedbackId):
