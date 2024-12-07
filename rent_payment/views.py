@@ -174,7 +174,7 @@ def payment_list_propertyowner(request):
             })
 
     # Paginate the payments
-    paginator = Paginator(properties_with_payments, 5)
+    paginator = Paginator(properties_with_payments, 10)
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)

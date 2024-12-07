@@ -19,7 +19,7 @@ def property_owner_dashboard(request):
 def property_listing_management(request):
     # Display only properties owned by the logged-in user
     properties = Property.objects.filter(owner=request.user)
-    paginator = Paginator(properties, 5)  # Show 5 properties per page
+    paginator = Paginator(properties, 10)  # Show 5 properties per page
     page_number = request.GET.get('page')  # Get the current page number from the request
     page_obj = paginator.get_page(page_number)  # Get the properties for the current page
 

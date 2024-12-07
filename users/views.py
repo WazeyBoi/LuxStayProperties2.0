@@ -79,7 +79,7 @@ def tenant_management(request):
         tenant.inactive_leases = Lease.objects.filter(tenant=tenant, end_date__lt=date.today())
 
     # Paginate the tenants
-    paginator = Paginator(tenants, 5)  # Show 10 tenants per page
+    paginator = Paginator(tenants, 10)  # Show 10 tenants per page
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
