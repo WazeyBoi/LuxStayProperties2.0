@@ -7,34 +7,33 @@
 <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); width: 100%; height: calc(100vh - 160px); margin: 0 auto; overflow-y: auto;">
     <h1 style="color: #800000; text-align: center;">Tenant Feedbacks</h1>
    
-    {% if feedbacks %}
+    {% if page_obj %}
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
             <tr style="background-color: #800000; color: white;">
-               
                 <th style="padding: 10px; text-align: left;">Property</th>
                 <th style="padding: 10px; text-align: left;">Tenant Name</th>
                 <th style="padding: 10px; text-align: left;">Star Rating</th>
                 <th style="padding: 10px; text-align: left;">Comments</th>
                 <th style="padding: 10px; text-align: left;">Submission Date</th>
-                <th style="padding: 10px; text-align: centers;">Status</th>
+                <th style="padding: 10px; text-align: center;">Status</th>
                 <th style="padding: 10px; text-align: center;">Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for feedback in feedbacks %}
+            {% for feedback in page_obj %}
             <tr style="border-bottom: 1px solid #ddd;">
-                <td style="padding: 10px;">{{  feedback.leaseId.property.property_name  }}</td>
+                <td style="padding: 10px;">{{ feedback.leaseId.property.property_name }}</td>
                 <td style="padding: 10px;">{{ feedback.tenantId.username }}</td>
                 <td style="padding: 10px;">{{ feedback.starRating }}</td>
                 <td style="padding: 10px;">{{ feedback.comments }}</td>
                 <td style="padding: 10px;">{{ feedback.submissionDate|date:"F j, Y" }}</td>
                 <td style="padding: 10px;">
-                    <span style="padding: 5px 10px; border-radius: 4px; 
-{% if feedback.status == 'new' %} font-weight:bold;color: orange; 
-{% elif feedback.status == 'viewed' %}font-weight:bold; color: green;
-{% else %} background-color: gray; color: white;
-{% endif %}">
+                    <span style="padding: 5px 10px; border-radius: 4px;
+                    {% if feedback.status == 'new' %} font-weight:bold;color: orange;
+                    {% elif feedback.status == 'viewed' %}font-weight:bold; color: green;
+                    {% else %} background-color: gray; color: white;
+                    {% endif %}">
                         {{ feedback.get_status_display }}
                     </span>
                 </td>
@@ -50,6 +49,22 @@
             {% endfor %}
         </tbody>
     </table>
+    
+    <div style="margin-top: 20px; text-align: center;">
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ page_obj.previous_page_number }}">&#8249; Previous</a>
+                {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next &#8250;</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
     {% else %}
     <p style="text-align: center; color: gray; font-size: 16px; margin-top: 20px;">No feedbacks found.</p>
     {% endif %}

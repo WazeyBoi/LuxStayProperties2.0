@@ -23,7 +23,11 @@ def maintenance_request_list(request):
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
-    return render(request, 'maintenance_request/maintenance_request_list.html', {'page_obj': page_obj})
+    return render(request, 'maintenance_request/maintenance_request_list.html', {
+        'page_obj': page_obj,
+        'maintenance_requests': page_obj.object_list,  # Pass current page objects if needed in the template
+    })
+
 @login_required
 def maintenance_request_create(request, leaseid, tenantid):
     lease = get_object_or_404(Lease, id=leaseid)
@@ -55,9 +59,17 @@ def maintenance_request_create(request, leaseid, tenantid):
 def owner_maintenance_requests(request):
     # Adjust the filter according to your actual model relationships
     requests = MaintenanceRequest.objects.filter(leaseId__property__owner=request.user)
+    paginator = Paginator(requests, 5)  # Display 5 requests per page
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
     return render(request, 'maintenance_request/maintenance_request_ownerlist.html', {
-        'requests': requests,
-        'has_requests': requests.exists(),
+        'requests': page_obj,  # Paginated object
     })
 
 @login_required
