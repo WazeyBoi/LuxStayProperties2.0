@@ -191,7 +191,7 @@ def payment_history(request):
     payments = Payment.objects.filter(tenantId=request.user).order_by('-paymentDate')  # Order by most recent payments
 
     # Paginate the payment history
-    paginator = Paginator(payments, 5)
+    paginator = Paginator(payments, 10)
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
