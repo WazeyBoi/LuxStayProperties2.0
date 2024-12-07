@@ -20,7 +20,7 @@
         <tbody>
             {% for request in page_obj %}
             <tr>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.leaseId.property.property_name }}</td>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.propertyId.property_name }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.requestDate }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.subject }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ request.description }}</td>
