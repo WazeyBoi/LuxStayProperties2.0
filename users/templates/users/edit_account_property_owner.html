@@ -18,20 +18,29 @@
         </div>
     {% endif %}
 
-    <form method="POST" onsubmit="return confirm('Are you sure you want to update your details?');" style="display: flex; flex-direction: column; gap: 15px;">
+    <form id="editAccountForm" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
         {% csrf_token %}
 
         <label for="username" style="font-weight: bold; color: #333;">Username:</label>
         <input type="text" id="username" name="username" placeholder="{{ user.username }}" value="{{ user.username }}" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
         <label for="current_password" style="font-weight: bold; color: #333;">Current Password:</label>
-        <input type="password" id="current_password" name="current_password" placeholder="Enter your current password" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        <div style="position: relative;">
+            <input type="password" id="current_password" name="current_password" placeholder="Enter your current password" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; width: 100%;">
+            <span id="toggle-current-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">👁️</span>
+        </div>
 
         <label for="new_password" style="font-weight: bold; color: #333;">New Password:</label>
-        <input type="password" id="new_password" name="new_password" placeholder="Enter new password (leave blank to keep current password)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        <div style="position: relative;">
+            <input type="password" id="new_password" name="new_password" placeholder="Enter new password (leave blank to keep current password)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; width: 100%;">
+            <span id="toggle-new-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">👁️</span>
+        </div>
 
         <label for="confirm_new_password" style="font-weight: bold; color: #333;">Confirm New Password:</label>
-        <input type="password" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm your new password" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        <div style="position: relative;">
+            <input type="password" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm your new password" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; width: 100%;">
+            <span id="toggle-confirm-new-password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">👁️</span>
+        </div>
 
         <label for="first_name" style="font-weight: bold; color: #333;">First Name:</label>
         <input type="text" id="first_name" name="first_name" placeholder="{{ user.first_name }}" value="{{ user.first_name }}" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
@@ -60,8 +69,62 @@
         <label for="zipcode" style="font-weight: bold; color: #333;">Zip Code:</label>
         <input type="text" id="zipcode" name="zipcode" placeholder="{{ user.zipcode|default_if_none:'N/A' }}" value="{{ user.zipcode|default_if_none:'' }}" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
-        <button type="submit" style="padding: 10px 20px; background-color: #800000; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer;">Update Details</button>
+        <button type="button" onclick="showConfirmationModal()" style="padding: 10px 20px; background-color: #800000; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer;">Update Details</button>
     </form>
 </div>
+
+<!-- Confirmation Modal -->
+<div id="confirmationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 1000;">
+    <div style="background-color: #fff; padding: 30px; border-radius: 10px; width: 400px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+        <h3 style="color: #d9534f; margin-bottom: 15px; font-size: 1.5rem; font-weight: bold;">Confirm Update</h3>
+        <p style="color: #555; font-size: 1rem; line-height: 1.5; margin-bottom: 25px;">Are you sure you want to update your account details?</p>
+        <div style="display: flex; justify-content: space-between; gap: 15px; align-items: center;">
+            <button type="button" onclick="closeConfirmationModal()" style="flex: 1; padding: 12px 0; background-color: #6c757d; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background-color 0.3s;">
+                Cancel
+            </button>
+            <button type="button" onclick="submitForm()" style="flex: 1; padding: 12px 0; background-color: #d9534f; color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background-color 0.3s;">
+                Update
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggleCurrentPassword = document.getElementById('toggle-current-password');
+    const currentPasswordField = document.getElementById('current_password');
+    toggleCurrentPassword.addEventListener('click', function() {
+        const type = currentPasswordField.type === 'password' ? 'text' : 'password';
+        currentPasswordField.type = type;
+        toggleCurrentPassword.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+
+    const toggleNewPassword = document.getElementById('toggle-new-password');
+    const newPasswordField = document.getElementById('new_password');
+    toggleNewPassword.addEventListener('click', function() {
+        const type = newPasswordField.type === 'password' ? 'text' : 'password';
+        newPasswordField.type = type;
+        toggleNewPassword.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+
+    const toggleConfirmNewPassword = document.getElementById('toggle-confirm-new-password');
+    const confirmNewPasswordField = document.getElementById('confirm_new_password');
+    toggleConfirmNewPassword.addEventListener('click', function() {
+        const type = confirmNewPasswordField.type === 'password' ? 'text' : 'password';
+        confirmNewPasswordField.type = type;
+        toggleConfirmNewPassword.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+    });
+
+    function showConfirmationModal() {
+        document.getElementById('confirmationModal').style.display = 'flex';
+    }
+
+    function closeConfirmationModal() {
+        document.getElementById('confirmationModal').style.display = 'none';
+    }
+
+    function submitForm() {
+        document.getElementById('editAccountForm').submit();
+    }
+</script>
 
 {% endblock %}
