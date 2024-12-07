@@ -50,21 +50,17 @@
         </tbody>
     </table>
     
-    <div style="margin-top: 20px; text-align: center;">
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; First</a>
-                <a href="?page={{ page_obj.previous_page_number }}">&#8249; Previous</a>
-                {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next &#8250;</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
+    <!-- Pagination Controls -->
+    <div style="text-align: center; margin-top: 20px;">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">Previous</a>
+        {% endif %}
+        <span style="font-weight: bold; font-size: 16px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">Next</a>
+        {% endif %}
     </div>
+    
     {% else %}
     <p style="text-align: center; color: gray; font-size: 16px; margin-top: 20px;">No feedbacks found.</p>
     {% endif %}

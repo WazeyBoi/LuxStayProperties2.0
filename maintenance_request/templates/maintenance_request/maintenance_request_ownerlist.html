@@ -48,16 +48,15 @@
         </tbody>
     </table>
 
+    <!-- Pagination Controls -->
     <div style="text-align: center; margin-top: 20px;">
-        <div>
-            {% if requests.has_previous %}
-            <a href="?page={{ requests.previous_page_number }}" style="margin: 0 10px; text-decoration: none; color: #800000;">&laquo; Previous</a>
-            {% endif %}
-            <span>Page {{ requests.number }} of {{ requests.paginator.num_pages }}</span>
-            {% if requests.has_next %}
-            <a href="?page={{ requests.next_page_number }}" style="margin: 0 10px; text-decoration: none; color: #800000;">Next &raquo;</a>
-            {% endif %}
-        </div>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">Previous</a>
+        {% endif %}
+        <span style="font-weight: bold; font-size: 16px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">Next</a>
+        {% endif %}
     </div>
     {% else %}
     <p style="text-align: center; color: gray; font-size: 16px; margin-top: 20px;">No maintenance requests found.</p>

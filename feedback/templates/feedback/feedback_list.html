@@ -37,23 +37,15 @@
         </tbody>
     </table>
 
+    <!-- Pagination Controls -->
     <div style="text-align: center; margin-top: 20px;">
-        <span style="font-weight: bold;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-        <div style="display: inline-flex; gap: 10px; margin-top: 10px;">
-            {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" style="padding: 8px 16px; background-color: #800000; color: white; text-decoration: none; border-radius: 5px;">Previous</a>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                {% if num == page_obj.number %}
-                    <span style="padding: 8px 16px; background-color: #800000; color: white; border-radius: 5px;">{{ num }}</span>
-                {% else %}
-                    <a href="?page={{ num }}" style="padding: 8px 16px; background-color: #ffffff; color: #800000; border: 1px solid #800000; border-radius: 5px; text-decoration: none;">{{ num }}</a>
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" style="padding: 8px 16px; background-color: #800000; color: white; text-decoration: none; border-radius: 5px;">Next</a>
-            {% endif %}
-        </div>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-right: 5px;">Previous</a>
+        {% endif %}
+        <span style="font-weight: bold; font-size: 16px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" style="display: inline-block; padding: 10px 15px; background-color: #800000; color: white; border-radius: 5px; text-decoration: none; margin-left: 5px;">Next</a>
+        {% endif %}
     </div>
 
     {% else %}
