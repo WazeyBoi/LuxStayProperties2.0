@@ -69,7 +69,8 @@ def owner_maintenance_requests(request):
         page_obj = paginator.page(paginator.num_pages)
 
     return render(request, 'maintenance_request/maintenance_request_ownerlist.html', {
-        'requests': page_obj,
+        'page_obj': page_obj,
+        'requests': page_obj.object_list,
     })
 
 @login_required

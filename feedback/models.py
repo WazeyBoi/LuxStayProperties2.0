@@ -1,6 +1,5 @@
 from django.db import models
 from users.models import User
-from properties.models import Property  # Assuming there's a Property model
 
 class Feedback(models.Model):
     STATUS_CHOICES = [
@@ -9,7 +8,7 @@ class Feedback(models.Model):
     ]
 
     feedbackId = models.AutoField(primary_key=True)
-    propertyId = models.ForeignKey(Property, on_delete=models.CASCADE, default=1)   # Replace Lease with Property
+    propertyId = models.ForeignKey('properties.Property', on_delete=models.CASCADE, default=1)   # Replace Lease with Property
     tenantId = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'tenant'})
     submissionDate = models.DateField(auto_now_add=True)
     starRating = models.IntegerField()  # Assuming a scale of 1-5 or 1-10
