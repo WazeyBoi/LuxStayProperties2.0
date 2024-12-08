@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import User
+from django.db.models import Avg
 
 class Property(models.Model):
     STATUS_CHOICES = [
@@ -35,6 +36,11 @@ class Property(models.Model):
     parking_spaces = models.PositiveIntegerField(default=0)
     pet_policy = models.CharField(max_length=11, choices=PET_POLICY_CHOICES, default='not_allowed')
     image = models.ImageField(upload_to='property_images/', blank=True, null=True)  # Add this line
+    
+    def get_average_rating(self):
+        from feedback.models import Feedback
+        average = Feedback.objects.filter(propertyId=self).aggregate(Avg('starRating'))['starRating__avg']
+        return round(average, 2) if average else 0
     
     def __str__(self):
         return f"{self.property_name or self.address} - {self.get_status_display()}"

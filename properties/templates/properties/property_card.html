@@ -56,6 +56,14 @@
                     {% endif %}
                 </span>
             </div>
+            <span style="color: #ccc; margin: 0 2.5px;">|</span> <!-- Separator -->
+            <!-- Star Rating Section -->
+            <div style="display: flex; align-items: center;">
+                <i class="fas fa-star" style="color: #FFD700; margin-right: 5px;"></i>
+                <span style="font-size: 14px; color: #000;">
+                    {{ property.average_rating|default:"No Rating Yet" }}
+                </span>
+            </div>
         </div>
 
     </div>

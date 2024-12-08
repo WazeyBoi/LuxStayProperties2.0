@@ -7,7 +7,7 @@ from .models import Lease, Property
 from datetime import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime, timedelta
-from django.db.models import Q
+from django.db.models import Q, Avg
 
 @login_required
 def tenant_dashboard(request):
@@ -113,6 +113,9 @@ def my_bookings(request):
 def property_listing(request):
     # Fetch only available properties
     properties = Property.objects.filter(status='available')
+    
+    # Annotate properties with average star rating
+    properties = properties.annotate(average_rating=Avg('feedback__starRating'))
     
     # Fetch dropdown values
     property_types = [choice[0] for choice in Property.PROPERTY_TYPE_CHOICES]
