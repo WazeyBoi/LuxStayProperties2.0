@@ -30,15 +30,15 @@
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
                 <td class="status-active" style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #28a745; font-weight: bold;">Active</td>
                 <td style="padding: 10px; text-align:left; white-space: nowrap;font-size: 14px;border-bottom: 1px solid #ddd;">
-                    <div style=" justify-content: center; align-items: center;">
-                         <button id="openModal" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px 20px; font-weight: bold; ">Request</button>
-                         <button id="openModal1" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px 20px; font-weight: bold;">Feedback</button>
-
-</div>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 10px; white-space: nowrap;">
+                        <button id="openModal" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px 15px; font-weight: bold;">Request</button>
+                        <button id="openModal1" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px 15px; font-weight: bold;">Feedback</button>
+                    </div>
+                    
    <!-- Modal -->
-<div id="requestModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+<div id="requestModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; white-space: nowrap; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
-        <h2 style="color: #800000; text-align: center;">Create Maintenance Request</h2>
+        <h2 style="color: #800000; text-align: center; margin-bottom: 10px;">Create Maintenance Request</h2>
         <form method="post" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
             {% csrf_token %}
             
@@ -47,7 +47,7 @@
             <input type="text" id="subject" name="subject" style="background-color: white; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;" required>
         
             <!-- Description Field -->
-            <label for="description" style="font-size: 14px; font-weight: bold;">Description:</label>
+            <label for="description" style="font-size: 14px; font-weight: bold; margin-bottom: 0;">Description:</label>
             <textarea id="description" name="description" style="background-color: white; width: 100%; height: 100px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px;" required></textarea>
         
          
@@ -118,16 +118,16 @@
 <!-- Modal -->
 <div id="feedbackModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
-        <h2 style="color: #800000; text-align: center;">Submit Feedback</h2>
+        <h2 style="color: #800000; text-align: center; margin-bottom: 10px;">Submit Feedback</h2>
         <form method="post">
             {% csrf_token %}
             {{ form.non_field_errors }}
 
             <!-- Emoji Rating System -->
-            <div>
+            <div style="margin-bottom: 20px;">
                 {{ form.starRating.errors }}
-                <label style="font-weight: bold;margin-bottom: 20px;padding: 10px;">Rate Your Experience:</label>
-                <div style="display: flex; justify-content: center; gap: 15px;padding: 15px; ">
+                <label style="font-weight: bold; margin-bottom: 10px; display: block;">Rate Your Experience:</label>
+                <div style="display: flex; justify-content: center; gap: 15px; padding: 15px;">
                     <!-- Angry -->
                     <label>
                         <input type="radio" name="starRating" value="1" id="star-1" style="display: none;">
@@ -137,7 +137,6 @@
                              onclick="selectEmoji(1)"
                              style="width: 50px; height: 50px; cursor: pointer;">
                     </label>
-                
                     <!-- Sad -->
                     <label>
                         <input type="radio" name="starRating" value="2" id="star-2" style="display: none;">
@@ -147,7 +146,6 @@
                              onclick="selectEmoji(2)"
                              style="width: 50px; height: 50px; cursor: pointer;">
                     </label>
-                
                     <!-- Neutral -->
                     <label>
                         <input type="radio" name="starRating" value="3" id="star-3" style="display: none;">
@@ -157,7 +155,6 @@
                              onclick="selectEmoji(3)"
                              style="width: 50px; height: 50px; cursor: pointer;">
                     </label>
-                
                     <!-- Smile -->
                     <label>
                         <input type="radio" name="starRating" value="4" id="star-4" style="display: none;">
@@ -167,7 +164,6 @@
                              onclick="selectEmoji(4)"
                              style="width: 50px; height: 50px; cursor: pointer;">
                     </label>
-                
                     <!-- Satisfied -->
                     <label>
                         <input type="radio" name="starRating" value="5" id="star-5" style="display: none;">
@@ -183,21 +179,21 @@
             <!-- Comments Section -->
             <div style="margin-bottom: 20px;">
                 {{ form.comments.errors }}
-                <label for="comments" style="display: block; margin-bottom: 10px; font-weight: bold; padding: 10px;">Comments:</label>
+                <label for="comments" style="display: block; margin-bottom: 5px; font-weight: bold;">Comments:</label>
                 <textarea id="comments" name="comments" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">{{ form.comments.value }}</textarea>
             </div>
-<!-- Hidden fields for propertyId -->
-<input type="hidden" name="propertyid" value="{{ booking.property.id }}">
-<input type="hidden" name="tenantid" value="{{ booking.tenant.id }}">
-            <!-- Submit Button -->
+
+            <!-- Hidden Fields -->
+            <input type="hidden" name="propertyid" value="{{ booking.property.id }}">
+            <input type="hidden" name="tenantid" value="{{ booking.tenant.id }}">
+
+            <!-- Submit and Cancel Buttons -->
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
                 <button type="button" id="closeModal1" style="background-color: #ccc; color: black; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px 20px;">Cancel</button>
                 <button type="submit" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px 20px;">Submit</button>
-                
             </div>
         </form>
     </div>
-</div>
 </div>
 
 <script>
