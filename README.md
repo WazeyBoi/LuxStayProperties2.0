@@ -29,10 +29,15 @@ The **LuxStay Properties Rental Management System** is designed to streamline an
 | **User Role and Access Management** | Manage different levels of access for users based on their roles within the system. |
 | **Feedback and Improvement Tracking** | Gather and manage feedback from tenants and property managers to continuously improve the system. |
 
-##  Figma UI/UX Design Link 
+##  Figma/CANVA UI/UX Design Link 
 
 1. [Figma](https://www.figma.com/design/KMo1xSOqFiKmuVxEg5sloT/UI%2FUX-Design-for-LuxStay-Properties?node-id=0-1&t=k97hLg84z87MUWI3-1)
+2. [CANVA](https://www.canva.com/design/DAGVxmC-_9c/WUes0DxxScwybfTCLenGvw/edit?utm_content=DAGVxmC-_9c&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
  
 ##  VisualParadigm ERD Link
 
-1. [VisualParadigm](https://online.visual-paradigm.com/share.jsp?id=333534353739302d32)
+1. [VisualParadigm | Logical & Phyiscal ERD Model](https://online.visual-paradigm.com/share.jsp?id=333534353739302d35)
+
+##  GitHub LuxStayPropertiesV.1
+
+1. [LuxStayPropertiesV.1](https://github.com/WazeyBoi/LuxStayProperties)
