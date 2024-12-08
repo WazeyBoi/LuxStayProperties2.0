@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Page{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'users/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'users/images/LSP_favicon.png' %}">
+    <style>
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body and Main Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            background-image: url("{% static 'users/images/TemplateBackground.png' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Header */
+        .header {
+            background-color: #54010b;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap; /* Ensure content wraps on smaller screens */
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0; /* Prevent the logo from shrinking */
+        }
+
+        .header nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 15px;
+            flex-grow: 1; /* Allow links to grow and adjust */
+        }
+
+        .header nav a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+            white-space: nowrap; /* Prevent links from breaking into multiple lines */
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .header nav a:last-child {
+            margin-right: 0;
+        }
+
+        /* Media Queries for Small Screens */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column; /* Stack content vertically */
+                align-items: center;
+                padding: 10px;
+            }
+
+            .header nav {
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .header nav a {
+                margin: 5px 10px; /* Adjust spacing for smaller screens */
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 310px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-right: 20px;
+            padding: 20px;
+        }
+
+        .sidebar .welcome {
+            font-size: 22px;
+            font-weight: bold;
+            color: #800000;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            background-color: #800000;
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: left;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: #660000;
+        }
+
+/* Main Content */
+.main-container {
+    display: flex;
+    margin: 20px;
+}
+
+.main-content {
+    flex: 1;
+    background-color: transparent;
+    padding: 10px; /* Add some padding for content inside the form */
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    display: block; /* Change to block to allow form to fill entire content area */
+    color: #555;
+}
+
+        /* Footer */
+        footer {
+            background-color: #54010b;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        footer img {
+            height: 65px;
+            width: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="{% static 'users/images/LSP_Header.png' %}" alt="LuxStay Properties" style="height: 65px; width: auto;">
+        </div>
+        <nav>
+            <a href="{% url 'property_listing' %}">DASHBOARD</a>
+            <a href="{% url 'logout' %}">LOGOUT</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Welcome Message -->
+            <div class="welcome">
+                Welcome, {{ request.user.username }}!
+            </div>
+
+            <!-- Sidebar Links -->
+            <a href="{% url 'property_listing' %}">PROPERTY LISTING</a>
+            <a href="{% url 'my_bookings' %}">MY BOOKINGS</a>
+            <a href="{% url 'pending_list' %}">MY PAYMENTS</a>
+            <a href="{% url 'payment_history' %}">MY PAYMENT HISTORY</a>
+            <a href="{% url 'maintenance_request:maintenance_request_list' %}">MY MAINTENANCE REQUEST</a>
+            <a href="{% url 'feedback:feedback_list' %}">MY FEEDBACKS</a>
+            <a href="{% url 'edit_account' %}">MY ACCOUNT</a>
+        </div>
+
+        <!-- Dynamic Content Area -->
+        <div class="main-content">
+            {% block content %}
+            Nothing to show, click a button.
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <img src="{% static 'users/images/LSP_Footer.png' %}" alt="LuxStay Footer">
+        &copy; EST. 2024 | All Rights Reserved
+    </footer>
+
+</body>
+</html>
