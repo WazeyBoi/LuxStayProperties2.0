@@ -11,14 +11,14 @@
     <h3 style="color: #333; margin-top: 20px;">Active & Pending Bookings</h3>
     {% if pending_page.object_list or active_page.object_list %}
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <thead style="background-color: #800000; color: white;">
+        <thead style="background-color: #800000; color: white;  ">
             <tr>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Property Name</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Address</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Start Date</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">End Date</th>
                 <th style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Status</th>
-                <th style="padding: 10px 15px; text-align: center; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase;">Actions</th>
+                <th style="padding: 10px 15px; text-align: center; border-bottom: 1px solid #ddd; font-size: 16px; text-transform: uppercase; ">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -29,10 +29,10 @@
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
                 <td class="status-active" style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #28a745; font-weight: bold;">Active</td>
-                <td style="padding: 10px; text-align:left; white-space: nowrap;font-size: 14px;border-bottom: 1px solid #ddd;">
-                    <div style="display: flex; justify-content: center; align-items: center; gap: 10px; white-space: nowrap;">
-                        <button id="openModal" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px 15px; font-weight: bold;">Request</button>
-                        <button id="openModal1" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px 15px; font-weight: bold;">Feedback</button>
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; ">
+                    <div style="display: flex; justify-content: center; gap: 10px;  ">
+                        <button id="openModal" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px   ; font-weight: bold;">Request</button>
+                        <button id="openModal1" style="background-color: #800000; color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 10px; padding: 10px; font-weight: bold;">Feedback</button>
                     </div>
                     
    <!-- Modal -->
@@ -291,14 +291,9 @@ function selectEmoji(selectedId) {
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.start_date }}</td>
                 <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #333;">{{ booking.end_date }}</td>
                 <td class="status-pending" style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; color: #ffc107; font-weight: bold;">Pending</td>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px;">
+                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; ">
                     {% if booking.status != 'pending' %}
-                    <a href="{% url 'maintenance_request:maintenance_request_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #800000; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Request</a>
-                    {% endif %}
-                </td>
-                <td style="padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px;">
-                    {% if booking.status != 'pending' %}
-                    <a href="{% url 'feedback:feedback_create' leaseid=booking.id tenantid=booking.tenant.id %}" style="background-color: #007bff; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Feedback</a>
+                    <a href="{% url 'maintenance_request:maintenance_request_create' propertyid=booking.id tenantid=booking.tenant.id %}" style="background-color: #800000; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Request</a>
                     {% endif %}
                 </td>
             </tr>
