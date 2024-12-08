@@ -1,10 +1,10 @@
-{% extends "users/base_payment.html" %}
+{% extends "users/base_tenant.html" %}
 {% load static %}
 
 {% block title %}Payment Form{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 800px; margin: 30px auto; background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);" id="payment-container">
+<div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); width: 100%; height: calc(100vh - 160px); margin: 0 auto; overflow-y: auto;" id="payment-container">
     <h1 style="color: #800000; text-align: center; font-size: 32px; margin-bottom: 20px;">Payment</h1>
 
     <!-- Display remaining balance styled as text -->
@@ -33,7 +33,9 @@
             </label>
             {{ form.paymentDate }}
             {% if form.paymentDate.errors %}
-            <span class="error-message" style="color: red; font-size: 14px;">{{ form.paymentDate.errors }}</span>
+                <span class="error-message" style="color: red; font-size: 14px;">
+                    {{ form.paymentDate.errors|join:", " }}
+                </span>
             {% endif %}
         </div>
 
@@ -45,7 +47,9 @@
             </label>
             {{ form.paymentMethod }}
             {% if form.paymentMethod.errors %}
-            <span class="error-message" style="color: red; font-size: 14px;">{{ form.paymentMethod.errors }}</span>
+                <span class="error-message" style="color: red; font-size: 14px;">
+                    {{ form.paymentMethod.errors|join:", " }}
+                </span>
             {% endif %}
         </div>
 
@@ -56,7 +60,9 @@
             </label>
             {{ form.totalAmount }}
             {% if form.totalAmount.errors %}
-            <span class="error-message" style="color: red; font-size: 14px;">{{ form.totalAmount.errors }}</span>
+                <span class="error-message" style="color: red; font-size: 14px;">
+                    {{ form.totalAmount.errors|join:", " }}
+                </span>
             {% endif %}
         </div>
 
@@ -109,7 +115,7 @@
     </form>
 
     <!-- Cancel link with confirmation -->
-    <a href="{% url 'pending_list' %}" class="cancel-link" onclick="return confirm('Are you sure you want to cancel?');" style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold; font-size: 16px;">
+    <a href="{% url 'pending_list' %}" class="cancel-link"  style="display: block; text-align: center; margin-top: 20px; color: #800000; text-decoration: none; font-weight: bold; font-size: 16px;">
         Cancel
     </a>
 </div>
@@ -240,11 +246,19 @@
     box-shadow: 0 0 5px rgba(128, 0, 0, 0.2);
 }
 
-    /* When Cash is selected, resize the form */
-    #payment-container.cash {
-        padding: 20px;
-        max-width: 600px; /* Smaller form for cash payments */
+.cash-payment {
+        display: block;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
     }
+
+    .cash-payment button {
+        margin-top: 50px;
+    }
+
+    /* When Cash is selected, resize the form */
+
 
     @media (max-width: 768px) {
         .container {
@@ -274,10 +288,10 @@ document.addEventListener('DOMContentLoaded', function() {
     paymentMethodSelect.addEventListener('change', function() {
         if (paymentMethodSelect.value === 'credit_card' || paymentMethodSelect.value === 'debit_card') {
             cardDetails.style.display = 'flex';
-            paymentContainer.classList.remove('cash'); // Make the form normal size
+            paymentContainer.classList.remove('cash-payment'); // Make the form normal size
         } else {
             cardDetails.style.display = 'none';
-            paymentContainer.classList.add('cash'); // Resize the form for cash
+            paymentContainer.classList.add('cash-payment'); // Resize the form for cash
         }
     });
 
