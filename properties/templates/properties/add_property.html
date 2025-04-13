@@ -15,7 +15,15 @@
         <input type="text" id="property_name" name="property_name" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
 
         <label for="address" style="font-weight: bold; color: #333;">Address:</label>
-        <input type="text" id="address" name="address" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
+        <div style="position: relative;">
+            <input type="text" id="address" name="address" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; width: 100%;" 
+                   placeholder="House/Unit No., Street, Barangay, City/Municipality, Province">
+            <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #800000; font-size: 16px;" 
+                 title="Philippine Address Format: House/Unit No., Street, Barangay, City/Municipality, Province">?</div>
+        </div>
+        <p style="margin-top: 5px; margin-bottom: 10px; font-size: 12px; color: #666;">
+            Example: 123 Rizal Street, Barangay San Miguel, Manila, Metro Manila
+        </p>
 
         <label for="property_type" style="font-weight: bold; color: #333;">Property Type:</label>
         <select id="property_type" name="property_type" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;">
@@ -59,10 +67,19 @@
         </select>
 
         <label for="description" style="font-weight: bold; color: #333;">Description:</label>
-        <textarea id="description" name="description" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; height: 150px;"></textarea>
+        <div style="position: relative;">
+            <textarea id="description" name="description" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; height: 150px; width: 100%;" maxlength="500" onkeyup="updateCharCount(this)"></textarea>
+            <div style="text-align: right; font-size: 12px; color: #666; margin-top: 5px;">
+                <span id="charCount">0</span>/500 characters
+            </div>
+        </div>
 
         <label for="image" style="font-weight: bold; color: #333;">Upload Image:</label>
-        <input type="file" id="image" name="image" accept="image/*" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px;" onchange="previewImage(event)">
+        <div style="position: relative;">
+            <input type="file" id="image" name="image" accept="image/*" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; width: 100%;" onchange="validateAndPreviewImage(event)">
+            <p style="margin-top: 5px; font-size: 12px; color: #666;">Maximum file size: 5MB</p>
+            <div id="fileError" style="color: #d9534f; font-size: 12px; margin-top: 5px; display: none;"></div>
+        </div>
         <div id="imagePreviewContainer" style="margin-top: 15px; display: none;">
             <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; border: 1px solid #ccc; border-radius: 5px;">
         </div>
@@ -76,14 +93,56 @@
 </div>
 
 <script>
-function previewImage(event) {
+function validateAndPreviewImage(event) {
+    const file = event.target.files[0];
+    const fileError = document.getElementById('fileError');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+    
+    // Reset previous error
+    fileError.style.display = 'none';
+    previewContainer.style.display = 'none';
+    
+    if (!file) return;
+    
+    // Check file size
+    if (file.size > maxSizeInBytes) {
+        fileError.textContent = 'File size exceeds 5MB limit. Please select a smaller image.';
+        fileError.style.display = 'block';
+        event.target.value = ''; // Clear the file input
+        return;
+    }
+    
+    // If size is OK, preview the image
     var reader = new FileReader();
     reader.onload = function() {
         var output = document.getElementById('imagePreview');
         output.src = reader.result;
-        document.getElementById('imagePreviewContainer').style.display = 'block';
+        previewContainer.style.display = 'block';
     }
-    reader.readAsDataURL(event.target.files[0]);
+    reader.readAsDataURL(file);
 }
+
+function updateCharCount(textarea) {
+    const maxLength = 500;
+    const currentLength = textarea.value.length;
+    const charCountElement = document.getElementById('charCount');
+    
+    charCountElement.textContent = currentLength;
+    
+    if (currentLength >= maxLength) {
+        charCountElement.style.color = '#d9534f';
+    } else if (currentLength >= maxLength * 0.8) {
+        charCountElement.style.color = '#f0ad4e';
+    } else {
+        charCountElement.style.color = '#666';
+    }
+}
+
+// Make sure the char count shows on page load if there's text already
+document.addEventListener('DOMContentLoaded', function() {
+    const descriptionTextarea = document.getElementById('description');
+    updateCharCount(descriptionTextarea);
+});
 </script>
 {% endblock %}
